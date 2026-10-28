@@ -1,0 +1,70 @@
+import React from 'react';
+import {
+  Menu,
+  Megaphone,
+  Plus,
+  Calendar,
+  Paperclip,
+  Tag as TagIcon,
+  LogOut,
+  GraduationCap,
+  Search,
+  LayoutDashboard,
+  Users,
+  BookOpen,
+  FileText,
+  Award,
+  CalendarCheck,
+  AlertTriangle,
+  CreditCard,
+  School,
+  UserCheck,
+  Clock,
+  Check,
+  X,
+  ArrowLeft,
+  User,
+  Eye,
+  Filter,
+  DollarSign,
+  AlertCircle
+} from 'lucide-react';
+
+const ICON_MAP = {
+  menu: Menu,
+  mega: Megaphone,
+  plus: Plus,
+  cal: Calendar,
+  calendar: Calendar,
+  clip: Paperclip,
+  tag: TagIcon,
+  logout: LogOut,
+  cap: GraduationCap,
+  search: Search,
+  dashboard: LayoutDashboard,
+  students: Users,
+  lessons: BookOpen,
+  homeworks: FileText,
+  exams: Award,
+  grades: Award,
+  attendance: CalendarCheck,
+  complaints: AlertTriangle,
+  announcements: Megaphone,
+  payments: CreditCard,
+  classes: School,
+  guardians: UserCheck,
+  clock: Clock,
+  check: Check,
+  x: X,
+  arrowLeft: ArrowLeft,
+  user: User,
+  eye: Eye,
+  filter: Filter,
+  dollar: DollarSign,
+  alert: AlertCircle
+};
+
+export default function Icon({ name, size = 18, className = '', style, ...props }) {
+  const Component = ICON_MAP[name] || ICON_MAP[String(name).toLowerCase()] || TagIcon;
+  return <Component size={size} className={className} style={style} {...props} />;
+}
