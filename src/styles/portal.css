@@ -1,0 +1,628 @@
+.portal-app {
+  --bg: var(--g-bg, #E8F0EE);
+  --card: var(--g-card, #fff);
+  --ink: var(--g-ink, #0A1C24);
+  --mute: var(--g-mute, #60797F);
+  --line: var(--g-line, #E3ECEA);
+  --soft: var(--g-soft, #F1F6F5);
+  --p1: var(--g-p1, #1E6F78);
+  --p2: var(--g-p2, #0F3B44);
+  --acc: var(--g-acc, #F59E6C);
+  --sh: var(--g-sh, 0 6px 20px rgba(15,59,68,.07));
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 14px/1.45 Manrope, system-ui, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.portal-app .app {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 12px;
+  padding: 12px;
+  height: 100vh;
+}
+
+.portal-app.app {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 12px;
+  padding: 12px;
+  height: 100vh;
+}
+
+.portal-app .sb {
+  background: var(--card);
+  border-radius: 28px;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--sh);
+}
+
+.portal-app .logo {
+  padding: 4px 12px 16px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 12px;
+}
+.portal-app .logo b {
+  font: 800 18px 'Bricolage Grotesque', serif;
+}
+.portal-app .logo small {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .14em;
+  color: var(--mute);
+}
+
+.portal-app .nv {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 14px;
+  color: var(--mute);
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 4px;
+  text-decoration: none;
+}
+.portal-app .nv.on {
+  background: linear-gradient(135deg, var(--p1), var(--p2));
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(15,59,68,.25);
+}
+.portal-app .nv:hover:not(.on) {
+  background: var(--soft);
+}
+.portal-app .lo {
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  color: #C0392B;
+  border-radius: 0;
+}
+
+.portal-app .mn {
+  background: var(--card);
+  border-radius: 28px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--sh);
+  min-width: 0;
+}
+
+.portal-app .tb {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--line);
+}
+.portal-app .sq {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--soft);
+  display: grid;
+  place-items: center;
+  border: 0;
+  color: var(--ink);
+  cursor: pointer;
+  position: relative;
+}
+.portal-app .tb h1 {
+  font-size: 17px;
+}
+.portal-app .tb small {
+  color: var(--mute);
+  font-size: 12px;
+}
+.portal-app .us {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.portal-app .us small {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .1em;
+}
+.portal-app .av {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--acc), #E7C9A3);
+  display: inline-block;
+  overflow: hidden;
+}
+.portal-app .bd {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--acc);
+  color: #0A1C24;
+  font: 700 10px Manrope;
+  border-radius: 9px;
+  padding: 1px 5px;
+}
+
+.portal-app .ct {
+  padding: 18px 22px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.portal-app .ct::-webkit-scrollbar,
+.portal-app *::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.portal-app .pt h2 {
+  font-size: 26px;
+}
+.portal-app .pt p {
+  color: var(--mute);
+  margin: 4px 0 18px;
+}
+
+.portal-app .bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.portal-app .in {
+  flex: 1;
+  min-width: 200px;
+  background: var(--soft);
+  border-radius: 16px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  color: var(--mute);
+}
+.portal-app .in input {
+  border: 0;
+  background: transparent;
+  flex: 1;
+  font: inherit;
+  color: var(--ink);
+  outline: 0;
+}
+.portal-app .pb {
+  background: linear-gradient(135deg, var(--p1), var(--p2));
+  color: #fff;
+  border: 0;
+  border-radius: 14px 14px 14px 4px;
+  padding: 0 20px;
+  height: 46px;
+  font: 700 14px Manrope, sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.portal-app .sel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 6px 16px;
+  height: 46px;
+  min-width: 190px;
+}
+.portal-app .sel small {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--mute);
+}
+.portal-app .sel b {
+  font-size: 14px;
+}
+
+.portal-app .chips {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.portal-app .ch {
+  padding: 7px 14px;
+  border-radius: 12px;
+  background: var(--soft);
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--mute);
+  cursor: pointer;
+  border: 0;
+}
+.portal-app .ch.on {
+  background: linear-gradient(135deg, var(--p1), var(--p2));
+  color: #fff;
+}
+
+.portal-app .gr {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+}
+.portal-app .cd {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: var(--sh);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.portal-app .cd h3 {
+  font-size: 16px;
+}
+.portal-app .cd p {
+  color: var(--mute);
+  font-size: 13px;
+}
+.portal-app .row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.portal-app .tg {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--soft);
+  color: var(--mute);
+}
+.portal-app .tg.g, .portal-app .g {
+  background: #DDF3E8;
+  color: #1F7A4D;
+}
+.portal-app .tg.a, .portal-app .a {
+  background: #FCEBC8;
+  color: #9A5B00;
+}
+.portal-app .tg.r, .portal-app .r {
+  background: #FADADD;
+  color: #B3263E;
+}
+.portal-app .tg.b, .portal-app .b {
+  background: #DCEBF5;
+  color: #1E5C86;
+}
+
+.portal-app .ghost {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 16px;
+  font: 700 13px Manrope, sans-serif;
+  color: var(--ink);
+  cursor: pointer;
+  margin-left: auto;
+}
+.portal-app .ghost:hover {
+  background: var(--soft);
+}
+
+.portal-app .tl {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--soft);
+  display: grid;
+  place-items: center;
+  font: 800 15px 'Bricolage Grotesque', serif;
+  flex: none;
+}
+.portal-app .st4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.portal-app .sc {
+  border-radius: 20px;
+  padding: 16px 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+.portal-app .sc small {
+  font-size: 11px;
+  letter-spacing: .08em;
+  font-weight: 700;
+  color: var(--mute);
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+}
+.portal-app .sc b {
+  font: 800 28px 'Bricolage Grotesque', serif;
+  display: block;
+  margin-top: 6px;
+}
+.portal-app .sc span {
+  color: var(--mute);
+  font-size: 12px;
+}
+
+.portal-app .bn {
+  border-radius: 22px;
+  padding: 22px 26px;
+  background: linear-gradient(120deg, var(--p2), var(--p1));
+  color: #F6F1E7;
+  margin-bottom: 16px;
+}
+.portal-app .bn small {
+  letter-spacing: .14em;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--acc);
+}
+.portal-app .bn h2 {
+  font-size: 26px;
+  margin-top: 4px;
+}
+.portal-app .dg {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 16px;
+}
+.portal-app .tt {
+  display: grid;
+  grid-template-columns: 44px repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 14px;
+}
+.portal-app .tt .h {
+  text-align: center;
+  font-size: 11px;
+  color: var(--mute);
+  font-weight: 700;
+}
+.portal-app .tt .h b {
+  display: block;
+  font-size: 14px;
+  color: var(--ink);
+}
+.portal-app .tt .t {
+  font-size: 11px;
+  color: var(--mute);
+  padding-top: 9px;
+}
+.portal-app .tt .s {
+  padding: 9px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0A1C24;
+}
+
+.portal-app .an {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--soft);
+  margin-bottom: 10px;
+}
+.portal-app .an h3 {
+  font-size: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.portal-app .an p {
+  font-size: 12px;
+  color: var(--mute);
+}
+
+.portal-app .ib {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: rgba(30,111,120,.14);
+  color: var(--p1);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.portal-app .dt {
+  width: 44px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(30,111,120,.12);
+  color: var(--p1);
+  text-align: center;
+  font: 700 10px Manrope, sans-serif;
+  padding-top: 7px;
+  flex: none;
+}
+.portal-app .dt b {
+  display: block;
+  font: 800 16px 'Bricolage Grotesque', serif;
+  color: var(--ink);
+}
+
+.portal-app .em {
+  text-align: center;
+  padding: 36px;
+  color: var(--mute);
+}
+.portal-app .em b {
+  display: block;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.portal-app .md {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,15,20,.55);
+  display: none;
+  place-items: center;
+  z-index: 20;
+}
+.portal-app .md.on {
+  display: grid;
+}
+.portal-app .mc {
+  background: var(--card);
+  width: 470px;
+  max-width: 92vw;
+  max-height: 92vh;
+  overflow-y: auto;
+  border-radius: 24px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.portal-app .mc::-webkit-scrollbar,
+.portal-app .no-scrollbar::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.portal-app .no-scrollbar,
+.no-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.portal-app .mh {
+  background: linear-gradient(120deg, var(--p2), var(--p1));
+  color: #fff;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+}
+.portal-app .mh p {
+  font-size: 13px;
+  opacity: .8;
+}
+.portal-app .mb {
+  padding: 20px 24px;
+  display: grid;
+  gap: 14px;
+}
+.portal-app .mb label {
+  font-size: 11px;
+  letter-spacing: .1em;
+  font-weight: 700;
+  color: var(--mute);
+}
+.portal-app .mb input, .portal-app .mb textarea, .portal-app .mb select {
+  width: 100%;
+  margin-top: 6px;
+  border: 1px solid var(--line);
+  background: var(--soft);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font: inherit;
+  color: var(--ink);
+}
+.portal-app .mb .row {
+  justify-content: flex-end;
+}
+
+/* Skeleton animation */
+@keyframes portal-skeleton-pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.portal-skeleton {
+  background: var(--g-soft, #F1F6F5);
+  border-radius: 12px;
+  animation: portal-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@media(max-width: 860px) {
+  .portal-app .app, .portal-app.app {
+    grid-template-columns: 1fr;
+  }
+  .portal-app .sb {
+    display: none;
+  }
+  .portal-app .sb.open {
+    display: flex;
+    position: fixed;
+    inset: 12px auto 12px 12px;
+    width: 240px;
+    z-index: 99;
+  }
+  .portal-app .st4 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .portal-app .dg {
+    grid-template-columns: 1fr;
+  }
+  .portal-app .us div {
+    display: none;
+  }
+  .portal-app .tt {
+    font-size: 10px;
+  }
+}
+
+/* Smooth CSS Spin Animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spin,
+.animate-spin,
+.portal-app .spin {
+  display: inline-block !important;
+  animation: spin 0.8s linear infinite !important;
+  transform-origin: center center !important;
+}
+
+
+/* Calendar Date Cell & Hover States */
+.att-day-cell {
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.att-day-cell-clickable:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(20, 184, 166, 0.45) !important;
+  transform: translateY(-1px);
+}
+
+.att-day-cell-clickable:hover .att-add-record-text {
+  opacity: 0.95 !important;
+}
+
+/* Section Card Button Hover States */
+.att-card-btn-give:hover {
+  background: linear-gradient(135deg, #0D9488, #0F766E) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(20, 184, 166, 0.35) !important;
+}
+
+.att-card-btn-view:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  transform: translateY(-1px);
+}
