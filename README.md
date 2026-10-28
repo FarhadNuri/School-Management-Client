@@ -1,0 +1,141 @@
+# School Management - Client Portal
+
+A modern, role-driven web application for Northfield Academy, serving **Guardians**, **Students**, and **Teachers** through a unified UI architecture built with React and Vite.
+
+---
+
+## Features
+
+- **Unified Role Architecture**: Guardians, Students, and Teachers share core layouts, styling, and navigation components. Access, tabs, and permissions are dynamically controlled via centralized role configurations (`roles.js`).
+- **Teacher Portal**: Manage assigned classes and rosters, take attendance roll call, upload study materials, create and evaluate homework, update gradebook marks, and browse parent/guardian contact info.
+- **Guardian Portal**: Monitor linked children, track attendance and grades, view study materials, and settle fee invoices online (`canPay: true`).
+- **Student Portal**: Access personalized timetables, download coursework and study materials, track grades and attendance, and file complaints.
+- **Role & Route Guards**: Strict client-side route protection (`AuthGuard`, `RoleGuard`) ensuring authenticated sessions and preventing cross-role route access.
+- **Fast Data Synchronization**: Server-state management powered by TanStack Query with modular API services and data adapters.
+
+---
+
+## Tech Stack
+
+- **Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
+- **Routing**: [React Router v7](https://reactrouter.com/)
+- **State & Data Fetching**: [TanStack Query v5](https://tanstack.com/query)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Linting**: [Oxlint](https://oxc.rs/)
+
+---
+
+## Getting Started
+
+### Prerequisites
+- **Node.js** (v18+ recommended)
+- **npm** (or pnpm / yarn)
+- Backend API server running
+
+### Installation
+
+1. **Clone the repository and install dependencies:**
+   ```bash
+   git clone <repository-url>
+   cd client
+   npm install
+   ```
+
+2. **Configure environment variables:**
+   ```bash
+   cp .env.example .env
+   ```
+   Set your backend API endpoint in `.env`:
+   ```env
+   VITE_API_URL=http://localhost:5000/api
+   ```
+
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+   The client will start at `http://localhost:5173` (or `http://localhost:5174`).
+
+---
+
+## Available Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Runs the Vite dev server with Hot Module Replacement (HMR). |
+| `npm run build` | Compiles and optimizes assets into `dist/` for production. |
+| `npm run preview` | Locally serves the production `dist/` build for testing. |
+| `npm run lint` | Runs Oxlint for fast code analysis. |
+
+---
+
+## Portal Roles & Routes
+
+### 1. Teacher Portal (`/teacher/*`)
+| Route | Feature / Description |
+|---|---|
+| `/teacher` | Dashboard: assigned classes count, timetable, quick actions, notices |
+| `/teacher/classes` | Class rosters and enrolled student records |
+| `/teacher/materials` | Upload, edit, and organize section study materials and notes |
+| `/teacher/attendance` | Roll call management and attendance logging per class |
+| `/teacher/homeworks` | Create assignments, manage deadlines, and evaluate student work |
+| `/teacher/grades` | Class gradebook, term marks, and assessment entry |
+| `/teacher/guardians` | Directory of linked parents and guardians for contact & communication |
+| `/teacher/announcements`| Post notices and review school-wide announcements |
+| `/teacher/complaints` | Incident reporting and case follow-up |
+
+### 2. Guardian Portal (`/guardian/*`)
+| Route | Feature / Description |
+|---|---|
+| `/guardian` | Dashboard: linked student summaries, timetable, and announcements |
+| `/guardian/students` | Linked students roster, academic profiles, and statuses |
+| `/guardian/materials` | Course study materials and lesson resources |
+| `/guardian/homeworks` | Coursework details and submission statuses |
+| `/guardian/grades` | Term assessment results, grade reports, and feedback |
+| `/guardian/attendance` | Daily attendance statistics and absence records |
+| `/guardian/payments` | Invoice history with **online payment** capability (`canPay: true`) |
+| `/guardian/complaints` | Submit feedback or formal inquiries to administration |
+| `/guardian/announcements`| School notices and bulletin board |
+
+### 3. Student Portal (`/student/*`)
+| Route | Feature / Description |
+|---|---|
+| `/student` | Dashboard: enrolled class overview, timetable, and recent notices |
+| `/student/materials` | Personal course notes, reading lists, and study resources |
+| `/student/homeworks` | Coursework tracker and assignment submissions |
+| `/student/grades` | Personal academic marks, exam scores, and GPA summary |
+| `/student/attendance` | Personal presence ring, attendance percentage, and logs |
+| `/student/payments` | Fee statement overview (read-only, `canPay: false`) |
+| `/student/complaints` | File incident reports and track resolution status |
+| `/student/announcements`| School bulletins and updates |
+
+### 4. Public Routes
+| Route | Description |
+|---|---|
+| `/` | Landing page |
+| `/login` | Unified login with role tabs (Guardian, Student, Teacher) and 1-click test sign-in |
+
+---
+
+## Project Structure
+
+```text
+src/
+├── assets/          # Static assets (logos, images, icons)
+├── components/      # Reusable UI components (Navbar, Sidebar, Modals, Tables, Toast)
+├── data/            # Static fixtures and fallback mock datasets
+├── features/
+│   ├── landing/     # Public landing page
+│   └── portal/      # Role views, shared pages, and teacher-specific modules
+│       ├── config/  # Role capabilities & tab definitions (roles.js)
+│       └── pages/   # Portal views (teacher/, student, guardian)
+├── routes/          # Router configuration and guards (AuthGuard, RoleGuard)
+├── services/        # API clients, teacher/student/guardian endpoints & adapters
+└── styles/          # Global CSS tokens and component stylesheets
+```
+
+---
+
+## Role Configuration
+
+All role differences and capabilities are centralized in `src/features/portal/config/roles.js`. Instead of scattering role conditions across UI components, views query capability flags (e.g. `canTakeAttendance`, `canManageMaterials`, `canPay`, `canCreateAnnouncement`) through the `usePortalRole` hook.
