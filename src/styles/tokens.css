@@ -1,0 +1,53 @@
+/* Shared brand tokens (Landing) */
+:root {
+  --ink: #0A1C24;
+  --deep: #0F3B44;
+  --lag: #1E6F78;
+  --lag2: #2B8791;
+  --acc: #F59E6C;
+  --cream: #F6F1E7;
+  --sand: #E7C9A3;
+  --text: #F6F1E7;
+  --mute: #B9CCCB;
+  --line: #23424b;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --ink: #FBF8F2;
+    --deep: #E3EEEB;
+    --text: #0A1C24;
+    --mute: #41606a;
+    --line: #cbd9d6;
+  }
+}
+
+/* Shared Portal Tokens (Guardian & Student, prefixed --g-) */
+:root,
+.portal-app,
+.guardian-app {
+  --g-bg: #E8F0EE;
+  --g-card: #FFFFFF;
+  --g-ink: #0A1C24;
+  --g-mute: #60797F;
+  --g-line: #E3ECEA;
+  --g-soft: #F1F6F5;
+  --g-p1: #1E6F78;
+  --g-p2: #0F3B44;
+  --g-acc: #F59E6C;
+  --g-sh: 0 6px 20px rgba(15, 59, 68, 0.07);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root,
+  .portal-app,
+  .guardian-app {
+    --g-bg: #071419;
+    --g-card: #0F2A33;
+    --g-ink: #F6F1E7;
+    --g-mute: #9DB5B5;
+    --g-line: #1F3E47;
+    --g-soft: #14323C;
+    --g-sh: none;
+  }
+}
