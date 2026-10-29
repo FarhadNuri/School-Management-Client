@@ -626,3 +626,207 @@
   border-color: rgba(255, 255, 255, 0.22) !important;
   transform: translateY(-1px);
 }
+
+/* Subjects & Course Cards Styling */
+.cd-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.cd-top-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cd-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cd-sub {
+  font-size: 12.5px;
+  color: var(--mute);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cd-tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cd-body {
+  font-size: 13px;
+  color: var(--mute);
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cd-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cd-meta {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--mute);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cd-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cd-btn-view {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  height: 32px;
+  padding: 0 14px;
+  font: 600 12px/1 Manrope, sans-serif;
+  color: var(--ink);
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.cd-btn-view:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.vt {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.vt span,
+.vt button {
+  width: 34px;
+  height: 30px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: var(--soft);
+  cursor: pointer;
+  color: var(--mute);
+  border: 0;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.vt .on,
+.vt button.on {
+  background: linear-gradient(135deg, var(--p1), var(--p2));
+  color: #fff;
+}
+
+.gr.ls {
+  grid-template-columns: 1fr;
+}
+
+/* Multi-column Detail Grids */
+.k2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.k3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 768px) {
+  .k2, .k3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 4 Grid Cards Layout for Subjects */
+.portal-app .gr-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 16px;
+}
+
+@media (max-width: 1440px) {
+  .portal-app .gr-4 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 1060px) {
+  .portal-app .gr-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .portal-app .gr-4 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.portal-app .gr-4.ls {
+  grid-template-columns: 1fr !important;
+}
+
+.portal-app .cd-meta {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.portal-app .cd-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+}

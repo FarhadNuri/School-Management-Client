@@ -1,6 +1,6 @@
 # School Management - Client Portal
 
-A modern, role-driven web application for Northfield Academy, serving **Guardians**, **Students**, and **Teachers** through a unified UI architecture built with React and Vite.
+A modern, role-driven web application for Sunrise Model School, serving **Guardians**, **Students**, and **Teachers** through a unified UI architecture built with React and Vite.
 
 ---
 
