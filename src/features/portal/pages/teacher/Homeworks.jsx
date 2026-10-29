@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import SearchBar from '../../components/SearchBar';
 import FilterDropdown from '../../components/FilterDropdown';
+import SubmissionsDetailsModal from '../../components/SubmissionsDetailsModal';
 import FormModal from '../../components/FormModal';
 import FileUpload from '../../components/FileUpload';
 import Skeleton from '../../components/Skeleton';
@@ -39,6 +40,7 @@ export default function TeacherHomeworks() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingHomework, setEditingHomework] = useState(null);
   const [viewingHomework, setViewingHomework] = useState(null);
+  const [submissionsHomeworkId, setSubmissionsHomeworkId] = useState(null);
 
   // Form fields
   const [formTitle, setFormTitle] = useState('');
@@ -537,11 +539,11 @@ export default function TeacherHomeworks() {
                     )}
                   </div>
 
-                  {/* Responsive Action Buttons (Same as Attendance cards) */}
+                  {/* Responsive Action Buttons: Row 1 = View Details & Edit, Row 2 = Submissions */}
                   <div
                     style={{
                       display: 'flex',
-                      alignItems: 'center',
+                      flexDirection: 'column',
                       gap: '8px',
                       paddingTop: '14px',
                       borderTop: '1px solid var(--line)',
@@ -549,63 +551,107 @@ export default function TeacherHomeworks() {
                       boxSizing: 'border-box'
                     }}
                   >
-                    <button
-                      type="button"
-                      className="att-card-btn-give"
-                      onClick={() => setViewingHomework(hw)}
-                      style={{
-                        flex: '1 1 0',
-                        minWidth: 0,
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                        height: '38px',
-                        padding: '0 8px',
-                        borderRadius: '10px',
-                        fontSize: '12px',
-                        fontWeight: 700,
-                        background: 'linear-gradient(135deg, #14B8A6, #0D9488)',
-                        color: '#FFFFFF',
-                        border: 'none',
-                        cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(20, 184, 166, 0.25)',
-                        transition: 'all 0.15s ease',
-                        whiteSpace: 'nowrap',
-                        boxSizing: 'border-box'
-                      }}
-                    >
-                      <Eye size={14} style={{ flexShrink: 0 }} />
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>View Details</span>
-                    </button>
+                    {/* Row 1: View Details & Edit */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
+                      <button
+                        type="button"
+                        className="att-card-btn-give"
+                        onClick={() => setViewingHomework(hw)}
+                        style={{
+                          flex: '1 1 0',
+                          minWidth: 0,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                          height: '38px',
+                          padding: '0 12px',
+                          borderRadius: '10px',
+                          fontSize: '12.5px',
+                          fontWeight: 700,
+                          background: 'linear-gradient(135deg, #14B8A6, #0D9488)',
+                          color: '#FFFFFF',
+                          border: 'none',
+                          cursor: 'pointer',
+                          boxShadow: '0 2px 8px rgba(20, 184, 166, 0.25)',
+                          transition: 'all 0.15s ease',
+                          whiteSpace: 'nowrap',
+                          boxSizing: 'border-box'
+                        }}
+                      >
+                        <Eye size={14} style={{ flexShrink: 0 }} />
+                        <span>View Details</span>
+                      </button>
 
+                      <button
+                        type="button"
+                        className="att-card-btn-view"
+                        onClick={() => handleOpenEdit(hw)}
+                        style={{
+                          flex: '1 1 0',
+                          minWidth: 0,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                          height: '38px',
+                          padding: '0 12px',
+                          borderRadius: '10px',
+                          fontSize: '12.5px',
+                          fontWeight: 700,
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          color: '#F8FAFC',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                          whiteSpace: 'nowrap',
+                          boxSizing: 'border-box'
+                        }}
+                      >
+                        <Edit3 size={14} style={{ flexShrink: 0 }} />
+                        <span>Edit</span>
+                      </button>
+                    </div>
+
+                    {/* Row 2: Submissions Button (Below View Details & Edit) */}
                     <button
                       type="button"
-                      className="att-card-btn-view"
-                      onClick={() => handleOpenEdit(hw)}
+                      onClick={() => setSubmissionsHomeworkId(hw.id || hw._id)}
                       style={{
-                        flex: '1 1 0',
-                        minWidth: 0,
+                        width: '100%',
                         display: 'inline-flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '6px',
                         height: '38px',
-                        padding: '0 8px',
+                        padding: '0 12px',
                         borderRadius: '10px',
-                        fontSize: '12px',
+                        fontSize: '12.5px',
                         fontWeight: 700,
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        color: '#F8FAFC',
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        background: 'rgba(20, 184, 166, 0.12)',
+                        color: '#2DD4BF',
+                        border: '1px solid rgba(45, 212, 191, 0.28)',
                         cursor: 'pointer',
                         transition: 'all 0.15s ease',
                         whiteSpace: 'nowrap',
                         boxSizing: 'border-box'
                       }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(20, 184, 166, 0.12)';
+                        e.currentTarget.style.borderColor = 'rgba(45, 212, 191, 0.5)';
+                        e.currentTarget.style.color = '#FFFFFF';
+                        e.currentTarget.style.boxShadow = '0 2px 10px rgba(20, 184, 166, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(20, 184, 166, 0.05)';
+                        e.currentTarget.style.borderColor = 'rgba(45, 212, 191, 0.28)';
+                        e.currentTarget.style.color = '#2DD4BF';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                      title="View student submissions for this assignment"
                     >
-                      <Edit3 size={14} style={{ flexShrink: 0 }} />
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>Edit</span>
+                      <Users size={14} style={{ flexShrink: 0 }} />
+                      <span>View Submissions</span>
                     </button>
                   </div>
                 </div>
@@ -614,6 +660,14 @@ export default function TeacherHomeworks() {
           )}
         </>
       )}
+
+      {/* SUBMISSIONS OVERVIEW MODAL */}
+      <SubmissionsDetailsModal
+        homeworkId={submissionsHomeworkId}
+        isOpen={Boolean(submissionsHomeworkId)}
+        onClose={() => setSubmissionsHomeworkId(null)}
+        role="teacher"
+      />
 
       {/* VIEW DETAILS MODAL - EXECUTIVE PROFESSIONAL REDESIGN */}
       {viewingHomework && (
@@ -817,7 +871,7 @@ export default function TeacherHomeworks() {
                     {viewingHomework.materials.map((mat, i) => {
                       const url = typeof mat === 'string' ? mat : mat.url;
                       let name = typeof mat === 'string' ? (mat.split('/').pop() || 'Attachment') : (mat.name || mat.url?.split('/').pop() || 'Attachment');
-                try { name = decodeURIComponent(name); } catch {}
+                      try { name = decodeURIComponent(name); } catch { }
                       return (
                         <a
                           key={i}
@@ -1145,7 +1199,7 @@ export default function TeacherHomeworks() {
                     {editingHomework.materials.map((m, i) => {
                       const url = typeof m === 'string' ? m : m.url;
                       let name = typeof m === 'string' ? (m.split('/').pop() || 'Attachment') : (m.name || 'Attachment');
-                      try { name = decodeURIComponent(name); } catch {}
+                      try { name = decodeURIComponent(name); } catch { }
                       return (
                         <a
                           key={i}
