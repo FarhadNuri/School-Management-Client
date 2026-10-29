@@ -3,7 +3,7 @@ export const topStripContent = {
 };
 
 export const headerContent = {
-  brand: "Northfield",
+  brand: "Sunrise",
   links: ["About", "Programs", "Activities", "Contact", "Login"],
   ctaText: "Enroll now"
 };
@@ -179,7 +179,7 @@ export const ctaBandContent = {
 };
 
 export const footerContent = {
-  brand: "Northfield Academy",
+  brand: "Sunrise Model School",
   description: "Nurturing curious minds from primary to higher secondary.",
   columns: [
     {
@@ -192,8 +192,8 @@ export const footerContent = {
     },
     {
       title: "Contact",
-      links: ["hello@northfield.edu", "+000 000 0000", "Login"]
+      links: ["hello@sunrise.edu", "+000 000 0000", "Login"]
     }
   ],
-  copyright: "© 2026 Northfield Academy. All rights reserved."
+  copyright: "© 2026 Sunrise Model School. All rights reserved."
 };

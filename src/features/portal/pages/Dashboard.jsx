@@ -89,28 +89,30 @@ export default function Dashboard() {
   );
   const { data: attendanceData } = useAttendanceLessons({ enabled: isTeacher });
 
-  // ==================== STUDENT QUERIES ====================
+  // ==================== STUDENT / GUARDIAN QUERIES ====================
+  const isStudentOrGuardian = isStudent || isGuardian;
+
   const {
     data: studentMaterialsData,
     isLoading: isLoadingStudentMaterials,
     isError: isStudentMaterialsError,
     refetch: refetchStudentMaterials
-  } = useStudentMaterials({}, { enabled: isStudent });
+  } = useStudentMaterials({}, { enabled: isStudentOrGuardian });
 
   const {
     data: studentHomeworksData,
     isLoading: isLoadingStudentHomeworks
-  } = useStudentHomeworks({}, { enabled: isStudent });
+  } = useStudentHomeworks({}, { enabled: isStudentOrGuardian });
 
   const {
     data: studentAttendanceData,
     isLoading: isLoadingStudentAttendance
-  } = useStudentAttendance({}, { enabled: isStudent });
+  } = useStudentAttendance({}, { enabled: isStudentOrGuardian });
 
   const {
     data: studentAttendanceSummaryData,
     isLoading: isLoadingStudentAttendanceSummary
-  } = useStudentAttendanceSummary({ enabled: isStudent });
+  } = useStudentAttendanceSummary({ enabled: isStudentOrGuardian });
 
   // Parse first name from session user
   const displayName = user.name ? user.name.split(' ')[0] : 'there';
@@ -130,29 +132,109 @@ export default function Dashboard() {
   }, [homeworksData]);
   const gradebooksCount = gradebooksData?.count ?? gradebooksData?.gradebooks?.length ?? 0;
 
-  // Student derived values
+  // Student & Guardian derived values
   const studentMaterialsList = studentMaterialsData?.materials || studentMaterialsData?.lessons || [];
-  const studentMaterialsCount = studentMaterialsList.length;
+  const studentMaterialsCount = studentMaterialsData?.count ?? studentMaterialsList.length;
 
-  const studentHomeworksList = studentHomeworksData?.homeworks || [];
-  const pendingStudentHomeworksCount = useMemo(() => {
-    if (!studentHomeworksList.length) return 0;
+  const studentHomeworksList = useMemo(() => {
+    const raw = studentHomeworksData?.homeworks;
+    if (Array.isArray(raw)) return raw;
+    if (Array.isArray(studentHomeworksData?.data)) return studentHomeworksData.data;
+    if (Array.isArray(studentHomeworksData)) return studentHomeworksData;
+    return [];
+  }, [studentHomeworksData]);
+
+  const {
+    totalDueHomeworksCount,
+    activeHomeworksCount,
+    pastDueHomeworksCount,
+    homeworkDueNote
+  } = useMemo(() => {
+    if (!studentHomeworksList.length) {
+      return {
+        totalDueHomeworksCount: 0,
+        activeHomeworksCount: 0,
+        pastDueHomeworksCount: 0,
+        homeworkDueNote: 'All caught up'
+      };
+    }
+
     const startOfToday = new Date().setHours(0, 0, 0, 0);
-    return studentHomeworksList.filter((h) => {
-      if (!h.dueDate) return true;
-      const due = new Date(h.dueDate).getTime();
-      return !isNaN(due) && due >= startOfToday;
-    }).length;
+    let active = 0;
+    let pastDue = 0;
+
+    studentHomeworksList.forEach((h) => {
+      const isSubmitted =
+        h.isSubmitted === true ||
+        h.submitted === true ||
+        h.status?.toLowerCase() === 'submitted' ||
+        h.status?.toLowerCase() === 'completed' ||
+        h.status?.toLowerCase() === 'graded' ||
+        Boolean(h.submission);
+
+      if (isSubmitted) return;
+
+      if (!h.dueDate) {
+        active += 1;
+      } else {
+        const due = new Date(h.dueDate).getTime();
+        if (isNaN(due) || due >= startOfToday) {
+          active += 1;
+        } else {
+          pastDue += 1;
+        }
+      }
+    });
+
+    const totalDue = active + pastDue;
+
+    let note = 'All caught up';
+    if (totalDue > 0) {
+      if (pastDue > 0 && active > 0) {
+        note = `${active} active, ${pastDue} past due`;
+      } else if (pastDue > 0) {
+        note = `${pastDue} assignment${pastDue === 1 ? '' : 's'} past due`;
+      } else {
+        note = `${active} active assignment${active === 1 ? '' : 's'}`;
+      }
+    }
+
+    return {
+      totalDueHomeworksCount: totalDue,
+      activeHomeworksCount: active,
+      pastDueHomeworksCount: pastDue,
+      homeworkDueNote: note
+    };
   }, [studentHomeworksList]);
 
   const studentAttendanceRecords = studentAttendanceData?.attendance || [];
   const studentAttendanceSummary = studentAttendanceSummaryData || {};
-  const studentAttendanceRate =
-    studentAttendanceSummary.rate !== undefined
-      ? studentAttendanceSummary.rate
-      : (studentAttendanceSummary.total > 0
-          ? Math.round(((studentAttendanceSummary.present + (studentAttendanceSummary.late || 0)) / studentAttendanceSummary.total) * 100)
-          : 100);
+  const hasAttendanceSummary = Boolean(
+    studentAttendanceSummary.total !== undefined && studentAttendanceSummary.total > 0
+  );
+
+  const totalAttendanceSessions = hasAttendanceSummary
+    ? studentAttendanceSummary.total
+    : studentAttendanceRecords.length;
+
+  const presentAttendanceSessions = hasAttendanceSummary && studentAttendanceSummary.present !== undefined
+    ? studentAttendanceSummary.present
+    : studentAttendanceRecords.filter((r) => r.status?.toLowerCase() === 'present').length;
+
+  const lateAttendanceSessions = hasAttendanceSummary && studentAttendanceSummary.late !== undefined
+    ? studentAttendanceSummary.late
+    : studentAttendanceRecords.filter((r) => r.status?.toLowerCase() === 'late').length;
+
+  const resolvedAttendanceRate = hasAttendanceSummary && studentAttendanceSummary.rate !== undefined
+    ? studentAttendanceSummary.rate
+    : (totalAttendanceSessions > 0
+        ? Math.round(((presentAttendanceSessions + lateAttendanceSessions) / totalAttendanceSessions) * 100)
+        : 100);
+
+  const resolvedAttendanceNote =
+    totalAttendanceSessions > 0
+      ? `${presentAttendanceSessions} of ${totalAttendanceSessions} sessions`
+      : 'No records yet';
 
   // Today's schedule lessons (Teacher)
   const todayScheduleLessons = useMemo(() => {
@@ -256,7 +338,7 @@ export default function Dashboard() {
             showArrow={true}
           />
           <StatCard
-            label="Materials"
+            label="Total materials"
             value={isLoadingStudentMaterials ? '...' : String(studentMaterialsCount)}
             note="Class learning resources"
             showArrow={true}
@@ -264,16 +346,16 @@ export default function Dashboard() {
           />
           <StatCard
             label="Homework due"
-            value={isLoadingStudentHomeworks ? '...' : String(pendingStudentHomeworksCount)}
-            note={pendingStudentHomeworksCount > 0 ? 'Active assignments' : 'All caught up'}
-            className={pendingStudentHomeworksCount > 0 ? 'ta' : ''}
+            value={isLoadingStudentHomeworks ? '...' : String(totalDueHomeworksCount)}
+            note={homeworkDueNote}
+            className={pastDueHomeworksCount > 0 ? 'ta' : totalDueHomeworksCount > 0 ? 'ta' : ''}
             showArrow={true}
             onClick={() => navigate('/student/homeworks')}
           />
           <StatCard
             label="Attendance"
-            value={isLoadingStudentAttendanceSummary ? '...' : `${studentAttendanceRate}%`}
-            note={`${studentAttendanceSummary?.present || 0} of ${studentAttendanceSummary?.total || 0} sessions`}
+            value={isLoadingStudentAttendance || isLoadingStudentAttendanceSummary ? '...' : `${resolvedAttendanceRate}%`}
+            note={resolvedAttendanceNote}
             showArrow={true}
             onClick={() => navigate('/student/attendance')}
           />
@@ -285,33 +367,40 @@ export default function Dashboard() {
             value={resolvedStat1Value}
             note={resolvedStat1Note}
             showArrow={true}
+            onClick={() => navigate('/guardian/students')}
           />
           <StatCard
-            label="Upcoming lessons"
-            value="1"
-            note="Next 14 days"
+            label="Total materials"
+            value={isLoadingStudentMaterials ? '...' : String(studentMaterialsCount)}
+            note="Class learning resources"
             showArrow={true}
+            onClick={() => navigate('/guardian/materials')}
           />
           <StatCard
             label="Homework due"
-            value="1"
-            note="Looking good"
+            value={isLoadingStudentHomeworks ? '...' : String(totalDueHomeworksCount)}
+            note={homeworkDueNote}
+            className={pastDueHomeworksCount > 0 ? 'ta' : totalDueHomeworksCount > 0 ? 'ta' : ''}
             showArrow={true}
+            onClick={() => navigate('/guardian/homeworks')}
           />
           <StatCard
             label="Attendance"
-            value="0%"
-            note="No records yet"
+            value={isLoadingStudentAttendance || isLoadingStudentAttendanceSummary ? '...' : `${resolvedAttendanceRate}%`}
+            note={resolvedAttendanceNote}
             showArrow={true}
+            onClick={() => navigate('/guardian/attendance')}
           />
         </div>
       )}
 
       <div className="dg">
         {isTeacher ? (
-          <div className="cd">
-            <div className="row" style={{ justifyContent: 'space-between', marginBottom: '8px' }}>
-              <h3 style={{ fontSize: '18px', margin: 0 }}>Today's schedule</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Timetable />
+            <div className="cd">
+              <div className="row" style={{ justifyContent: 'space-between', marginBottom: '8px' }}>
+                <h3 style={{ fontSize: '18px', margin: 0 }}>Today's schedule</h3>
               <span className="tg" style={{ marginLeft: 'auto' }}>
                 {formatDate(new Date())}
               </span>
@@ -362,9 +451,12 @@ export default function Dashboard() {
                 </div>
               ))
             )}
+            </div>
           </div>
         ) : isStudent ? (
-          <div className="cd" style={{ padding: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Timetable />
+            <div className="cd" style={{ padding: '20px' }}>
             {/* Header with Switcher Tabs */}
             <div
               style={{
@@ -607,6 +699,7 @@ export default function Dashboard() {
                 )}
               </div>
             )}
+            </div>
           </div>
         ) : (
           <Timetable />

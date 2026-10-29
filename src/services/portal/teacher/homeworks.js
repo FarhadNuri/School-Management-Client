@@ -92,3 +92,7 @@ export async function updateHomework(id, formDataOrData) {
   });
   return adaptTeacherHomework(raw?.homework || raw);
 }
+
+export async function getTeacherHomeworkSubmissions(id) {
+  return await apiRequest('/teacher/homeworks/' + id + '/submissions');
+}

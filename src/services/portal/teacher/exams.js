@@ -89,9 +89,10 @@ export async function saveExamResults(id, results) {
 }
 
 
-export async function getTeacherGradebook(classId) {
+export async function getTeacherGradebook(classId, params = {}) {
   if (!classId) return null;
-  const raw = await apiRequest(`/teacher/grades/${classId}`);
+  const query = new URLSearchParams(params).toString();
+  const raw = await apiRequest(`/teacher/grades/${classId}${query ? `?${query}` : ''}`);
   return raw;
 }
 

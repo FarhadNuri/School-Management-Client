@@ -14,7 +14,8 @@ import {
   X,
   School,
   PlusCircle,
-  Eye
+  Eye,
+  BookOpen
 } from 'lucide-react';
 import {
   useTeacherClasses,
@@ -48,6 +49,7 @@ const calculateLetterGrade = (obtained, max) => {
 export default function TeacherGrades() {
   // Currently opened section for grade input (null = show sections overview)
   const [selectedSection, setSelectedSection] = useState(null);
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
 
   // Section filter for the cards overview ('all' or specific class ID)
   const [sectionFilterId, setSectionFilterId] = useState('all');
@@ -108,7 +110,7 @@ export default function TeacherGrades() {
     isError,
     error,
     refetch
-  } = useTeacherGradebook(selectedSection?.id);
+  } = useTeacherGradebook(selectedSection?.id, selectedCourseId ? { courseId: selectedCourseId } : {});
 
   const isPublished = Boolean(gradebookData?.isPublished || gradebookData?.status === 'published');
   const saveMutation = useSaveTeacherGradebook();
@@ -118,6 +120,9 @@ export default function TeacherGrades() {
   useEffect(() => {
     if (gradebookData) {
       setAssessments(gradebookData.assessments || []);
+      if (!selectedCourseId && (gradebookData.course?.id || gradebookData.course?._id)) {
+        setSelectedCourseId(gradebookData.course?.id || gradebookData.course?._id);
+      }
 
       const initialScores = {};
       (gradebookData.students || []).forEach((s) => {
@@ -126,7 +131,7 @@ export default function TeacherGrades() {
       setStudentScores(initialScores);
       setHasUnsavedChanges(false);
     }
-  }, [gradebookData]);
+  }, [gradebookData, selectedCourseId]);
 
   const students = useMemo(() => gradebookData?.students || [], [gradebookData?.students]);
 
@@ -276,6 +281,9 @@ export default function TeacherGrades() {
       {
         classId: selectedSection.id,
         data: {
+          courseId: gradebookData?.course?.id || gradebookData?.course?._id || selectedCourseId,
+          subject: gradebookData?.subject || selectedSection.mySubject,
+          courseCode: gradebookData?.courseCode || selectedSection.myCourseCode,
           assessments,
           grades: payloadGrades
         }
@@ -301,6 +309,7 @@ export default function TeacherGrades() {
       }
     }
     setSelectedSection(null);
+    setSelectedCourseId(null);
     setStudentSearch('');
     setHasUnsavedChanges(false);
   };
@@ -358,9 +367,33 @@ export default function TeacherGrades() {
               <span>Back</span>
             </button>
 
-            <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 800, color: 'var(--ink)' }}>
-              {selectedSection.className}
-            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 800, color: 'var(--ink)' }}>
+                {selectedSection.className}
+              </h2>
+              <span
+                style={{
+                  padding: '5px 12px',
+                  borderRadius: '10px',
+                  background: 'rgba(20, 184, 166, 0.12)',
+                  border: '1px solid rgba(20, 184, 166, 0.25)',
+                  color: '#14B8A6',
+                  fontWeight: 800,
+                  fontSize: '13.5px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <BookOpen size={15} />
+                <span>{gradebookData?.subject || selectedSection.mySubject || 'Arts and Culture'}</span>
+                {(gradebookData?.courseCode || selectedSection.myCourseCode) ? (
+                  <span style={{ opacity: 0.85, fontWeight: 700 }}>
+                    ({gradebookData?.courseCode || selectedSection.myCourseCode})
+                  </span>
+                ) : null}
+              </span>
+            </div>
 
             <span
               style={{
@@ -496,6 +529,43 @@ export default function TeacherGrades() {
             )}
           </div>
         </div>
+
+        {/* Assigned Courses Tabs (if teacher teaches multiple courses in this class) */}
+        {gradebookData?.assignedCourses?.length > 1 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--mute)' }}>Grading Subject:</span>
+            {gradebookData.assignedCourses.map((c) => {
+              const cId = String(c.id || c._id);
+              const isSelected = cId === String(selectedCourseId || gradebookData.course?.id || gradebookData.course?._id);
+              return (
+                <button
+                  key={cId}
+                  type="button"
+                  onClick={() => {
+                    if (hasUnsavedChanges && !window.confirm('You have unsaved changes. Discard and switch subject?')) {
+                      return;
+                    }
+                    setSelectedCourseId(cId);
+                    setHasUnsavedChanges(false);
+                  }}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '10px',
+                    border: isSelected ? '1px solid #14B8A6' : '1px solid var(--line)',
+                    background: isSelected ? 'rgba(20, 184, 166, 0.15)' : 'var(--card)',
+                    color: isSelected ? '#14B8A6' : 'var(--ink)',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  {c.courseName} {c.courseCode ? `(${c.courseCode})` : ''}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* Published & Locked Banner */}
         {isPublished && (
@@ -1487,14 +1557,45 @@ export default function TeacherGrades() {
                 </div>
 
                 {/* Class Name */}
-                <h3 style={{ margin: '0 0 6px', fontSize: '19px', fontWeight: 800, color: 'var(--ink)' }}>
+                <h3 style={{ margin: '0 0 4px', fontSize: '19px', fontWeight: 800, color: 'var(--ink)' }}>
                   {section.className}
                 </h3>
+
+                {/* Assigned Subject & Course Code */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      fontSize: '12.5px',
+                      fontWeight: 700,
+                      color: '#14B8A6'
+                    }}
+                  >
+                    <BookOpen size={14} />
+                    <span>{section.mySubject || sectionGb?.subject || 'Arts and Culture'}</span>
+                  </span>
+                  {(section.myCourseCode || sectionGb?.courseCode) && (
+                    <span
+                      style={{
+                        fontSize: '11px',
+                        fontWeight: 800,
+                        padding: '2px 7px',
+                        borderRadius: '6px',
+                        background: 'rgba(20, 184, 166, 0.12)',
+                        color: '#14B8A6'
+                      }}
+                    >
+                      {section.myCourseCode || sectionGb?.courseCode}
+                    </span>
+                  )}
+                </div>
 
                 {/* Enrolled Students Count */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--mute)', fontSize: '13px' }}>
                   <Users size={15} color="#14B8A6" />
-                  <span>{section.studentCount} Students Enrolled</span>
+                  <span>{section.studentCount || (section.students?.length) || 0} Students Enrolled</span>
                 </div>
               </div>
 

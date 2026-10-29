@@ -33,7 +33,7 @@ export function adaptTeacherGuardian(g) {
       id: sId,
       _id: sId,
       name: sName,
-      photo: resolvePhoto(sUser.photo),
+      photo: resolvePhoto(sUser.photo) || '/Student.jpg',
       className: sClass,
       grade: sGrade,
       displayClass: [sClass, sGrade].filter(Boolean).join(' · ')
@@ -50,7 +50,7 @@ export function adaptTeacherGuardian(g) {
     phone,
     altPhone,
     whatsapp,
-    photo: resolvePhoto(user.photo),
+    photo: resolvePhoto(user.photo) || '/Guardians.jpg',
     address,
     students,
     isActive: user.isActive ?? true

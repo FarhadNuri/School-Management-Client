@@ -10,7 +10,7 @@ import {
   GraduationCap,
   Calendar,
   MapPin,
-  User,
+  CreditCard,
   ArrowRight
 } from 'lucide-react';
 
@@ -59,19 +59,18 @@ export default function Students() {
       </div>
 
       {isLoading && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '20px' }}>
           {[1, 2].map((n) => (
-            <div key={n} className="cd" style={{ padding: '22px', gap: '16px' }}>
+            <div key={n} className="cd" style={{ padding: '22px', gap: '16px', borderRadius: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <Skeleton width="56px" height="56px" borderRadius="16px" />
+                <Skeleton width="54px" height="54px" borderRadius="16px" />
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <Skeleton width="160px" height="20px" />
-                  <Skeleton width="100px" height="14px" />
+                  <Skeleton width="100px" height="20px" borderRadius="8px" />
                 </div>
               </div>
-              <Skeleton width="100%" height="60px" borderRadius="14px" />
-              <Skeleton width="100%" height="38px" borderRadius="12px" />
-              <Skeleton width="100%" height="38px" borderRadius="12px" />
+              <Skeleton width="100%" height="130px" borderRadius="16px" />
+              <Skeleton width="100%" height="42px" borderRadius="12px" />
             </div>
           ))}
         </div>
@@ -96,8 +95,12 @@ export default function Students() {
       )}
 
       {!isLoading && !isError && students.length > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '20px' }}>
           {students.map((stu) => {
+            const cleanAdmissionDate = stu.admittedDate && stu.admittedDate !== '—'
+              ? stu.admittedDate.replace(/^Admitted\s+/i, '')
+              : null;
+
             return (
               <div
                 key={stu.id}
@@ -110,35 +113,48 @@ export default function Students() {
                   boxShadow: 'var(--sh)',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '16px'
+                  gap: '16px',
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.borderColor = 'rgba(30, 111, 120, 0.35)';
+                  e.currentTarget.style.boxShadow = '0 10px 24px rgba(15, 59, 68, 0.12)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'var(--line)';
+                  e.currentTarget.style.boxShadow = 'var(--sh)';
                 }}
               >
                 {/* Header Row: Avatar, Student Name, Class & Status */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', minWidth: 0, flex: 1 }}>
                     {stu.photo ? (
                       <img
                         src={stu.photo}
                         alt={stu.name}
                         style={{
-                          width: '56px',
-                          height: '56px',
+                          width: '54px',
+                          height: '54px',
                           borderRadius: '16px',
                           objectFit: 'cover',
                           border: '1px solid var(--line)',
-                          flexShrink: 0
+                          flexShrink: 0,
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.06)'
                         }}
                       />
                     ) : (
                       <div
                         style={{
-                          width: '56px',
-                          height: '56px',
+                          width: '54px',
+                          height: '54px',
                           borderRadius: '16px',
-                          background: 'rgba(30, 111, 120, 0.15)',
-                          border: '1px solid rgba(30, 111, 120, 0.3)',
+                          background: 'linear-gradient(135deg, rgba(30, 111, 120, 0.2), rgba(15, 59, 68, 0.25))',
+                          border: '1.5px solid rgba(30, 111, 120, 0.35)',
                           color: 'var(--p1)',
-                          fontSize: '20px',
+                          fontSize: '22px',
                           fontWeight: 800,
                           display: 'flex',
                           alignItems: 'center',
@@ -150,68 +166,132 @@ export default function Students() {
                       </div>
                     )}
 
-                    <div>
-                      <h3 style={{ margin: '0 0 4px', fontSize: '17px', fontWeight: 800, color: 'var(--ink)' }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <h3
+                        style={{
+                          margin: '0 0 5px',
+                          fontSize: '17px',
+                          fontWeight: 800,
+                          color: 'var(--ink)',
+                          lineHeight: 1.3,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}
+                        title={stu.name}
+                      >
                         {stu.name}
                       </h3>
                       <span
                         style={{
-                          fontSize: '12.5px',
-                          color: 'var(--mute)',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          color: 'var(--p1)',
+                          background: 'rgba(30, 111, 120, 0.12)',
+                          padding: '2.5px 8.5px',
+                          borderRadius: '7px',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '5px'
+                          gap: '5.5px',
+                          width: 'fit-content'
                         }}
                       >
-                        <GraduationCap size={14} style={{ color: 'var(--p1)' }} />
+                        <GraduationCap size={13} style={{ flexShrink: 0 }} />
                         <span>{stu.classGrade && stu.classGrade !== '—' ? stu.classGrade : 'Enrolled Student'}</span>
                       </span>
                     </div>
                   </div>
 
-                  <Tag color={stu.status === 'Active' ? 'g' : 'a'}>
-                    {stu.status}
-                  </Tag>
+                  <div style={{ flexShrink: 0, marginTop: '2px' }}>
+                    <Tag color={stu.status === 'Active' ? 'g' : 'a'}>
+                      {stu.status}
+                    </Tag>
+                  </div>
                 </div>
 
-                {/* Structured Metadata Box */}
+                {/* Structured Key-Value Metadata Box */}
                 <div
                   style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+                    display: 'flex',
+                    flexDirection: 'column',
                     gap: '10px',
-                    padding: '12px 14px',
+                    padding: '13px 15px',
                     borderRadius: '14px',
                     background: 'var(--soft)',
                     border: '1px solid var(--line)',
                     fontSize: '12.5px'
                   }}
                 >
-                  {stu.admittedDate && stu.admittedDate !== '—' && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--mute)' }}>
-                      <Calendar size={13} style={{ color: 'var(--p1)', flexShrink: 0 }} />
-                      <span>Admitted: <b style={{ color: 'var(--ink)', fontWeight: 600 }}>{stu.admittedDate}</b></span>
-                    </div>
-                  )}
-
-                  {stu.city && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--mute)' }}>
-                      <MapPin size={13} style={{ color: 'var(--p1)', flexShrink: 0 }} />
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        <b style={{ color: 'var(--ink)', fontWeight: 600 }}>{stu.city}</b>
+                  {cleanAdmissionDate && (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '7.5px', color: 'var(--mute)', flexShrink: 0 }}>
+                        <Calendar size={13.5} style={{ color: 'var(--p1)', flexShrink: 0 }} />
+                        <span>Admission Date</span>
+                      </div>
+                      <span style={{ fontWeight: 600, color: 'var(--ink)', whiteSpace: 'nowrap' }}>
+                        {cleanAdmissionDate}
                       </span>
                     </div>
                   )}
 
-                  {stu.teacher && stu.teacher !== '—' && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--mute)', gridColumn: 'span 2' }}>
-                      <User size={13} style={{ color: 'var(--p1)', flexShrink: 0 }} />
-                      <span>Teacher: <b style={{ color: 'var(--ink)', fontWeight: 600 }}>{stu.teacher}</b></span>
+                  {stu.city && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                        ...(cleanAdmissionDate ? { borderTop: '1px solid var(--line)', paddingTop: '9px' } : {})
+                      }}
+                    >
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '7.5px', color: 'var(--mute)', flexShrink: 0 }}>
+                        <MapPin size={13.5} style={{ color: 'var(--p1)', flexShrink: 0 }} />
+                        <span>Location</span>
+                      </div>
+                      <span
+                        style={{
+                          fontWeight: 600,
+                          color: 'var(--ink)',
+                          textAlign: 'right',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          maxWidth: '58%'
+                        }}
+                        title={stu.city}
+                      >
+                        {stu.city}
+                      </span>
+                    </div>
+                  )}
+
+                  {stu.paymentInfo && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                        ...((cleanAdmissionDate || stu.city) ? { borderTop: '1px solid var(--line)', paddingTop: '9px' } : {})
+                      }}
+                    >
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '7.5px', color: 'var(--mute)', flexShrink: 0 }}>
+                        <CreditCard size={13.5} style={{ color: 'var(--p1)', flexShrink: 0 }} />
+                        <span>Payment</span>
+                      </div>
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          fontSize: '12px',
+                          color: stu.paymentInfo.color,
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        {stu.paymentInfo.label}
+                      </span>
                     </div>
                   )}
                 </div>
-
-
 
                 {/* Profile Action Button */}
                 <button
@@ -220,21 +300,39 @@ export default function Students() {
                   onClick={() => navigate(`/guardian/students/${stu.id}`)}
                   style={{
                     width: '100%',
-                    height: '38px',
+                    height: '40px',
                     borderRadius: '12px',
                     fontSize: '13px',
                     fontWeight: 700,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '6px',
+                    gap: '7px',
                     marginTop: 'auto',
                     cursor: 'pointer',
-                    transition: 'all 0.15s ease'
+                    background: 'var(--soft)',
+                    border: '1px solid var(--line)',
+                    color: 'var(--ink)',
+                    marginLeft: 0,
+                    transition: 'all 0.18s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'var(--p1)';
+                    e.currentTarget.style.borderColor = 'var(--p1)';
+                    e.currentTarget.style.color = '#FFFFFF';
+                    const arrow = e.currentTarget.querySelector('svg');
+                    if (arrow) arrow.style.transform = 'translateX(4px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'var(--soft)';
+                    e.currentTarget.style.borderColor = 'var(--line)';
+                    e.currentTarget.style.color = 'var(--ink)';
+                    const arrow = e.currentTarget.querySelector('svg');
+                    if (arrow) arrow.style.transform = 'translateX(0)';
                   }}
                 >
                   <span>View Full Profile</span>
-                  <ArrowRight size={14} />
+                  <ArrowRight size={14} style={{ transition: 'transform 0.18s ease' }} />
                 </button>
               </div>
             );

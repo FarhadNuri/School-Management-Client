@@ -53,3 +53,7 @@ export * from './homeworks';
 export * from './attendance';
 
 export * from './grades';
+
+export * from './routine';
+
+export * from './courses';

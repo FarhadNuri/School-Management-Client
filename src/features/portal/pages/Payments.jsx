@@ -460,7 +460,7 @@ export default function Payments() {
         >
           <div className="mc" style={{ width: '560px', maxWidth: '92vw', borderRadius: '24px' }}>
             {/* Modal Header */}
-            <div className="mh">
+            <div className="mh" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
               <div>
                 <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 800 }}>{selectedPayment.title}</h3>
                 <p style={{ margin: '3px 0 0', fontSize: '13px', opacity: 0.85 }}>
@@ -469,11 +469,32 @@ export default function Payments() {
               </div>
               <button
                 type="button"
-                className="close-btn"
                 onClick={() => setSelectedPayment(null)}
                 aria-label="Close modal"
+                title="Close"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  border: 'none',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '10px',
+                  display: 'grid',
+                  placeItems: 'center',
+                  cursor: 'pointer',
+                  color: '#fff',
+                  transition: 'background 0.15s ease, transform 0.15s ease',
+                  flexShrink: 0
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)';
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
               >
-                ×
+                <X size={18} />
               </button>
             </div>
 

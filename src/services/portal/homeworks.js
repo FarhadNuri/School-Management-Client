@@ -14,7 +14,13 @@ export const getStudentHomeworks = async ({ search = '', status = 'all' } = {}) 
     }
   });
 
-  const list = Array.isArray(raw?.homeworks) ? raw.homeworks : [];
+  const list = Array.isArray(raw?.homeworks)
+    ? raw.homeworks
+    : Array.isArray(raw?.data)
+    ? raw.data
+    : Array.isArray(raw)
+    ? raw
+    : [];
   return {
     count: raw?.count ?? list.length,
     homeworks: list
@@ -28,4 +34,16 @@ export const getStudentHomeworkById = async (id) => {
   }
   const raw = await apiRequest(`/user/homeworks/${id}`);
   return raw?.homework || raw || null;
+};
+
+export const submitHomework = async (id, data) => {
+  return await apiRequest('/user/homeworks/' + id + '/submit', {
+    method: 'POST',
+    body: data
+  });
+};
+
+export const getHomeworkSubmissions = async (id, role = 'student') => {
+  const endpoint = role === 'teacher' ? ('/teacher/homeworks/' + id + '/submissions') : ('/user/homeworks/' + id + '/submissions');
+  return await apiRequest(endpoint);
 };

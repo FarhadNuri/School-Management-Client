@@ -42,7 +42,7 @@ export default function Login() {
       <div className="login-card">
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <b style={{ font: "800 24px 'Bricolage Grotesque', serif", color: 'var(--cream)' }}>
-            Northfield
+            Sunrise
           </b>
           <small
             style={{
@@ -52,7 +52,7 @@ export default function Login() {
               color: 'var(--mute)'
             }}
           >
-            ACADEMY
+            MODEL SCHOOL
           </small>
         </div>
 
@@ -148,7 +148,7 @@ export default function Login() {
                 setEmail(e.target.value);
                 setErrorMsg('');
               }}
-              placeholder="user@northfield.edu"
+              placeholder="user@sunrise.edu"
               required
             />
           </div>
@@ -203,7 +203,7 @@ export default function Login() {
               textDecoration: 'none'
             }}
           >
-            ← Back to Northfield Academy Home
+            ← Back to Sunrise Model School Home
           </Link>
         </div>
       </div>

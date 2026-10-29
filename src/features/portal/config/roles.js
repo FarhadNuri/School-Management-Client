@@ -1,4 +1,12 @@
 export const ALL_TABS = {
+  subjects: {
+    id: 'subjects',
+    route: 'subjects',
+    label: 'Subjects',
+    icon: 'subjects',
+    subtitle: 'Curriculum subjects and e-books'
+  },
+
   dashboard: {
     id: 'dashboard',
     route: '',
@@ -99,6 +107,7 @@ export const ROLES = {
     tabIds: [
       'dashboard',
       'students',
+      'subjects',
       'materials',
       'homeworks',
       'grades',
@@ -115,6 +124,7 @@ export const ROLES = {
     label: 'STUDENT',
     tabIds: [
       'dashboard',
+      'subjects',
       'materials',
       'homeworks',
       'grades',
@@ -132,6 +142,7 @@ export const ROLES = {
     tabIds: [
       'dashboard',
       'classes',
+      'subjects',
       'materials',
       'attendance',
       'homeworks',

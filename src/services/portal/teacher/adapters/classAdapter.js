@@ -30,6 +30,9 @@ export function adaptTeacherClass(cls) {
     courses: courseNames,
     courseObjects,
     coursesText: courseNames.length > 0 ? courseNames.join(', ') : '—',
+    mySubject: cls.mySubject || '',
+    myCourseCode: cls.myCourseCode || '',
+    myCourses: cls.myCourses || [],
     coverImage: resolvePhoto(cls.coverImage),
     isActive: cls.isActive ?? true
   };

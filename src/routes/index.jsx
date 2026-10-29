@@ -1,3 +1,5 @@
+import SubjectDetail from '../features/portal/pages/SubjectDetail';
+import Subjects from '../features/portal/pages/Subjects';
 import StudentGrades from '../features/portal/pages/StudentGrades';
 ﻿import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from '../features/landing/LandingPage';
@@ -7,7 +9,7 @@ import RoleGuard from './RoleGuard';
 import PortalLayout from '../features/portal/layout/PortalLayout';
 import Dashboard from '../features/portal/pages/Dashboard';
 import Students from '../features/portal/pages/Students';
-import Lessons from '../features/portal/pages/Lessons';
+import Materials from '../features/portal/pages/Materials';
 import Homeworks from '../features/portal/pages/Homeworks';
 import Exams from '../features/portal/pages/Exams';
 import Attendance from '../features/portal/pages/Attendance';
@@ -60,7 +62,9 @@ export default function AppRoutes() {
             <Route index element={<Dashboard />} />
             <Route path="students" element={<Students />} />
             <Route path="students/:id" element={<StudentProfile />} />
-            <Route path="materials" element={<Lessons />} />
+            <Route path="subjects" element={<Subjects />} />
+            <Route path="subjects/:id" element={<SubjectDetail />} />
+            <Route path="materials" element={<Materials />} />
             <Route path="lessons" element={<Navigate to="/guardian/materials" replace />} />
             <Route path="homeworks" element={<Homeworks />} />
             <Route path="grades" element={<StudentGrades />} />
@@ -79,7 +83,8 @@ export default function AppRoutes() {
             <Route index element={<Dashboard />} />
             {/* If a student opens /student/students or any guardian-only path, redirect to /student */}
             <Route path="students" element={<Navigate to="/student" replace />} />
-            <Route path="materials" element={<Lessons />} />
+            <Route path="subjects" element={<Subjects />} />
+            <Route path="materials" element={<Materials />} />
             <Route path="lessons" element={<Navigate to="/student/materials" replace />} />
             <Route path="homeworks" element={<Homeworks />} />
             <Route path="grades" element={<StudentGrades />} />
@@ -96,6 +101,8 @@ export default function AppRoutes() {
         <Route element={<RoleGuard allowedRole="teacher" />}>
           <Route path="/teacher" element={<PortalLayout />}>
             <Route index element={<Dashboard />} />
+            <Route path="subjects" element={<Subjects />} />
+            <Route path="subjects/:id" element={<SubjectDetail />} />
             <Route path="classes" element={<TeacherClasses />} />
             <Route path="materials" element={<TeacherLessons />} />
             <Route path="lessons" element={<Navigate to="/teacher/materials" replace />} />
