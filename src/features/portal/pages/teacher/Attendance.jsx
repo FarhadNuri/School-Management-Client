@@ -17,7 +17,8 @@ import {
   Loader2,
   ShieldCheck,
   CalendarCheck,
-  Plus
+  Plus,
+  BookOpen
 } from 'lucide-react';
 import {
   useTeacherAttendanceSections,
@@ -344,6 +345,25 @@ export default function TeacherAttendance() {
                 <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#F8FAFC' }}>
                   {selectedSection.className}
                 </h2>
+                {selectedSection.mySubject && (
+                  <span
+                    style={{
+                      padding: '2px 8px',
+                      borderRadius: '6px',
+                      background: 'rgba(20, 184, 166, 0.15)',
+                      color: '#14B8A6',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <BookOpen size={12} />
+                    <span>{selectedSection.mySubject}</span>
+                    {selectedSection.myCourseCode ? ` (${selectedSection.myCourseCode})` : ''}
+                  </span>
+                )}
                 <span
                   style={{
                     padding: '2px 8px',
@@ -930,6 +950,25 @@ export default function TeacherAttendance() {
               <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#F8FAFC' }}>
                 {selectedSection.className}
               </h2>
+              {selectedSection.mySubject && (
+                <span
+                  style={{
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    background: 'rgba(20, 184, 166, 0.15)',
+                    color: '#14B8A6',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  <BookOpen size={12} />
+                  <span>{selectedSection.mySubject}</span>
+                  {selectedSection.myCourseCode ? ` (${selectedSection.myCourseCode})` : ''}
+                </span>
+              )}
               <span
                 style={{
                   padding: '2px 8px',
@@ -1537,6 +1576,47 @@ export default function TeacherAttendance() {
                     {section.academicYear || 'Current Year'}
                   </span>
                 </div>
+
+                {/* Subject Name above Class Name */}
+                {section.mySubject ? (
+                  <div
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      marginBottom: '6px',
+                      flexWrap: 'wrap'
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '12.5px',
+                        fontWeight: 700,
+                        color: '#14B8A6',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px'
+                      }}
+                    >
+                      <BookOpen size={14} />
+                      <span>{section.mySubject}</span>
+                    </span>
+                    {section.myCourseCode && (
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          fontWeight: 800,
+                          padding: '2px 7px',
+                          borderRadius: '6px',
+                          background: 'rgba(20, 184, 166, 0.12)',
+                          color: '#14B8A6'
+                        }}
+                      >
+                        {section.myCourseCode}
+                      </span>
+                    )}
+                  </div>
+                ) : null}
 
                 <h3 style={{ margin: '0 0 6px', fontSize: '18px', fontWeight: 800, color: 'var(--ink)' }}>
                   {section.className}
