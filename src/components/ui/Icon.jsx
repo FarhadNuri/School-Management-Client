@@ -44,6 +44,7 @@ const ICON_MAP = {
   dashboard: LayoutDashboard,
   students: Users,
   lessons: BookOpen,
+  subjects: BookOpen,
   homeworks: FileText,
   exams: Award,
   grades: Award,
