@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { usePortalRole } from '../hooks/usePortalRole';
 import { useStudentMaterials, useDebounce } from '../hooks/usePortalQueries';
 import SearchBar from '../components/SearchBar';
@@ -12,8 +12,8 @@ import {
   Paperclip,
   ExternalLink,
   FileText,
-  FileCheck,
-  FolderOpen
+  Eye,
+  X
 } from 'lucide-react';
 import { formatDate } from '../utils/dateUtils';
 
@@ -30,9 +30,19 @@ const getFileName = (url) => {
 };
 
 export default function Materials() {
-  const { user, flags } = usePortalRole();
+  const { user } = usePortalRole();
   const [searchTerm, setSearchTerm] = useState('');
+  const [viewingMaterial, setViewingMaterial] = useState(null);
   const debouncedSearch = useDebounce(searchTerm, 300);
+
+  // Close modal on Escape
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setViewingMaterial(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const {
     data: materialsData,
@@ -42,7 +52,10 @@ export default function Materials() {
     refetch
   } = useStudentMaterials({ search: debouncedSearch });
 
-  const rawMaterials = materialsData?.materials || materialsData?.lessons || [];
+  const rawMaterials = useMemo(
+    () => materialsData?.materials || materialsData?.lessons || [],
+    [materialsData]
+  );
 
   const filteredMaterials = useMemo(() => {
     if (!debouncedSearch.trim()) return rawMaterials;
@@ -181,7 +194,7 @@ export default function Materials() {
                       }}
                     >
                       <Calendar size={12} />
-                      <span>{formatDate(mat.createdAt || mat.scheduledAt || new Date())}</span>
+                      <span>{formatDate(mat.createdAt || mat.scheduledAt)}</span>
                     </span>
                   </div>
 
@@ -239,19 +252,19 @@ export default function Materials() {
                     )}
                   </div>
 
-                  {/* Notes / Description */}
+                  {/* Notes / Description Snippet */}
                   {(mat.notes || mat.description) && (
                     <p
                       style={{
                         margin: '0 0 12px',
                         fontSize: '13px',
-                        color: 'var(--ink)',
-                        opacity: 0.85,
+                        color: 'var(--mute)',
                         lineHeight: 1.5,
-                        background: 'rgba(255,255,255,0.03)',
-                        padding: '10px 12px',
-                        borderRadius: '10px',
-                        border: '1px solid var(--line)'
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        wordBreak: 'break-word'
                       }}
                     >
                       {mat.notes || mat.description}
@@ -259,76 +272,334 @@ export default function Materials() {
                   )}
                 </div>
 
-                {/* Attachments Section */}
-                <div>
-                  <div
+                {/* Bottom Action Bar: Resource count and View Details Button */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '10px',
+                    paddingTop: '14px',
+                    borderTop: '1px solid var(--line)',
+                    width: '100%',
+                    boxSizing: 'border-box'
+                  }}
+                >
+                  <span
                     style={{
-                      fontSize: '11.5px',
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      color: 'var(--mute)',
-                      marginBottom: '8px',
-                      display: 'flex',
+                      display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '5px'
+                      gap: '5px',
+                      fontSize: '12px',
+                      color: fileList.length > 0 ? '#2DD4BF' : 'var(--mute)',
+                      fontWeight: 600
                     }}
                   >
-                    <Paperclip size={12} />
-                    <span>Attached Resources ({fileList.length})</span>
-                  </div>
+                    <Paperclip size={13} />
+                    <span>{fileList.length} resource{fileList.length === 1 ? '' : 's'}</span>
+                  </span>
 
-                  {fileList.length === 0 ? (
-                    <span style={{ fontSize: '12.5px', color: 'var(--mute)', fontStyle: 'italic' }}>
-                      No downloadable files attached
-                    </span>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      {fileList.map((fileUrl, idx) => {
-                        const name = getFileName(fileUrl);
-                        return (
-                          <a
-                            key={idx}
-                            href={fileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              padding: '8px 12px',
-                              borderRadius: '10px',
-                              background: 'rgba(30,111,120,0.08)',
-                              border: '1px solid rgba(30,111,120,0.2)',
-                              color: 'var(--ink)',
-                              textDecoration: 'none',
-                              fontSize: '12.5px',
-                              fontWeight: 600,
-                              transition: 'all 0.15s ease'
-                            }}
-                          >
-                            <span
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap'
-                              }}
-                            >
-                              <FileText size={15} style={{ color: 'var(--p1)', flexShrink: 0 }} />
-                              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{name}</span>
-                            </span>
-                            <ExternalLink size={14} style={{ color: 'var(--p1)', flexShrink: 0, marginLeft: '8px' }} />
-                          </a>
-                        );
-                      })}
-                    </div>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setViewingMaterial(mat)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      height: '36px',
+                      padding: '0 14px',
+                      borderRadius: '10px',
+                      fontSize: '12.5px',
+                      fontWeight: 700,
+                      background: 'linear-gradient(135deg, #14B8A6, #0D9488)',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 8px rgba(20, 184, 166, 0.25)',
+                      transition: 'all 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(20, 184, 166, 0.35)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(20, 184, 166, 0.25)';
+                    }}
+                  >
+                    <Eye size={14} />
+                    <span>View Details</span>
+                  </button>
                 </div>
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* VIEW DETAILS MODAL - EXECUTIVE PROFESSIONAL DESIGN */}
+      {viewingMaterial && (
+        <div
+          className="md on"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setViewingMaterial(null);
+          }}
+          style={{ zIndex: 100, padding: '16px' }}
+        >
+          <div
+            className="mc no-scrollbar"
+            style={{
+              position: 'relative',
+              width: '640px',
+              maxWidth: '96vw',
+              maxHeight: '90vh',
+              borderRadius: '24px',
+              background: 'var(--card)',
+              border: '1px solid var(--line)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
+              overflowY: 'auto',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            {/* Header with Teal Gradient */}
+            <div
+              style={{
+                background: 'linear-gradient(135deg, var(--p2), var(--p1))',
+                color: '#fff',
+                padding: '22px 24px',
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                borderTopLeftRadius: '24px',
+                borderTopRightRadius: '24px',
+                flexShrink: 0
+              }}
+            >
+              <div style={{ flex: 1, paddingRight: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                  <span
+                    style={{
+                      padding: '3px 10px',
+                      borderRadius: '8px',
+                      background: 'rgba(255, 255, 255, 0.2)',
+                      color: '#FFFFFF',
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      letterSpacing: '0.5px',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    {viewingMaterial.className || user?.className || 'CLASS'}
+                  </span>
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      padding: '3px 10px',
+                      borderRadius: '8px',
+                      background: 'rgba(255, 255, 255, 0.25)',
+                      color: '#FFFFFF',
+                      fontSize: '11px',
+                      fontWeight: 700
+                    }}
+                  >
+                    <BookOpen size={11} />
+                    {viewingMaterial.subject || viewingMaterial.courseName || 'General'}
+                  </span>
+                </div>
+
+                <h3
+                  style={{
+                    margin: '0 0 6px',
+                    fontSize: '20px',
+                    fontWeight: 800,
+                    color: '#fff',
+                    letterSpacing: '-0.01em',
+                    wordBreak: 'break-word'
+                  }}
+                >
+                  {viewingMaterial.title}
+                </h3>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '12px',
+                    color: 'rgba(255,255,255,0.85)',
+                    flexWrap: 'wrap'
+                  }}
+                >
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <Calendar size={13} />
+                    <span>{formatDate(viewingMaterial.createdAt || viewingMaterial.scheduledAt)}</span>
+                  </span>
+                  {viewingMaterial.teacherName && (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <User size={13} />
+                      <span>{viewingMaterial.teacherName}</span>
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setViewingMaterial(null)}
+                title="Close"
+                style={{
+                  background: 'rgba(255,255,255,0.15)',
+                  border: 'none',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '10px',
+                  display: 'grid',
+                  placeItems: 'center',
+                  cursor: 'pointer',
+                  color: '#fff',
+                  transition: 'background 0.15s ease'
+                }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Study Notes & Overview */}
+              <div>
+                <h4 style={{ margin: '0 0 8px', fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--mute)', letterSpacing: '0.5px' }}>
+                  Study Notes & Overview
+                </h4>
+                <div
+                  style={{
+                    padding: '14px 16px',
+                    borderRadius: '14px',
+                    background: 'var(--soft)',
+                    border: '1px solid var(--line)',
+                    fontSize: '13.5px',
+                    lineHeight: 1.6,
+                    color: 'var(--ink)',
+                    whiteSpace: 'pre-wrap'
+                  }}
+                >
+                  {viewingMaterial.notes || viewingMaterial.description || 'No additional notes provided for this study material.'}
+                </div>
+              </div>
+
+              {/* Attachments Section */}
+              <div>
+                <h4 style={{ margin: '0 0 10px', fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--mute)', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Paperclip size={14} />
+                  <span>Attached Study Resources ({(Array.isArray(viewingMaterial.materials) ? viewingMaterial.materials : []).length})</span>
+                </h4>
+
+                {(Array.isArray(viewingMaterial.materials) ? viewingMaterial.materials : []).length === 0 ? (
+                  <p style={{ margin: 0, fontSize: '13px', color: 'var(--mute)', fontStyle: 'italic' }}>
+                    No downloadable files attached to this lesson.
+                  </p>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {(Array.isArray(viewingMaterial.materials) ? viewingMaterial.materials : []).map((fileUrl, idx) => {
+                      const fileName = getFileName(fileUrl);
+                      return (
+                        <div
+                          key={idx}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '12px',
+                            padding: '12px 16px',
+                            borderRadius: '12px',
+                            background: 'var(--soft)',
+                            border: '1px solid var(--line)',
+                            transition: 'border-color 0.15s ease'
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
+                            <FileText size={18} style={{ color: 'var(--p1)', flexShrink: 0 }} />
+                            <span
+                              style={{
+                                fontSize: '13px',
+                                fontWeight: 600,
+                                color: 'var(--ink)',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap'
+                              }}
+                              title={fileName}
+                            >
+                              {fileName}
+                            </span>
+                          </div>
+
+                          <a
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              padding: '6px 14px',
+                              borderRadius: '8px',
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              background: 'var(--card)',
+                              border: '1px solid var(--line)',
+                              color: 'var(--p1)',
+                              textDecoration: 'none',
+                              flexShrink: 0,
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            <span>Open</span>
+                            <ExternalLink size={13} />
+                          </a>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div
+              style={{
+                padding: '16px 24px',
+                borderTop: '1px solid var(--line)',
+                display: 'flex',
+                justifyContent: 'flex-end',
+                background: 'var(--card)',
+                borderBottomLeftRadius: '24px',
+                borderBottomRightRadius: '24px'
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setViewingMaterial(null)}
+                className="ghost"
+                style={{
+                  padding: '8px 20px',
+                  borderRadius: '10px',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  margin: 0
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </>
