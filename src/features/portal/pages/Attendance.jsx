@@ -63,11 +63,22 @@ export default function StudentAttendance() {
   }, [rawRecords, statusFilter, debouncedSearch]);
 
   const summary = summaryData || {};
-  const total = summary.total || rawRecords.length || 0;
-  const present = summary.present || 0;
-  const late = summary.late || 0;
-  const absent = summary.absent || 0;
-  const rate = summary.rate !== undefined ? summary.rate : (total > 0 ? Math.round(((present + late) / total) * 100) : 100);
+  const hasSummaryCounts = Boolean(summary.total !== undefined && summary.total > 0);
+
+  const total = hasSummaryCounts ? summary.total : rawRecords.length;
+  const present = hasSummaryCounts && summary.present !== undefined
+    ? summary.present
+    : rawRecords.filter((r) => r.status?.toLowerCase() === 'present').length;
+  const late = hasSummaryCounts && summary.late !== undefined
+    ? summary.late
+    : rawRecords.filter((r) => r.status?.toLowerCase() === 'late').length;
+  const absent = hasSummaryCounts && summary.absent !== undefined
+    ? summary.absent
+    : rawRecords.filter((r) => r.status?.toLowerCase() === 'absent').length;
+
+  const rate = summary.rate !== undefined && hasSummaryCounts
+    ? summary.rate
+    : (total > 0 ? Math.round(((present + late) / total) * 100) : 100);
 
   return (
     <>
