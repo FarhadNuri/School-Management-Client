@@ -12,7 +12,8 @@ import {
   Phone,
   Mail,
   ShieldCheck,
-  Hash
+  Hash,
+  BookOpen
 } from 'lucide-react';
 import {
   useTeacherClasses,
@@ -262,6 +263,27 @@ export default function TeacherClasses() {
           <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 800, color: 'var(--ink)' }}>
             {cls?.className || 'Class Roster'}
           </h2>
+
+          {cls?.mySubject && (
+            <span
+              style={{
+                padding: '4px 10px',
+                borderRadius: '8px',
+                background: 'rgba(20, 184, 166, 0.12)',
+                border: '1px solid rgba(20, 184, 166, 0.25)',
+                color: '#14B8A6',
+                fontSize: '13px',
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}
+            >
+              <BookOpen size={13} />
+              <span>{cls.mySubject}</span>
+              {cls.myCourseCode ? ` (${cls.myCourseCode})` : ''}
+            </span>
+          )}
 
           <span
             style={{
@@ -555,6 +577,47 @@ export default function TeacherClasses() {
                     </span>
                   </div>
                 </div>
+
+                {/* Assigned Subject above Class Name */}
+                {cls.mySubject ? (
+                  <div
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      marginBottom: '6px',
+                      flexWrap: 'wrap'
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '13px',
+                        fontWeight: 700,
+                        color: '#14B8A6',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px'
+                      }}
+                    >
+                      <BookOpen size={14} />
+                      <span>{cls.mySubject}</span>
+                    </span>
+                    {cls.myCourseCode && (
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          fontWeight: 800,
+                          padding: '2px 7px',
+                          borderRadius: '6px',
+                          background: 'rgba(20, 184, 166, 0.12)',
+                          color: '#14B8A6'
+                        }}
+                      >
+                        {cls.myCourseCode}
+                      </span>
+                    )}
+                  </div>
+                ) : null}
 
                 <h3
                   style={{
