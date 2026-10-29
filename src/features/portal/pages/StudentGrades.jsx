@@ -32,17 +32,17 @@ export default function StudentGrades() {
         <StatCard
           label="OVERALL AVERAGE"
           value={isPublished && overall.percentage !== undefined ? `${overall.percentage}%` : '—'}
-          note={isPublished ? `Grade ${overall.letterGrade || '—'}` : 'Awaiting publication'}
+          note={isPublished ? 'Academic performance' : 'Awaiting publication'}
+        />
+        <StatCard
+          label="LETTER GRADE"
+          value={isPublished && overall.letterGrade ? `Grade ${overall.letterGrade}` : '—'}
+          note={isPublished ? 'Academic standing' : 'Awaiting publication'}
         />
         <StatCard
           label="PUBLISHED SUBJECTS"
           value={isPublished ? String(subjects.length) : '0'}
           note={data?.className || user?.className || 'Enrolled Class'}
-        />
-        <StatCard
-          label="STATUS"
-          value={isPublished ? (overall.percentage >= 50 ? 'Passed' : 'Pending') : 'Under Review'}
-          note={isPublished ? 'Academic standing' : 'Administrative review'}
         />
       </div>
 
@@ -124,21 +124,19 @@ export default function StudentGrades() {
 
                   {/* Clean Assessment Rows Table */}
                   <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13.5px', minWidth: '550px' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13.5px', minWidth: '500px' }}>
                       <thead>
                         <tr style={{ borderBottom: '1px solid var(--line)', color: 'var(--mute)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                           <th style={{ padding: '10px 12px', fontWeight: 700 }}>Assessment</th>
-                          <th style={{ padding: '10px 12px', fontWeight: 700 }}>Type</th>
                           <th style={{ padding: '10px 12px', fontWeight: 700, textAlign: 'right' }}>Max Marks</th>
                           <th style={{ padding: '10px 12px', fontWeight: 700, textAlign: 'right' }}>Score Obtained</th>
                           <th style={{ padding: '10px 12px', fontWeight: 700, textAlign: 'right' }}>Percentage</th>
-                          <th style={{ padding: '10px 12px', fontWeight: 700, textAlign: 'center' }}>Status</th>
                         </tr>
                       </thead>
                       <tbody>
                         {asmts.length === 0 ? (
                           <tr>
-                            <td colSpan={6} style={{ padding: '20px', textAlign: 'center', color: 'var(--mute)' }}>
+                            <td colSpan={4} style={{ padding: '20px', textAlign: 'center', color: 'var(--mute)' }}>
                               No specific assessments recorded for this subject.
                             </td>
                           </tr>
@@ -150,11 +148,6 @@ export default function StudentGrades() {
                                 <td style={{ padding: '12px', fontWeight: 600, color: 'var(--ink)' }}>
                                   {asmt.name}
                                 </td>
-                                <td style={{ padding: '12px' }}>
-                                  <span className="tg" style={{ fontSize: '11px', textTransform: 'capitalize' }}>
-                                    {asmt.type || 'Evaluation'}
-                                  </span>
-                                </td>
                                 <td style={{ padding: '12px', textAlign: 'right', color: 'var(--mute)' }}>
                                   {asmt.maxMarks} pts
                                 </td>
@@ -164,13 +157,6 @@ export default function StudentGrades() {
                                 <td style={{ padding: '12px', textAlign: 'right', fontWeight: 700, color: has ? 'var(--p1)' : 'var(--mute)' }}>
                                   {has ? `${asmt.percentage}%` : '—'}
                                 </td>
-                                <td style={{ padding: '12px', textAlign: 'center' }}>
-                                  {has ? (
-                                    <span className="tg g" style={{ fontSize: '11px' }}>Graded</span>
-                                  ) : (
-                                    <span className="tg" style={{ fontSize: '11px' }}>Pending</span>
-                                  )}
-                                </td>
                               </tr>
                             );
                           })
@@ -178,7 +164,7 @@ export default function StudentGrades() {
                       </tbody>
                       <tfoot>
                         <tr style={{ background: 'var(--soft)', fontWeight: 800 }}>
-                          <td colSpan={2} style={{ padding: '12px', color: 'var(--ink)' }}>
+                          <td style={{ padding: '12px', color: 'var(--ink)' }}>
                             Subject Total
                           </td>
                           <td style={{ padding: '12px', textAlign: 'right', color: 'var(--mute)' }}>
@@ -189,11 +175,6 @@ export default function StudentGrades() {
                           </td>
                           <td style={{ padding: '12px', textAlign: 'right', color: 'var(--p1)' }}>
                             {sub.percentage}%
-                          </td>
-                          <td style={{ padding: '12px', textAlign: 'center' }}>
-                            <Tag color={sub.percentage >= 80 ? 'g' : sub.percentage >= 60 ? 'b' : 'a'}>
-                              {sub.letterGrade}
-                            </Tag>
                           </td>
                         </tr>
                       </tfoot>
