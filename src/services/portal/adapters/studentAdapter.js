@@ -56,7 +56,7 @@ export const adaptStudent = (raw) => {
   const firstName = raw.firstName || raw.user?.firstName || '';
   const lastName = raw.lastName || raw.user?.lastName || '';
   const name = raw.name || [firstName, lastName].filter(Boolean).join(' ') || '—';
-  const photo = resolvePhotoUrl(raw.photo || raw.user?.photo);
+  const photo = resolvePhotoUrl(raw.photo || raw.user?.photo) || '/Student.jpg';
   const status = raw.status || (raw.isActive !== false ? 'Active' : 'Inactive');
 
   const guardianName =
