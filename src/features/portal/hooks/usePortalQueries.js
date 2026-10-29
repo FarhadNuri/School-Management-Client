@@ -1,8 +1,12 @@
+import { getMyCourses, getMyCourseById } from '../../../services/portal/courses';
+import { getMyRoutine } from '../../../services/portal/routine';
 import {
   getStudentMaterials,
   getStudentMaterialById,
   getStudentHomeworks,
   getStudentHomeworkById,
+  submitHomework,
+  getHomeworkSubmissions,
   getStudentAttendance,
   getStudentAttendanceSummary,
   getStudentGrades
@@ -637,10 +641,10 @@ export function useTeacherGradebooks(options = {}) {
   });
 }
 
-export function useTeacherGradebook(classId, options = {}) {
+export function useTeacherGradebook(classId, params = {}, options = {}) {
   return useQuery({
-    queryKey: ['portal', 'teacher', 'gradebook', classId],
-    queryFn: () => getTeacherGradebook(classId),
+    queryKey: ['portal', 'teacher', 'gradebook', classId, params],
+    queryFn: () => getTeacherGradebook(classId, params),
     enabled: Boolean(classId && classId !== 'all'),
     staleTime: 0,
     refetchOnMount: 'always',
@@ -722,5 +726,63 @@ export function useStudentGrades(options = {}) {
     staleTime: 0,
     refetchOnMount: 'always',
     ...options
+  });
+}
+
+export function useMyRoutine(studentId, options = {}) {
+  return useQuery({
+    queryKey: ['my-routine', studentId],
+    queryFn: () => getMyRoutine(studentId),
+    staleTime: 1000 * 30,
+    refetchInterval: 1000 * 60,
+    ...options
+  });
+}
+
+export function useMyCourses(params) {
+  return useQuery({
+    queryKey: ['myCourses', params],
+    queryFn: () => getMyCourses(params),
+  });
+}
+
+export function useMyCourse(id) {
+  return useQuery({
+    queryKey: ['myCourse', id],
+    queryFn: () => getMyCourseById(id),
+    enabled: Boolean(id),
+  });
+}
+
+export function useSubmitHomework(options = {}) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }) => submitHomework(id, data),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['portal', 'student', 'homeworks'] });
+      queryClient.invalidateQueries({ queryKey: ['portal', 'student', 'homework'] });
+      queryClient.invalidateQueries({ queryKey: ['portal', 'homework', 'submissions'] });
+      queryClient.invalidateQueries({ queryKey: ['teacher', 'homeworks'] });
+      queryClient.invalidateQueries({ queryKey: ['teacher', 'homework'] });
+      showToast(data?.message || 'Homework submitted successfully!', 'success');
+      options.onSuccess?.(data, variables);
+    },
+    onError: (err) => {
+      showToast(err?.message || 'Failed to submit homework', 'error');
+      options.onError?.(err);
+    }
+  });
+}
+
+export function useHomeworkSubmissions(id, role = 'student', options = {}) {
+  // If options passed as second arg
+  const actualRole = typeof role === 'string' ? role : 'student';
+  const actualOptions = typeof role === 'object' && role !== null ? role : options;
+
+  return useQuery({
+    queryKey: ['portal', 'homework', 'submissions', id, actualRole],
+    queryFn: () => getHomeworkSubmissions(id, actualRole),
+    enabled: Boolean(id),
+    ...actualOptions
   });
 }
