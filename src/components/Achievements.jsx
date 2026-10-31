@@ -10,7 +10,18 @@ export default function Achievements() {
         </div>
         <div className="bento">
           {achievementsContent.items.map((item, index) => (
-            <div key={index} className={item.className || undefined}>
+            <div
+              key={index}
+              className={[item.className, item.image ? 'has-bg' : ''].filter(Boolean).join(' ')}
+            >
+              {item.image && (
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="bento-bg"
+                  loading="lazy"
+                />
+              )}
               {item.tag && <span className="tg">{item.tag}</span>}
               <b>{item.stat}</b>
               <h3>{item.title}</h3>

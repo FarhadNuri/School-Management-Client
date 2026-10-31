@@ -6,7 +6,7 @@ export default function CtaBand() {
     <div className="cta">
       <div className="w">
         <h2>{ctaBandContent.heading}</h2>
-        <Button>{ctaBandContent.ctaText}</Button>
+        <Button href="/contact">{ctaBandContent.ctaText}</Button>
       </div>
     </div>
   );

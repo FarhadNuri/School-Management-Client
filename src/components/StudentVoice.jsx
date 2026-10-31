@@ -3,7 +3,7 @@ import Button from './Button';
 
 export default function StudentVoice() {
   return (
-    <section className="cm">
+    <section className="cm dark">
       <div className="w">
         <div>
           <span className="eb">{studentVoiceContent.eyebrow}</span>
@@ -15,8 +15,22 @@ export default function StudentVoice() {
           <Button>{studentVoiceContent.ctaText}</Button>
         </div>
         <div className="pp">
-          <i className="p1"></i>
-          <i className="p2"></i>
+          <div className="p1">
+            <img
+              src="/first.jpg"
+              alt="Adesua graduate alumna"
+              className="pp-img pp-img1"
+              loading="lazy"
+            />
+          </div>
+          <div className="p2">
+            <img
+              src="/second.jpg"
+              alt="Adesua graduate student"
+              className="pp-img pp-img2"
+              loading="lazy"
+            />
+          </div>
         </div>
       </div>
     </section>

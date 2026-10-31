@@ -2,7 +2,7 @@ import { stepsContent } from '../data/content';
 
 export default function Steps() {
   return (
-    <section>
+    <section className="camp">
       <div className="w">
         <div className="sh">
           <h2>{stepsContent.heading}</h2>
