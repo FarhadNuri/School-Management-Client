@@ -1,4 +1,4 @@
-# School Management - Client Portal
+# Sunrise Model School - Client Portal
 
 A modern, role-driven web application for Sunrise Model School, serving **Guardians**, **Students**, and **Teachers** through a unified UI architecture built with React and Vite.
 
@@ -6,8 +6,7 @@ A modern, role-driven web application for Sunrise Model School, serving **Guardi
 
 ## Features
 
-- **Unified Role Architecture**: Guardians, Students, and Teachers share core layouts, styling, and navigation components. Access, tabs, and permissions are dynamically controlled via centralized role configurations (`roles.js`).
-- **Dynamic Time-Aware Dashboard**: Greeting message dynamically adapts based on time of day (`GOOD MORNING` before 12:00 PM, `GOOD AFTERNOON` from 12:00 PM to 6:00 PM, and `GOOD EVENING` after 6:00 PM).
+- **Unified Role Architecture**: Guardians, Students, and Teachers share core layouts, styling, and navigation components. Access, tabs, and permissions are dynamically controlled via centralized role configurations.
 - **Teacher Portal**: Manage assigned classes and rosters, take attendance roll call, upload study materials, create and evaluate homework, delete assignments, update gradebook marks, and browse parent/guardian contact info.
 - **Guardian Portal**: Monitor linked children, track attendance and grades, view study materials, inspect student homework submissions (`ViewSubmissionModal`), and settle fee invoices online (`canPay: true`).
 - **Student Portal**: Access personalized timetables, download coursework and study materials, submit homework files and links, track grades and attendance, and file complaints.
@@ -18,19 +17,6 @@ A modern, role-driven web application for Sunrise Model School, serving **Guardi
   - Submissions are restricted strictly to students (hidden from guardians).
   - Guardians see a "Submitted" status badge and can open the **View Submission** modal to inspect submitted attachments and student notes.
   - Teachers have full homework deletion controls with confirmation.
-- **Theme Engine (Dark & Light Mode)**:
-  - Persistent theme toggle in TopBar matching admin portal color palette (`dark` default across all dashboards).
-  - Landing pages locked to dark mode.
-  - High-contrast button styles in both dark and light modes.
-- **User Profile & Photo Upload**:
-  - Students, teachers, and guardians can change their profile image with live avatar sync (`PATCH /api/user/me/photo`).
-  - Account modal featuring clean scrollbar-free UX and password change functionality.
-- **Reactive Unread Announcements**:
-  - TopBar megaphone icon shows dynamic unread announcement badge.
-  - Opening or viewing notices reactively decrements the unread counter per user.
-- **Portal & Landing Header Synchronization**:
-  - Top-left sidebar logo in portal navigates back to the landing page (`/`).
-  - Landing page header detects authenticated sessions and renders a circular avatar profile button with dropdown options to return to the **Dashboard** (role-specific) or **Logout** (clears session and restores standard "Enroll now" & "Login" buttons).
 - **Role & Route Guards**: Strict client-side route protection (`AuthGuard`, `RoleGuard`) ensuring authenticated sessions and preventing cross-role route access.
 - **Fast Data Synchronization**: Server-state management powered by TanStack Query with modular API services and data adapters.
 
