@@ -243,9 +243,9 @@ export default function FormModal({
                 borderRadius: '12px',
                 fontSize: '13px',
                 fontWeight: 600,
-                background: 'rgba(255, 255, 255, 0.05)',
-                color: '#F8FAFC',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                background: 'var(--soft)',
+                color: 'var(--ink)',
+                border: '1px solid var(--line)',
                 opacity: isSubmitting ? 0.6 : 1,
                 cursor: isSubmitting ? 'not-allowed' : 'pointer',
                 transition: 'all 0.15s ease'
