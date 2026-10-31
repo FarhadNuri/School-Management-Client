@@ -6,7 +6,7 @@ export const getMyCourses = async ({ classId = '', studentId = '' } = {}) => {
   if (classId) params.classId = classId;
   if (studentId) params.studentId = studentId;
 
-  const raw = await apiRequest('/user/courses', { params });
+  const raw = await apiRequest('/academics/user/courses', { params });
   return {
     count: raw?.count ?? (raw?.courses?.length || 0),
     courses: Array.isArray(raw?.courses) ? raw.courses : [],
@@ -15,6 +15,6 @@ export const getMyCourses = async ({ classId = '', studentId = '' } = {}) => {
 };
 
 export const getMyCourseById = async (id) => {
-  const raw = await apiRequest(`/user/courses/${id}`);
+  const raw = await apiRequest(`/academics/user/courses/${id}`);
   return raw?.course || raw;
 };
