@@ -1,5 +1,43 @@
-/* Shared brand tokens (Landing) */
+/* Shared brand tokens (Landing - always Dark Mode) */
 :root {
+  --ink: #0A1C24;
+  --deep: #0F3B44;
+  --lag: #1E6F78;
+  --lag2: #2B8791;
+  --acc: #F59E6C;
+  --cream: #F6F1E7;
+  --sand: #E7C9A3;
+  --text: #F6F1E7;
+  --mute: #B9CCCB;
+  --line: #23424b;
+  --sh: none;
+
+  /* Default Admin & Portal Tokens (Dark Mode) */
+  --bg: #071419;
+  --card: #0F2A33;
+  --soft: #14323C;
+  --p1: #1E6F78;
+  --p2: #0F3B44;
+  --grad-primary: linear-gradient(135deg, var(--p1), var(--p2));
+  --grad-banner: linear-gradient(120deg, var(--p2), var(--p1));
+  --logout-red: #C0392B;
+
+  /* Prefixed Portal Tokens (Default Dark) */
+  --g-bg: #071419;
+  --g-card: #0F2A33;
+  --g-ink: #F6F1E7;
+  --g-mute: #9DB5B5;
+  --g-line: #1F3E47;
+  --g-soft: #14323C;
+  --g-p1: #1E6F78;
+  --g-p2: #0F3B44;
+  --g-acc: #F59E6C;
+  --g-sh: none;
+}
+
+/* Landing pages always stay dark regardless of global data-theme */
+:root[data-theme="dark"],
+:root[data-theme="light"] {
   --ink: #0A1C24;
   --deep: #0F3B44;
   --lag: #1E6F78;
@@ -12,20 +50,60 @@
   --line: #23424b;
 }
 
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --ink: #FBF8F2;
-    --deep: #E3EEEB;
-    --text: #0A1C24;
-    --mute: #41606a;
-    --line: #cbd9d6;
-  }
+/* Portal / Dashboard Dark Theme (matches admin dark theme) */
+.portal-app,
+.portal-app[data-theme="dark"],
+:root[data-theme="dark"] .portal-app {
+  --bg: #071419;
+  --card: #0F2A33;
+  --ink: #F6F1E7;
+  --mute: #9DB5B5;
+  --line: #1F3E47;
+  --soft: #14323C;
+  --p1: #1E6F78;
+  --p2: #0F3B44;
+  --acc: #F59E6C;
+  --lag2: #2B8791;
+  --sand: #E7C9A3;
+  --sh: none;
+  --grad-primary: linear-gradient(135deg, var(--p1), var(--p2));
+  --grad-banner: linear-gradient(120deg, var(--p2), var(--p1));
+  --logout-red: #C0392B;
+
+  --g-bg: #071419;
+  --g-card: #0F2A33;
+  --g-ink: #F6F1E7;
+  --g-mute: #9DB5B5;
+  --g-line: #1F3E47;
+  --g-soft: #14323C;
+  --g-p1: #1E6F78;
+  --g-p2: #0F3B44;
+  --g-acc: #F59E6C;
+  --g-sh: none;
+
+  background: var(--bg);
+  color: var(--ink);
 }
 
-/* Shared Portal Tokens (Guardian & Student, prefixed --g-) */
-:root,
-.portal-app,
-.guardian-app {
+/* Portal / Dashboard Light Theme (matches admin light theme) */
+.portal-app[data-theme="light"],
+:root[data-theme="light"] .portal-app {
+  --bg: #E8F0EE;
+  --card: #FFFFFF;
+  --ink: #0A1C24;
+  --mute: #60797F;
+  --line: #E3ECEA;
+  --soft: #F1F6F5;
+  --p1: #1E6F78;
+  --p2: #0F3B44;
+  --acc: #F59E6C;
+  --lag2: #2B8791;
+  --sand: #E7C9A3;
+  --sh: 0 6px 20px rgba(15, 59, 68, 0.07);
+  --grad-primary: linear-gradient(135deg, var(--p1), var(--p2));
+  --grad-banner: linear-gradient(120deg, var(--p2), var(--p1));
+  --logout-red: #C0392B;
+
   --g-bg: #E8F0EE;
   --g-card: #FFFFFF;
   --g-ink: #0A1C24;
@@ -36,18 +114,7 @@
   --g-p2: #0F3B44;
   --g-acc: #F59E6C;
   --g-sh: 0 6px 20px rgba(15, 59, 68, 0.07);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root,
-  .portal-app,
-  .guardian-app {
-    --g-bg: #071419;
-    --g-card: #0F2A33;
-    --g-ink: #F6F1E7;
-    --g-mute: #9DB5B5;
-    --g-line: #1F3E47;
-    --g-soft: #14323C;
-    --g-sh: none;
-  }
+  background: var(--bg);
+  color: var(--ink);
 }
