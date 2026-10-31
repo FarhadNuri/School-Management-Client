@@ -47,7 +47,7 @@ export async function getTeacherHomeworks() {
     return { count: 0, homeworks: [] };
   }
 
-  const raw = await apiRequest('/teacher/homeworks');
+  const raw = await apiRequest('/academics/teacher/homeworks');
   const list = Array.isArray(raw?.homeworks) ? raw.homeworks.map(adaptTeacherHomework) : [];
   return {
     count: raw?.count ?? list.length,
@@ -57,7 +57,7 @@ export async function getTeacherHomeworks() {
 
 export async function getTeacherHomework(id) {
   if (!LIVE_TEACHER.homeworks) return null;
-  const raw = await apiRequest(`/teacher/homeworks/${id}`);
+  const raw = await apiRequest(`/academics/teacher/homeworks/${id}`);
   return adaptTeacherHomework(raw?.homework || raw);
 }
 
@@ -66,11 +66,11 @@ export async function createHomework(formDataOrData) {
 
   if (formDataOrData instanceof FormData) {
     const files = formDataOrData.getAll('materials');
-    const raw = await sendFormDataWithFieldFallback('/teacher/homeworks', 'POST', formDataOrData, files);
+    const raw = await sendFormDataWithFieldFallback('/academics/teacher/homeworks', 'POST', formDataOrData, files);
     return adaptTeacherHomework(raw?.homework || raw);
   }
 
-  const raw = await apiRequest('/teacher/homeworks', {
+  const raw = await apiRequest('/academics/teacher/homeworks', {
     method: 'POST',
     body: formDataOrData
   });
@@ -82,11 +82,11 @@ export async function updateHomework(id, formDataOrData) {
 
   if (formDataOrData instanceof FormData) {
     const files = formDataOrData.getAll('materials');
-    const raw = await sendFormDataWithFieldFallback(`/teacher/homeworks/${id}`, 'PATCH', formDataOrData, files);
+    const raw = await sendFormDataWithFieldFallback(`/academics/teacher/homeworks/${id}`, 'PATCH', formDataOrData, files);
     return adaptTeacherHomework(raw?.homework || raw);
   }
 
-  const raw = await apiRequest(`/teacher/homeworks/${id}`, {
+  const raw = await apiRequest(`/academics/teacher/homeworks/${id}`, {
     method: 'PATCH',
     body: formDataOrData
   });
@@ -94,13 +94,12 @@ export async function updateHomework(id, formDataOrData) {
 }
 
 export async function getTeacherHomeworkSubmissions(id) {
-  return await apiRequest('/teacher/homeworks/' + id + '/submissions');
+  return await apiRequest('/academics/teacher/homeworks/' + id + '/submissions');
 }
 
 export async function deleteHomework(id) {
   if (!LIVE_TEACHER.homeworks) return { success: true };
-  return await apiRequest(`/teacher/homeworks/${id}`, {
+  return await apiRequest(`/academics/teacher/homeworks/${id}`, {
     method: 'DELETE'
   });
 }
-
