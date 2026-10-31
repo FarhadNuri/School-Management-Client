@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from './components/ui/Toast';
+import ScrollToTop from './components/ScrollToTop';
 import AppRoutes from './routes';
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <AppRoutes />
         </BrowserRouter>
       </ToastProvider>

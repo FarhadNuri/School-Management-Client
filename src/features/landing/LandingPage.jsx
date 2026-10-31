@@ -2,7 +2,6 @@ import TopStrip from '../../components/TopStrip';
 import Header from '../../components/Header';
 import Hero from '../../components/Hero';
 import Achievements from '../../components/Achievements';
-import Campuses from '../../components/Campuses';
 import Steps from '../../components/Steps';
 import StudentVoice from '../../components/StudentVoice';
 import Testimonials from '../../components/Testimonials';
@@ -16,7 +15,6 @@ export default function LandingPage() {
       <Header />
       <Hero />
       <Achievements />
-      <Campuses />
       <Steps />
       <StudentVoice />
       <Testimonials />
