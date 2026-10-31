@@ -7,6 +7,7 @@ import FileUpload from '../../components/FileUpload';
 import Skeleton from '../../components/Skeleton';
 import EmptyState from '../../components/EmptyState';
 import ErrorRetry from '../../components/ErrorRetry';
+import ConfirmModal from '../../components/ConfirmModal';
 import {
   Calendar,
   BookOpen,
@@ -14,6 +15,7 @@ import {
   Paperclip,
   Eye,
   Edit3,
+  Trash2,
   X,
   FileText,
   ExternalLink,
@@ -26,6 +28,7 @@ import {
   useTeacherCourses,
   useCreateHomework,
   useUpdateHomework,
+  useDeleteHomework,
   useDebounce
 } from '../../hooks/usePortalQueries';
 import { getTodayDateString, formatDate } from '../../utils/dateUtils';
@@ -41,6 +44,7 @@ export default function TeacherHomeworks() {
   const [editingHomework, setEditingHomework] = useState(null);
   const [viewingHomework, setViewingHomework] = useState(null);
   const [submissionsHomeworkId, setSubmissionsHomeworkId] = useState(null);
+  const [deletingHomeworkId, setDeletingHomeworkId] = useState(null);
 
   // Form fields
   const [formTitle, setFormTitle] = useState('');
@@ -79,6 +83,7 @@ export default function TeacherHomeworks() {
 
   const createMutation = useCreateHomework();
   const updateMutation = useUpdateHomework();
+  const deleteMutation = useDeleteHomework();
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
   const myClasses = classesData?.classes || [];
@@ -206,6 +211,19 @@ export default function TeacherHomeworks() {
       setIsFormOpen(false);
     } catch {
       // Handled by toast
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deletingHomeworkId) return;
+    try {
+      await deleteMutation.mutateAsync(deletingHomeworkId);
+      if (viewingHomework && (viewingHomework.id === deletingHomeworkId || viewingHomework._id === deletingHomeworkId)) {
+        setViewingHomework(null);
+      }
+      setDeletingHomeworkId(null);
+    } catch {
+      // Toast handled by mutation
     }
   };
 
@@ -498,7 +516,7 @@ export default function TeacherHomeworks() {
                           alignItems: 'center',
                           gap: '5px',
                           fontWeight: 600,
-                          color: '#F8FAFC'
+                          color: 'var(--ink)'
                         }}
                       >
                         <BookOpen size={14} style={{ color: 'var(--p1)' }} />
@@ -588,7 +606,7 @@ export default function TeacherHomeworks() {
                         className="att-card-btn-view"
                         onClick={() => handleOpenEdit(hw)}
                         style={{
-                          flex: '1 1 0',
+                          flex: '0 0 auto',
                           minWidth: 0,
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -599,9 +617,9 @@ export default function TeacherHomeworks() {
                           borderRadius: '10px',
                           fontSize: '12.5px',
                           fontWeight: 700,
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          color: '#F8FAFC',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          background: 'var(--soft)',
+                          color: 'var(--ink)',
+                          border: '1px solid var(--line)',
                           cursor: 'pointer',
                           transition: 'all 0.15s ease',
                           whiteSpace: 'nowrap',
@@ -611,11 +629,48 @@ export default function TeacherHomeworks() {
                         <Edit3 size={14} style={{ flexShrink: 0 }} />
                         <span>Edit</span>
                       </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setDeletingHomeworkId(hw.id || hw._id)}
+                        style={{
+                          flex: '0 0 auto',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '5px',
+                          height: '38px',
+                          padding: '0 12px',
+                          borderRadius: '10px',
+                          fontSize: '12.5px',
+                          fontWeight: 700,
+                          background: 'rgba(239, 68, 68, 0.08)',
+                          color: '#EF4444',
+                          border: '1px solid rgba(239, 68, 68, 0.22)',
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                          whiteSpace: 'nowrap',
+                          boxSizing: 'border-box'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.18)';
+                          e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.45)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)';
+                          e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.22)';
+                        }}
+                        title="Delete Homework"
+                      >
+                        <Trash2 size={14} style={{ flexShrink: 0 }} />
+                        <span>Delete</span>
+                      </button>
                     </div>
 
                     {/* Row 2: Submissions Button (Below View Details & Edit) */}
                     <button
                       type="button"
+                      className="hw-btn-submissions"
                       onClick={() => setSubmissionsHomeworkId(hw.id || hw._id)}
                       style={{
                         width: '100%',
@@ -628,25 +683,9 @@ export default function TeacherHomeworks() {
                         borderRadius: '10px',
                         fontSize: '12.5px',
                         fontWeight: 700,
-                        background: 'rgba(20, 184, 166, 0.12)',
-                        color: '#2DD4BF',
-                        border: '1px solid rgba(45, 212, 191, 0.28)',
                         cursor: 'pointer',
-                        transition: 'all 0.15s ease',
                         whiteSpace: 'nowrap',
                         boxSizing: 'border-box'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'rgba(20, 184, 166, 0.12)';
-                        e.currentTarget.style.borderColor = 'rgba(45, 212, 191, 0.5)';
-                        e.currentTarget.style.color = '#FFFFFF';
-                        e.currentTarget.style.boxShadow = '0 2px 10px rgba(20, 184, 166, 0.2)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(20, 184, 166, 0.05)';
-                        e.currentTarget.style.borderColor = 'rgba(45, 212, 191, 0.28)';
-                        e.currentTarget.style.color = '#2DD4BF';
-                        e.currentTarget.style.boxShadow = 'none';
                       }}
                       title="View student submissions for this assignment"
                     >
@@ -796,7 +835,7 @@ export default function TeacherHomeworks() {
                   <span style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: 'var(--mute)', textTransform: 'uppercase', marginBottom: '4px' }}>
                     Section / Class
                   </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', fontWeight: 700, color: '#F8FAFC' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', fontWeight: 700, color: 'var(--ink)' }}>
                     <Users size={15} style={{ color: 'var(--p1)' }} />
                     <span>{viewingHomework.className || 'General'}</span>
                   </div>
@@ -806,14 +845,14 @@ export default function TeacherHomeworks() {
                   style={{
                     padding: '12px 14px',
                     borderRadius: '12px',
-                    background: 'rgba(255,255,255,0.03)',
+                    background: 'var(--soft)',
                     border: '1px solid var(--line)'
                   }}
                 >
                   <span style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: 'var(--mute)', textTransform: 'uppercase', marginBottom: '4px' }}>
                     Subject
                   </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', fontWeight: 700, color: '#F8FAFC' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', fontWeight: 700, color: 'var(--ink)' }}>
                     <BookOpen size={15} style={{ color: 'var(--p1)' }} />
                     <span>{viewingHomework.subject || 'All Subjects'}</span>
                   </div>
@@ -847,10 +886,10 @@ export default function TeacherHomeworks() {
                   style={{
                     padding: '14px 16px',
                     borderRadius: '12px',
-                    background: 'rgba(255,255,255,0.025)',
+                    background: 'var(--soft)',
                     border: '1px solid var(--line)',
                     fontSize: '13.5px',
-                    color: viewingHomework.instructions ? '#F8FAFC' : 'var(--mute)',
+                    color: viewingHomework.instructions ? 'var(--ink)' : 'var(--mute)',
                     lineHeight: 1.6,
                     whiteSpace: 'pre-wrap'
                   }}
@@ -884,9 +923,9 @@ export default function TeacherHomeworks() {
                             justifyContent: 'space-between',
                             padding: '10px 14px',
                             borderRadius: '12px',
-                            background: 'rgba(255,255,255,0.04)',
+                            background: 'var(--soft)',
                             border: '1px solid var(--line)',
-                            color: '#F8FAFC',
+                            color: 'var(--ink)',
                             textDecoration: 'none',
                             transition: 'all 0.15s ease'
                           }}
@@ -933,7 +972,7 @@ export default function TeacherHomeworks() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'flex-end',
+                justifyContent: 'space-between',
                 gap: '12px',
                 padding: '14px 24px',
                 background: 'rgba(255,255,255,0.02)',
@@ -942,45 +981,80 @@ export default function TeacherHomeworks() {
             >
               <button
                 type="button"
-                onClick={() => setViewingHomework(null)}
-                style={{
-                  padding: '9px 18px',
-                  borderRadius: '10px',
-                  background: 'rgba(255,255,255,0.05)',
-                  color: '#F8FAFC',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                Close
-              </button>
-              <button
-                type="button"
                 onClick={() => {
-                  const hw = viewingHomework;
-                  setViewingHomework(null);
-                  handleOpenEdit(hw);
+                  const id = viewingHomework.id || viewingHomework._id;
+                  setDeletingHomeworkId(id);
                 }}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '9px 20px',
+                  padding: '9px 16px',
                   borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #14B8A6, #0D9488)',
-                  color: '#FFFFFF',
-                  border: 'none',
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  color: '#EF4444',
+                  border: '1px solid rgba(239, 68, 68, 0.22)',
                   fontSize: '13px',
-                  fontWeight: 700,
+                  fontWeight: 600,
                   cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(20, 184, 166, 0.25)'
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.18)';
+                  e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.45)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.22)';
                 }}
               >
-                <Edit3 size={14} />
-                <span>Edit Assignment</span>
+                <Trash2 size={14} />
+                <span>Delete Assignment</span>
               </button>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <button
+                  type="button"
+                  onClick={() => setViewingHomework(null)}
+                  style={{
+                    padding: '9px 18px',
+                    borderRadius: '10px',
+                    background: 'var(--soft)',
+                    color: 'var(--ink)',
+                    border: '1px solid var(--line)',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const hw = viewingHomework;
+                    setViewingHomework(null);
+                    handleOpenEdit(hw);
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '9px 20px',
+                    borderRadius: '10px',
+                    background: 'linear-gradient(135deg, #14B8A6, #0D9488)',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(20, 184, 166, 0.25)'
+                  }}
+                >
+                  <Edit3 size={14} />
+                  <span>Edit Assignment</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1245,6 +1319,21 @@ export default function TeacherHomeworks() {
             </div>
           </div>
         </FormModal>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deletingHomeworkId && (
+        <ConfirmModal
+          isOpen={Boolean(deletingHomeworkId)}
+          onClose={() => setDeletingHomeworkId(null)}
+          onCancel={() => setDeletingHomeworkId(null)}
+          onConfirm={handleDeleteConfirm}
+          title="Delete Homework"
+          message="Are you sure you want to delete this homework? Attached materials will be permanently removed and students will no longer see this assignment."
+          confirmText="Delete Homework"
+          confirmVariant="danger"
+          isLoading={deleteMutation.isPending}
+        />
       )}
     </div>
   );

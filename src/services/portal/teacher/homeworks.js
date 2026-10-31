@@ -96,3 +96,11 @@ export async function updateHomework(id, formDataOrData) {
 export async function getTeacherHomeworkSubmissions(id) {
   return await apiRequest('/teacher/homeworks/' + id + '/submissions');
 }
+
+export async function deleteHomework(id) {
+  if (!LIVE_TEACHER.homeworks) return { success: true };
+  return await apiRequest(`/teacher/homeworks/${id}`, {
+    method: 'DELETE'
+  });
+}
+
