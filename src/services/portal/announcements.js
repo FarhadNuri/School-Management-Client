@@ -21,7 +21,7 @@ export const getAnnouncements = async ({ search = '', category = '', severity = 
     return adaptAnnouncementsList({ count: list.length, announcements: list });
   }
 
-  const raw = await apiRequest('/user/announcements', {
+  const raw = await apiRequest('/communication/user/announcements', {
     params: {
       search: search?.trim() || undefined,
       category: category && category !== 'all' ? category.toLowerCase().trim() : undefined,
@@ -49,14 +49,14 @@ export const createAnnouncement = async (data) => {
   }
 
   try {
-    const res = await apiRequest('/teacher/announcements', {
+    const res = await apiRequest('/communication/teacher/announcements', {
       method: 'POST',
       body
     });
     return res;
   } catch (err) {
     if (err.status === 404) {
-      const fallback = await apiRequest('/admin/announcements', {
+      const fallback = await apiRequest('/communication/admin/announcements', {
         method: 'POST',
         body
       });
@@ -84,14 +84,14 @@ export const updateAnnouncement = async (id, data) => {
   }
 
   try {
-    const res = await apiRequest(`/teacher/announcements/${id}`, {
+    const res = await apiRequest(`/communication/teacher/announcements/${id}`, {
       method: 'PATCH',
       body
     });
     return res;
   } catch (err) {
     if (err.status === 404) {
-      const fallback = await apiRequest(`/admin/announcements/${id}`, {
+      const fallback = await apiRequest(`/communication/admin/announcements/${id}`, {
         method: 'PATCH',
         body
       });
@@ -103,13 +103,13 @@ export const updateAnnouncement = async (id, data) => {
 
 export const deleteAnnouncement = async (id) => {
   try {
-    const res = await apiRequest(`/teacher/announcements/${id}`, {
+    const res = await apiRequest(`/communication/teacher/announcements/${id}`, {
       method: 'DELETE'
     });
     return res;
   } catch (err) {
     if (err.status === 404) {
-      const fallback = await apiRequest(`/admin/announcements/${id}`, {
+      const fallback = await apiRequest(`/communication/admin/announcements/${id}`, {
         method: 'DELETE'
       });
       return fallback;
