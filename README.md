@@ -4,21 +4,53 @@ A modern, role-driven web application for Sunrise Model School, serving **Guardi
 
 ---
 
-## Features
+## Key Features
 
-- **Unified Role Architecture**: Guardians, Students, and Teachers share core layouts, styling, and navigation components. Access, tabs, and permissions are dynamically controlled via centralized role configurations.
-- **Teacher Portal**: Manage assigned classes and rosters, take attendance roll call, upload study materials, create and evaluate homework, delete assignments, update gradebook marks, and browse parent/guardian contact info.
-- **Guardian Portal**: Monitor linked children, track attendance and grades, view study materials, inspect student homework submissions (`ViewSubmissionModal`), and settle fee invoices online (`canPay: true`).
-- **Student Portal**: Access personalized timetables, download coursework and study materials, submit homework files and links, track grades and attendance, and file complaints.
-- **Payments & Stripe Receipts**:
-  - Before payment, view and download the pending invoice with amount due.
-  - After payment, view and download the official Stripe receipt detailing payment history (payment method, date paid, amount paid, and receipt number).
+- **Modular Microservice API Routing**: Client services are decoupled into domain-driven endpoint modules (`/auth`, `/communication`, `/academics`, `/billing`, `/grading`) matching the backend microservice architecture.
+- **Unified Role System**: Guardians, Students, and Teachers share core layouts, styling, and navigation primitives. Access, navigation tabs, and actions are dynamically controlled via centralized capability flags.
+- **Academic Grades & Assessment**:
+  - Comprehensive gradebook management for teachers with multi-course tab switching, subject badges, term assessments, and score logging.
+  - Transparent academic reports for students and guardians detailing subject marks, term GPA summaries, grading scales, and instructor feedback.
+- **Attendance & Roll Call Management**:
+  - Interactive daily roll call logging for teachers per class session, supporting real-time status updates (`present`, `absent`, `late`, `excused`) and monthly attendance overview grids.
+  - Visual presence tracking for students and guardians featuring attendance percentage rings, historical logs, and absence breakdown records.
+- **Curriculum Study Materials & E-Books**:
+  - Centralized study materials repository allowing teachers to upload lesson notes, study guides, and multimedia attachments.
+  - Integrated digital e-book reader and curriculum syllabus viewer for students and guardians with quick document downloads and category filtering.
+- **Announcements & Incident Complaints**:
+  - **School Announcements**: Targeted bulletin broadcasts for students, guardians, and teachers with category/severity filtering and a dynamic unread counter badge in the TopBar that decrements reactively when notices are viewed.
+  - **Incident Grievances & Follow-Up**: Structured complaint filing system with evidence uploads (`FormData` photo attachments), categorized incident classifications, witness declarations, and end-to-end lifecycle tracking.
+- **Payment & Stripe Receipt Workflow**:
+  - Unpaid invoices render the pending balance and due date with online settlement capability (`canPay: true`).
+  - Paid invoices render the official Stripe receipt detailing transaction history (payment method, date paid, amount paid, and receipt number).
 - **Homework Workflow**:
   - Submissions are restricted strictly to students (hidden from guardians).
-  - Guardians see a "Submitted" status badge and can open the **View Submission** modal to inspect submitted attachments and student notes.
-  - Teachers have full homework deletion controls with confirmation.
-- **Role & Route Guards**: Strict client-side route protection (`AuthGuard`, `RoleGuard`) ensuring authenticated sessions and preventing cross-role route access.
-- **Fast Data Synchronization**: Server-state management powered by TanStack Query with modular API services and data adapters.
+  - Guardians view a "Submitted" status badge and can inspect student submissions (files, attachments, notes) via the **View Submission** modal.
+  - Teachers have full homework creation, review, and deletion controls.
+- **Client Route Guards**: Strict route protection via `AuthGuard` and `RoleGuard` ensuring authenticated sessions and preventing cross-role route access.
+- **Server State & Data Adapters**: TanStack Query server-state caching layered on top of resilient adapters that insulate views from upstream payload variations.
+
+---
+
+## Modular API Architecture
+
+The application communicates with backend services through clean domain namespaces under `src/services/portal/`:
+
+| Domain | Base Prefix | Service Files | Responsibilities |
+|---|---|---|---|
+| **Authentication** | `/auth/user` | `account.js` | User login, session verification (`/me`), password changes, profile photo updates |
+| **Communication** | `/communication` | `announcements.js`<br>`complaints.js` | School-wide and role-targeted notices, incident reports, grievance follow-ups |
+| **Academics (Student/Guardian)** | `/academics/user` | `attendance.js`<br>`courses.js`<br>`homeworks.js`<br>`lessons.js`<br>`routine.js`<br>`students.js` | Course materials, student rosters, personal attendance summaries, class timetable, homework submissions |
+| **Academics (Teacher)** | `/academics/teacher` | `teacher/attendance.js`<br>`teacher/classes.js`<br>`teacher/exams.js`<br>`teacher/guardians.js`<br>`teacher/homeworks.js`<br>`teacher/lessons.js` | Roll call management, class rosters, homework assignment creation/deletion, syllabus material uploads, gradebook entries, guardian directory |
+| **Billing & Payments** | `/billing/user` | `payments.js` | Fee invoice history, student payment statements, Stripe online checkout |
+| **Grading** | `/grading/user` | `grades.js` | Academic marks, term report cards, GPA transcripts |
+
+### Data Adapter Layer
+Raw backend responses pass through data adapters (`src/services/portal/adapters/` and `src/services/portal/teacher/adapters/`) before reaching UI components. This ensures:
+- Safe fallback values for nullable database fields.
+- Normalization of entity identifiers (`id`, `_id`).
+- Consistent date/time parsing and formatting.
+- Shielding UI components from backend schema modifications.
 
 ---
 
@@ -143,7 +175,10 @@ src/
 │       ├── hooks/      # usePortalRole, useTheme, useUnreadAnnouncements, usePortalQueries
 │       └── pages/      # Portal views (teacher/, student, guardian)
 ├── routes/          # Router configuration and guards (AuthGuard, RoleGuard)
-├── services/        # API clients, teacher/student/guardian endpoints & adapters
+├── services/        # Modular API clients, domain endpoints & data adapters
+│   └── portal/
+│       ├── adapters/   # Normalization adapters for student & guardian payloads
+│       └── teacher/    # Teacher-specific services and adapters
 └── styles/          # Global CSS tokens (tokens.css), portal styles (portal.css), index.css
 ```
 
@@ -152,3 +187,5 @@ src/
 ## Role Configuration
 
 All role differences and capabilities are centralized in `src/features/portal/config/roles.js`. Instead of scattering role conditions across UI components, views query capability flags (e.g. `canTakeAttendance`, `canManageMaterials`, `canPay`, `canCreateAnnouncement`) through the `usePortalRole` hook.
+
+---
