@@ -39,13 +39,18 @@ export const adaptPayment = (raw) => {
       ? raw.stripeHostedInvoiceUrl || raw.checkoutUrl || raw.payUrl || null
       : null;
 
-  // Official receipt or Stripe hosted invoice link for paid invoices
-  const receiptUrl =
-    raw.receiptUrl ||
+  // Invoice PDF link (shows amount due and itemization)
+  const invoicePdf =
+    raw.invoicePdf ||
     raw.stripeInvoicePdf ||
     raw.stripeHostedInvoiceUrl ||
     raw.hostedInvoiceUrl ||
     null;
+
+  // Official Stripe payment receipt URL (with payment history, receipt number, card details)
+  const receiptUrl =
+    raw.receiptUrl ||
+    (status === 'paid' ? (raw.stripeHostedInvoiceUrl || raw.hostedInvoiceUrl || raw.stripeInvoicePdf || null) : null);
 
   const invoiceNumber = id.slice(-8);
 
@@ -95,6 +100,8 @@ export const adaptPayment = (raw) => {
     issuedDate,
     payUrl,
     receiptUrl,
+    invoicePdf,
+    stripeHostedInvoiceUrl: raw.stripeHostedInvoiceUrl || raw.hostedInvoiceUrl || null,
     invoiceNumber,
     studentName,
     guardianName,
