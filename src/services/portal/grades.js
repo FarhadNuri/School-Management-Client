@@ -1,6 +1,6 @@
 import apiRequest from '../api';
 
 export const getStudentGrades = async () => {
-  const raw = await apiRequest('/user/grades');
+  const raw = await apiRequest('/grading/user/grades');
   return raw;
 };

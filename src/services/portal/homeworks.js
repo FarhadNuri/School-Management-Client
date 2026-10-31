@@ -7,7 +7,7 @@ export const getStudentHomeworks = async ({ search = '', status = 'all' } = {}) 
     return { count: mockHomeworks.length, homeworks: mockHomeworks };
   }
 
-  const raw = await apiRequest('/user/homeworks', {
+  const raw = await apiRequest('/academics/user/homeworks', {
     params: {
       search: search?.trim() || undefined,
       status: status && status !== 'all' ? status : undefined
@@ -32,18 +32,18 @@ export const getStudentHomeworkById = async (id) => {
     const found = mockHomeworks.find((h) => String(h.id) === String(id));
     return found || null;
   }
-  const raw = await apiRequest(`/user/homeworks/${id}`);
+  const raw = await apiRequest(`/academics/user/homeworks/${id}`);
   return raw?.homework || raw || null;
 };
 
 export const submitHomework = async (id, data) => {
-  return await apiRequest('/user/homeworks/' + id + '/submit', {
+  return await apiRequest('/academics/user/homeworks/' + id + '/submit', {
     method: 'POST',
     body: data
   });
 };
 
 export const getHomeworkSubmissions = async (id, role = 'student') => {
-  const endpoint = role === 'teacher' ? ('/teacher/homeworks/' + id + '/submissions') : ('/user/homeworks/' + id + '/submissions');
+  const endpoint = role === 'teacher' ? ('/academics/teacher/homeworks/' + id + '/submissions') : ('/academics/user/homeworks/' + id + '/submissions');
   return await apiRequest(endpoint);
 };

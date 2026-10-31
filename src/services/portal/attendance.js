@@ -7,7 +7,7 @@ export const getStudentAttendance = async ({ status = 'all', startDate, endDate 
     return { count: 0, attendance: [] };
   }
 
-  const raw = await apiRequest('/user/attendance', {
+  const raw = await apiRequest('/academics/user/attendance', {
     params: {
       status: status && status !== 'all' ? status : undefined,
       startDate: startDate || undefined,
@@ -35,7 +35,7 @@ export const getStudentAttendanceSummary = async () => {
     };
   }
 
-  const raw = await apiRequest('/user/attendance/summary');
+  const raw = await apiRequest('/academics/user/attendance/summary');
   return raw?.summary || raw || {
     total: 0,
     present: 0,

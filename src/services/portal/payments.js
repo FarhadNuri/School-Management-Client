@@ -17,7 +17,7 @@ export const getPayments = async ({ search = '' } = {}) => {
     };
   }
 
-  const raw = await apiRequest('/user/payments', {
+  const raw = await apiRequest('/billing/user/payments', {
     params: { search: search?.trim() || undefined }
   });
 

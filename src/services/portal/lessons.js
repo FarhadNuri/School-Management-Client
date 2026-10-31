@@ -7,7 +7,7 @@ export const getStudentMaterials = async ({ search = '', courseId = '' } = {}) =
     return { count: mockLessons.length, lessons: mockLessons, materials: mockLessons };
   }
 
-  const raw = await apiRequest('/user/lessons', {
+  const raw = await apiRequest('/academics/user/lessons', {
     params: {
       search: search?.trim() || undefined,
       courseId: courseId && courseId !== 'all' ? courseId : undefined
@@ -27,6 +27,6 @@ export const getStudentMaterialById = async (id) => {
     const found = mockLessons.find((l) => String(l.id) === String(id));
     return found || null;
   }
-  const raw = await apiRequest(`/user/lessons/${id}`);
+  const raw = await apiRequest(`/academics/user/lessons/${id}`);
   return raw?.lesson || raw || null;
 };

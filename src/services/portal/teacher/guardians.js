@@ -7,7 +7,7 @@ export async function getTeacherGuardians({ search = '', isActive } = {}) {
     return { count: 0, guardians: [] };
   }
 
-  const raw = await apiRequest('/teacher/guardians', {
+  const raw = await apiRequest('/academics/teacher/guardians', {
     params: {
       search: search?.trim() || undefined,
       isActive: typeof isActive === 'boolean' ? isActive : undefined
@@ -23,6 +23,6 @@ export async function getTeacherGuardians({ search = '', isActive } = {}) {
 
 export async function getTeacherGuardian(id) {
   if (!LIVE_TEACHER.guardians) return null;
-  const raw = await apiRequest(`/teacher/guardians/${id}`);
+  const raw = await apiRequest(`/academics/teacher/guardians/${id}`);
   return adaptTeacherGuardian(raw?.guardian || raw);
 }

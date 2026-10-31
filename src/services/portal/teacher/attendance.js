@@ -1,4 +1,4 @@
-﻿import apiRequest from '../../api';
+import apiRequest from '../../api';
 import { LIVE_TEACHER } from '../sources';
 import { adaptAttendanceLesson, adaptRosterItem } from './adapters/attendanceAdapter';
 import { adaptTeacherLesson } from './adapters/lessonAdapter';
@@ -7,7 +7,7 @@ export async function getTeacherAttendanceSections() {
   if (!LIVE_TEACHER.attendance) {
     return { count: 0, sections: [] };
   }
-  const raw = await apiRequest('/teacher/attendance/sections');
+  const raw = await apiRequest('/academics/teacher/attendance/sections');
   return {
     count: raw?.count ?? (raw?.sections?.length || 0),
     sections: raw?.sections || []
@@ -18,7 +18,7 @@ export async function getSectionMonthlyAttendance(classId, year, month) {
   if (!LIVE_TEACHER.attendance || !classId) {
     return null;
   }
-  const raw = await apiRequest(`/teacher/attendance/sections/${classId}/monthly`, {
+  const raw = await apiRequest(`/academics/teacher/attendance/sections/${classId}/monthly`, {
     params: { year, month }
   });
   return raw;
@@ -28,7 +28,7 @@ export async function getSectionDailyAttendance(classId, date) {
   if (!LIVE_TEACHER.attendance || !classId || !date) {
     return null;
   }
-  const raw = await apiRequest(`/teacher/attendance/sections/${classId}/date/${date}`);
+  const raw = await apiRequest(`/academics/teacher/attendance/sections/${classId}/date/${date}`);
   const roster = Array.isArray(raw?.roster) ? raw.roster.map(adaptRosterItem) : [];
 
   return {
@@ -51,7 +51,7 @@ export async function getSectionDailyAttendance(classId, date) {
 
 export async function saveSectionDailyAttendance(classId, date, records) {
   if (!LIVE_TEACHER.attendance) return { success: true };
-  const raw = await apiRequest(`/teacher/attendance/sections/${classId}/date/${date}`, {
+  const raw = await apiRequest(`/academics/teacher/attendance/sections/${classId}/date/${date}`, {
     method: 'PUT',
     body: { records }
   });
@@ -64,7 +64,7 @@ export async function getAttendanceLessons() {
     return { count: 0, lessons: [] };
   }
 
-  const raw = await apiRequest('/teacher/attendance/lessons');
+  const raw = await apiRequest('/academics/teacher/attendance/lessons');
   const list = Array.isArray(raw?.lessons) ? raw.lessons.map(adaptAttendanceLesson) : [];
   return {
     count: raw?.count ?? list.length,
@@ -74,7 +74,7 @@ export async function getAttendanceLessons() {
 
 export async function getLessonRoster(lessonId) {
   if (!LIVE_TEACHER.attendance) return null;
-  const raw = await apiRequest(`/teacher/attendance/lessons/${lessonId}`);
+  const raw = await apiRequest(`/academics/teacher/attendance/lessons/${lessonId}`);
 
   const lesson = adaptTeacherLesson(raw?.lesson);
   const roster = Array.isArray(raw?.roster) ? raw.roster.map(adaptRosterItem) : [];
@@ -98,7 +98,7 @@ export async function getLessonRoster(lessonId) {
 
 export async function saveRollCall(lessonId, records) {
   if (!LIVE_TEACHER.attendance) return { success: true };
-  const raw = await apiRequest(`/teacher/attendance/lessons/${lessonId}`, {
+  const raw = await apiRequest(`/academics/teacher/attendance/lessons/${lessonId}`, {
     method: 'PUT',
     body: { records }
   });

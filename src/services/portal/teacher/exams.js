@@ -14,7 +14,7 @@ export async function getTeacherExams({
     return { count: 0, exams: [] };
   }
 
-  const raw = await apiRequest('/teacher/exams', {
+  const raw = await apiRequest('/grading/teacher/exams', {
     params: {
       classId: classId && classId !== 'all' ? classId : undefined,
       examType: examType && examType !== 'all' ? examType : undefined,
@@ -34,7 +34,7 @@ export async function getTeacherExams({
 
 export async function getTeacherExam(id) {
   if (!LIVE_TEACHER.exams) return null;
-  const raw = await apiRequest(`/teacher/exams/${id}`);
+  const raw = await apiRequest(`/grading/teacher/exams/${id}`);
   const exam = adaptTeacherExam(raw?.exam || raw);
   const totalMarks = exam?.totalMarks || 0;
   const passingMarks = exam?.passingMarks || 0;
@@ -63,7 +63,7 @@ export async function getTeacherExam(id) {
 
 export async function createExam(examData) {
   if (!LIVE_TEACHER.exams) return { success: true };
-  const raw = await apiRequest('/teacher/exams', {
+  const raw = await apiRequest('/grading/teacher/exams', {
     method: 'POST',
     body: examData
   });
@@ -72,7 +72,7 @@ export async function createExam(examData) {
 
 export async function updateExam(id, examData) {
   if (!LIVE_TEACHER.exams) return { success: true };
-  const raw = await apiRequest(`/teacher/exams/${id}`, {
+  const raw = await apiRequest(`/grading/teacher/exams/${id}`, {
     method: 'PATCH',
     body: examData
   });
@@ -81,24 +81,23 @@ export async function updateExam(id, examData) {
 
 export async function saveExamResults(id, results) {
   if (!LIVE_TEACHER.exams) return { success: true };
-  const raw = await apiRequest(`/teacher/exams/${id}/results`, {
+  const raw = await apiRequest(`/grading/teacher/exams/${id}/results`, {
     method: 'PUT',
     body: { results }
   });
   return raw;
 }
 
-
 export async function getTeacherGradebook(classId, params = {}) {
   if (!classId) return null;
   const query = new URLSearchParams(params).toString();
-  const raw = await apiRequest(`/teacher/grades/${classId}${query ? `?${query}` : ''}`);
+  const raw = await apiRequest(`/grading/teacher/grades/${classId}${query ? `?${query}` : ''}`);
   return raw;
 }
 
 export async function saveTeacherGradebook(classId, data) {
   if (!classId) return null;
-  const raw = await apiRequest(`/teacher/grades/${classId}`, {
+  const raw = await apiRequest(`/grading/teacher/grades/${classId}`, {
     method: 'PUT',
     body: data
   });
@@ -106,6 +105,6 @@ export async function saveTeacherGradebook(classId, data) {
 }
 
 export async function getTeacherGradebooks() {
-  const raw = await apiRequest('/teacher/grades');
+  const raw = await apiRequest('/grading/teacher/grades');
   return raw;
 }
