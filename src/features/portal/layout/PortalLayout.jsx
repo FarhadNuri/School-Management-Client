@@ -2,9 +2,15 @@ import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
+import { useTheme } from '../hooks/useTheme';
 
 export default function PortalLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', resolvedTheme);
+  }, [resolvedTheme]);
 
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
@@ -15,7 +21,7 @@ export default function PortalLayout() {
   }, []);
 
   return (
-    <div className="portal-app app">
+    <div className="portal-app app" data-theme={resolvedTheme}>
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}

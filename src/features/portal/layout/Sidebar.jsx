@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import Logo from '../../../components/ui/Logo';
 import Icon from '../../../components/ui/Icon';
 import { usePortalRole } from '../hooks/usePortalRole';
@@ -13,7 +13,14 @@ export default function Sidebar({ isOpen, onClose }) {
 
   return (
     <aside className={`sb ${isOpen ? 'open' : ''}`.trim()} id="sb">
-      <Logo />
+      <Link
+        to="/"
+        className="sidebar-brand-link"
+        title="Go to landing page"
+        onClick={onClose}
+      >
+        <Logo />
+      </Link>
       <div id="nv">
         {tabs.map((tab) => (
           <NavLink

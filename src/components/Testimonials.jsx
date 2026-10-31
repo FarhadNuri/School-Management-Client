@@ -41,7 +41,7 @@ export default function Testimonials() {
   }, [updateScrollButtons]);
 
   return (
-    <section>
+    <section className="camp">
       <div className="w">
         <div className="sh">
           <h2>{testimonialsContent.heading}</h2>

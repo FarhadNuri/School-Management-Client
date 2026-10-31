@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <defs>
+    <!-- Background Squircle -->
+    <linearGradient id="bgS" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E2D36" />
+      <stop offset="100%" stop-color="#06161B" />
+    </linearGradient>
+
+    <!-- Sunrise Orange Arc (Upper loop of S) -->
+    <linearGradient id="gradOrangeS" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFBA7A" />
+      <stop offset="50%" stop-color="#F59E6C" />
+      <stop offset="100%" stop-color="#E0642F" />
+    </linearGradient>
+
+    <!-- Marine Teal Ribbon (Lower loop of S / Horizon Page) -->
+    <linearGradient id="gradTealS" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#32C7B6" />
+      <stop offset="50%" stop-color="#1E6F78" />
+      <stop offset="100%" stop-color="#0F3C43" />
+    </linearGradient>
+
+    <!-- Sun Disc Gradient -->
+    <radialGradient id="sunOrbS" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFF2E0" />
+      <stop offset="40%" stop-color="#FFAC68" />
+      <stop offset="100%" stop-color="#F59E6C" />
+    </radialGradient>
+
+    <!-- Subtle Border Stroke -->
+    <linearGradient id="borderS" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E6C" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#1E6F78" stop-opacity="0.2" />
+    </linearGradient>
+  </defs>
+
+  <!-- Container Squircle -->
+  <rect x="1.5" y="1.5" width="61" height="61" rx="17" fill="url(#bgS)" stroke="url(#borderS)" stroke-width="1.5" />
+
+  <!-- Rising Sun Core (Positioned at upper center) -->
+  <circle cx="34" cy="24" r="9" fill="url(#sunOrbS)" />
+
+  <!-- Top-Right Radiant Ray Accents -->
+  <path d="M47 15 L52 11 M42 9 L44 4 M33 7 L33 2" stroke="#F59E6C" stroke-width="2" stroke-linecap="round" opacity="0.85" />
+
+  <!-- The "S" Monogram Upper Curve (Sunrise Dawn Arch) -->
+  <!-- Sweeps from top-left, curves over the sun, then swoops down toward center -->
+  <path d="M19 22 C19 14, 25 10, 36 10 C43 10, 48 13, 50 17 C48 19, 44 19.5, 36 18 C28 16.5, 25 20, 25 24 C25 29, 31 31, 38 33 C47 35.5, 50 40, 50 46 C50 54, 42 58, 30 58 C21 58, 15 54, 13 49 C15 47, 20 46.5, 28 47.5 C36 49, 42 47, 42 42 C42 37, 36 35, 29 32.5 C21 29.5, 19 26, 19 22 Z"
+        fill="url(#gradOrangeS)" />
+
+  <!-- The "S" Lower Geometric Dynamic Wing (Academic Horizon / Book Page in Teal) -->
+  <path d="M14 47 C14 38, 23 34, 32 37 C41 40, 47 42, 51 46 C47 50, 39 52, 30 50 C22 48, 17 50, 14 47 Z"
+        fill="url(#gradTealS)" opacity="0.9" />
+
+  <!-- Center Spark of Knowledge -->
+  <circle cx="34" cy="24" r="2.5" fill="#FFFFFF" />
+</svg>
+

@@ -20,6 +20,7 @@ import {
   useStudentAttendance,
   useStudentAttendanceSummary
 } from '../hooks/usePortalQueries';
+import { useUnreadAnnouncements } from '../hooks/useUnreadAnnouncements';
 import {
   getTodayLocalRange,
   formatTime,
@@ -51,6 +52,7 @@ const getFileName = (url) => {
 export default function Dashboard() {
   const { role, stat1, user, basePath, flags } = usePortalRole();
   const navigate = useNavigate();
+  const { isRead } = useUnreadAnnouncements();
 
   const isTeacher = Boolean(flags.canTakeAttendance);
   const isGuardian = role === 'guardian';
@@ -741,15 +743,35 @@ export default function Dashboard() {
           ) : (
             announcements.map((a) => {
               const sevColor = a.severity === 'High' ? 'r' : a.severity === 'Medium' ? 'a' : 'g';
+              const unread = !isRead(a.id || a._id);
               return (
-                <div key={a.id} className="an">
+                <div
+                  key={a.id}
+                  className="an"
+                  onClick={() => navigate(`${basePath}/announcements`)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <span className="ib">
                     <Icon name="mega" />
                   </span>
                   <div>
-                    <h3>
+                    <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                       {a.title}
                       <Tag color={sevColor}>{a.severity}</Tag>
+                      {unread && (
+                        <span
+                          style={{
+                            fontSize: '10px',
+                            fontWeight: 800,
+                            background: 'var(--acc, #F59E6C)',
+                            color: '#0A1C24',
+                            padding: '1px 6px',
+                            borderRadius: '6px'
+                          }}
+                        >
+                          NEW
+                        </span>
+                      )}
                     </h3>
                     <p>{a.description}</p>
                   </div>

@@ -1,8 +1,12 @@
 import SubjectDetail from '../features/portal/pages/SubjectDetail';
 import Subjects from '../features/portal/pages/Subjects';
 import StudentGrades from '../features/portal/pages/StudentGrades';
-﻿import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from '../features/landing/LandingPage';
+import ContactPage from '../features/landing/pages/ContactPage';
+import AboutPage from '../features/landing/pages/AboutPage';
+import ProgramsPage from '../features/landing/pages/ProgramsPage';
+import ActivitiesPage from '../features/landing/pages/ActivitiesPage';
 import Login from '../features/portal/pages/Login';
 import AuthGuard from './AuthGuard';
 import RoleGuard from './RoleGuard';
@@ -48,6 +52,10 @@ export default function AppRoutes() {
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<LandingPage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/programs" element={<ProgramsPage />} />
+      <Route path="/activities" element={<ActivitiesPage />} />
+      <Route path="/contact" element={<ContactPage />} />
       <Route path="/login" element={<Login />} />
 
       {/* Legacy /dashboard redirect */}

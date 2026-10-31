@@ -851,7 +851,7 @@ function MakeComplaintModal({ isOpen, onClose, mutation }) {
             >
               <UploadCloud size={20} style={{ color: 'var(--p1)' }} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#F8FAFC', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <span style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {file ? file.name : 'Choose image evidence...'}
                 </span>
                 <span style={{ fontSize: '11px', color: 'var(--mute)' }}>
@@ -890,9 +890,9 @@ function MakeComplaintModal({ isOpen, onClose, mutation }) {
               style={{
                 padding: '9px 18px',
                 borderRadius: '10px',
-                background: 'rgba(255,255,255,0.05)',
-                color: '#F8FAFC',
-                border: '1px solid rgba(255,255,255,0.12)',
+                background: 'var(--soft)',
+                color: 'var(--ink)',
+                border: '1px solid var(--line)',
                 fontSize: '13px',
                 fontWeight: 600,
                 cursor: 'pointer'
@@ -1113,7 +1113,7 @@ function ViewCaseModal({ complaint, onClose }) {
                 <User size={13} style={{ color: 'var(--p1)' }} />
                 Reported Party
               </span>
-              <span style={{ fontSize: '15px', fontWeight: 700, color: '#F8FAFC', wordBreak: 'break-word' }}>
+              <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--ink)', wordBreak: 'break-word' }}>
                 {complaint.reportedParty}
               </span>
             </div>
@@ -1123,7 +1123,7 @@ function ViewCaseModal({ complaint, onClose }) {
               style={{
                 padding: '14px 16px',
                 borderRadius: '14px',
-                background: 'rgba(255, 255, 255, 0.03)',
+                background: 'var(--soft)',
                 border: '1px solid var(--line)',
                 display: 'flex',
                 flexDirection: 'column',
@@ -1149,7 +1149,7 @@ function ViewCaseModal({ complaint, onClose }) {
                 style={{
                   fontSize: '14px',
                   fontWeight: 600,
-                  color: witnessesText === 'None mentioned' ? 'var(--mute)' : '#F8FAFC',
+                  color: witnessesText === 'None mentioned' ? 'var(--mute)' : 'var(--ink)',
                   wordBreak: 'break-word'
                 }}
               >
@@ -1180,11 +1180,11 @@ function ViewCaseModal({ complaint, onClose }) {
               style={{
                 padding: '16px',
                 borderRadius: '14px',
-                background: 'rgba(255, 255, 255, 0.025)',
+                background: 'var(--soft)',
                 border: '1px solid var(--line)',
                 fontSize: '14px',
                 lineHeight: '1.65',
-                color: '#F8FAFC',
+                color: 'var(--ink)',
                 whiteSpace: 'pre-wrap',
                 wordBreak: 'break-word'
               }}
@@ -1317,9 +1317,9 @@ function ViewCaseModal({ complaint, onClose }) {
             style={{
               padding: '9px 24px',
               borderRadius: '10px',
-              background: 'rgba(255, 255, 255, 0.05)',
-              color: '#F8FAFC',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              background: 'var(--soft)',
+              color: 'var(--ink)',
+              border: '1px solid var(--line)',
               fontSize: '13px',
               fontWeight: 600,
               cursor: 'pointer',

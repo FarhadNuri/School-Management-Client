@@ -378,11 +378,11 @@ export default function TeacherGuardians() {
                         gap: '6px',
                         padding: '4px 10px',
                         borderRadius: '8px',
-                        background: 'rgba(255, 255, 255, 0.04)',
+                        background: 'var(--soft)',
                         border: '1px solid var(--line)',
                         fontSize: '12px',
                         fontWeight: 600,
-                        color: '#F8FAFC',
+                        color: 'var(--ink)',
                         textDecoration: 'none'
                       }}
                     >
@@ -438,11 +438,11 @@ export default function TeacherGuardians() {
                             justifyContent: 'space-between',
                             padding: '7px 10px',
                             borderRadius: '10px',
-                            background: 'rgba(255, 255, 255, 0.03)',
+                            background: 'var(--soft)',
                             border: '1px solid var(--line)'
                           }}
                         >
-                          <span style={{ fontSize: '13px', fontWeight: 700, color: '#F8FAFC' }}>
+                          <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)' }}>
                             {stu.name}
                           </span>
                           <span
@@ -526,9 +526,9 @@ export default function TeacherGuardians() {
                       borderRadius: '10px',
                       fontSize: '12px',
                       fontWeight: 700,
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      color: '#F8FAFC',
-                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      background: 'var(--soft)',
+                      color: 'var(--ink)',
+                      border: '1px solid var(--line)',
                       cursor: 'pointer',
                       transition: 'all 0.15s ease',
                       whiteSpace: 'nowrap',
@@ -706,10 +706,10 @@ export default function TeacherGuardians() {
                       <span style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: 'var(--mute)', textTransform: 'uppercase', marginBottom: '4px' }}>
                         Primary Phone
                       </span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', fontWeight: 700, color: '#F8FAFC' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', fontWeight: 700, color: 'var(--ink)' }}>
                         <Phone size={15} style={{ color: 'var(--p1)' }} />
                         {guardianDetail?.phone && guardianDetail.phone !== '—' ? (
-                          <a href={'tel:' + guardianDetail.phone} style={{ color: '#F8FAFC', textDecoration: 'none' }}>
+                          <a href={'tel:' + guardianDetail.phone} style={{ color: 'var(--ink)', textDecoration: 'none' }}>
                             {guardianDetail.phone}
                           </a>
                         ) : (
@@ -722,14 +722,14 @@ export default function TeacherGuardians() {
                       style={{
                         padding: '12px 14px',
                         borderRadius: '12px',
-                        background: 'rgba(255,255,255,0.03)',
+                        background: 'var(--soft)',
                         border: '1px solid var(--line)'
                       }}
                     >
                       <span style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: 'var(--mute)', textTransform: 'uppercase', marginBottom: '4px' }}>
                         Alt Phone / WhatsApp
                       </span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', fontWeight: 700, color: '#F8FAFC' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', fontWeight: 700, color: 'var(--ink)' }}>
                         <MessageSquare size={15} style={{ color: 'var(--p1)' }} />
                         <span>
                           {guardianDetail?.altPhone !== '—'
@@ -757,7 +757,7 @@ export default function TeacherGuardians() {
                           gap: '6px',
                           fontSize: '13px',
                           fontWeight: 700,
-                          color: '#F8FAFC',
+                          color: 'var(--ink)',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap'
@@ -833,7 +833,7 @@ export default function TeacherGuardians() {
                                 </span>
                               )}
                               <div>
-                                <b style={{ display: 'block', fontSize: '14px', color: '#F8FAFC' }}>
+                                <b style={{ display: 'block', fontSize: '14px', color: 'var(--ink)' }}>
                                   {stu.name}
                                 </b>
                                 <span style={{ fontSize: '12px', color: 'var(--mute)' }}>
@@ -899,7 +899,7 @@ export default function TeacherGuardians() {
                           background: 'rgba(255,255,255,0.025)',
                           border: '1px solid var(--line)',
                           fontSize: '13px',
-                          color: '#F8FAFC',
+                          color: 'var(--ink)',
                           lineHeight: 1.5
                         }}
                       >
@@ -929,9 +929,9 @@ export default function TeacherGuardians() {
                 style={{
                   padding: '9px 18px',
                   borderRadius: '10px',
-                  background: 'rgba(255,255,255,0.05)',
-                  color: '#F8FAFC',
-                  border: '1px solid rgba(255,255,255,0.12)',
+                  background: 'var(--soft)',
+                  color: 'var(--ink)',
+                  border: '1px solid var(--line)',
                   fontSize: '13px',
                   fontWeight: 600,
                   cursor: 'pointer'

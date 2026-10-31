@@ -1,14 +1,14 @@
 .portal-app {
-  --bg: var(--g-bg, #E8F0EE);
-  --card: var(--g-card, #fff);
-  --ink: var(--g-ink, #0A1C24);
-  --mute: var(--g-mute, #60797F);
-  --line: var(--g-line, #E3ECEA);
-  --soft: var(--g-soft, #F1F6F5);
+  --bg: var(--g-bg, #071419);
+  --card: var(--g-card, #0F2A33);
+  --ink: var(--g-ink, #F6F1E7);
+  --mute: var(--g-mute, #9DB5B5);
+  --line: var(--g-line, #1F3E47);
+  --soft: var(--g-soft, #14323C);
   --p1: var(--g-p1, #1E6F78);
   --p2: var(--g-p2, #0F3B44);
   --acc: var(--g-acc, #F59E6C);
-  --sh: var(--g-sh, 0 6px 20px rgba(15,59,68,.07));
+  --sh: var(--g-sh, none);
   background: var(--bg);
   color: var(--ink);
   font: 400 14px/1.45 Manrope, system-ui, sans-serif;
@@ -41,10 +41,25 @@
   box-shadow: var(--sh);
 }
 
+.portal-app .sidebar-brand-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  cursor: pointer;
+  border-radius: 14px;
+  transition: opacity 0.18s ease;
+}
+.portal-app .sidebar-brand-link:hover {
+  opacity: 0.88;
+}
+.portal-app .sidebar-brand-link:hover .logo b {
+  color: var(--acc, #F59E6C);
+}
 .portal-app .logo {
   padding: 4px 12px 16px;
   border-bottom: 1px solid var(--line);
   margin-bottom: 12px;
+  cursor: pointer;
 }
 .portal-app .logo b {
   font: 800 18px 'Bricolage Grotesque', serif;
@@ -154,14 +169,6 @@
   padding: 18px 22px;
   overflow-y: auto;
   flex: 1;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.portal-app .ct::-webkit-scrollbar,
-.portal-app *::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
 }
 
 .portal-app .pt h2 {
@@ -303,6 +310,59 @@
 .portal-app .tg.b, .portal-app .b {
   background: #DCEBF5;
   color: #1E5C86;
+}
+
+/* Dark mode tag refinement matching admin */
+:root[data-theme="dark"] .portal-app .tg.g,
+:root[data-theme="dark"] .portal-app .g {
+  background: rgba(48, 160, 110, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.22);
+}
+:root[data-theme="dark"] .portal-app .tg.a,
+:root[data-theme="dark"] .portal-app .a {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+  border: 1px solid rgba(250, 204, 21, 0.22);
+}
+:root[data-theme="dark"] .portal-app .tg.r,
+:root[data-theme="dark"] .portal-app .r {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.22);
+}
+:root[data-theme="dark"] .portal-app .tg.b,
+:root[data-theme="dark"] .portal-app .b {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.22);
+}
+
+/* Option Groups matching admin */
+.portal-app .opt {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+.portal-app .opt span,
+.portal-app .opt button {
+  flex: 1;
+  text-align: center;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  background: var(--card);
+  color: var(--ink);
+  transition: all 0.15s ease;
+}
+.portal-app .opt span.on,
+.portal-app .opt button.on {
+  background: linear-gradient(135deg, var(--p1), var(--p2));
+  color: #fff;
+  border-color: transparent;
 }
 
 .portal-app .ghost {
@@ -487,20 +547,25 @@
   max-height: 92vh;
   overflow-y: auto;
   border-radius: 24px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 }
-.portal-app .mc::-webkit-scrollbar,
 .portal-app .no-scrollbar::-webkit-scrollbar,
-.no-scrollbar::-webkit-scrollbar {
+.no-scrollbar::-webkit-scrollbar,
+.portal-app .account-modal-card::-webkit-scrollbar,
+.account-modal-card::-webkit-scrollbar {
   display: none !important;
   width: 0 !important;
   height: 0 !important;
 }
 .portal-app .no-scrollbar,
-.no-scrollbar {
+.no-scrollbar,
+.portal-app .account-modal-card,
+.account-modal-card {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+}
+
+.portal-app div:hover > .avatar-hover-overlay {
+  opacity: 1 !important;
 }
 .portal-app .mh {
   background: linear-gradient(120deg, var(--p2), var(--p1));
@@ -533,6 +598,16 @@
   padding: 12px 14px;
   font: inherit;
   color: var(--ink);
+}
+.portal-app[data-theme="dark"] input[type="password"]::-ms-reveal,
+.portal-app[data-theme="dark"] input[type="password"]::-ms-clear {
+  filter: invert(100%) brightness(200%) !important;
+  cursor: pointer;
+}
+.portal-app[data-theme="light"] input[type="password"]::-ms-reveal,
+.portal-app[data-theme="light"] input[type="password"]::-ms-clear {
+  filter: none;
+  cursor: pointer;
 }
 .portal-app .mb .row {
   justify-content: flex-end;
@@ -622,8 +697,17 @@
 }
 
 .att-card-btn-view:hover {
+  background: rgba(0, 0, 0, 0.06) !important;
+  border-color: rgba(0, 0, 0, 0.16) !important;
+  color: var(--ink) !important;
+  transform: translateY(-1px);
+}
+
+:root[data-theme="dark"] .att-card-btn-view:hover,
+[data-theme="dark"] .att-card-btn-view:hover {
   background: rgba(255, 255, 255, 0.09) !important;
   border-color: rgba(255, 255, 255, 0.22) !important;
+  color: #fff !important;
   transform: translateY(-1px);
 }
 
@@ -720,7 +804,7 @@
   border-radius: 10px;
   height: 32px;
   padding: 0 14px;
-  font: 600 12px/1 Manrope, sans-serif;
+  font: 700 12px/1 Manrope, sans-serif;
   color: var(--ink);
   cursor: pointer;
   white-space: nowrap;
@@ -733,9 +817,49 @@
 }
 
 .cd-btn-view:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #fff;
+  background: rgba(30, 111, 120, 0.12);
+  border-color: rgba(30, 111, 120, 0.35);
+  color: #1E6F78;
+}
+
+:root[data-theme="dark"] .cd-btn-view:hover,
+[data-theme="dark"] .cd-btn-view:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
+
+:root[data-theme="light"] .cd-btn-view:hover,
+[data-theme="light"] .cd-btn-view:hover {
+  background: rgba(30, 111, 120, 0.12);
+  border-color: rgba(30, 111, 120, 0.35);
+  color: #1E6F78;
+}
+
+/* Homeworks Submissions Button States */
+.portal-app .hw-btn-submissions {
+  background: rgba(20, 184, 166, 0.1);
+  color: #0F766E;
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  transition: all 0.15s ease;
+}
+.portal-app .hw-btn-submissions:hover {
+  background: rgba(20, 184, 166, 0.18);
+  border-color: rgba(45, 212, 191, 0.55);
+  color: #0F766E;
+  box-shadow: 0 2px 10px rgba(20, 184, 166, 0.2);
+}
+:root[data-theme="dark"] .portal-app .hw-btn-submissions,
+[data-theme="dark"] .portal-app .hw-btn-submissions {
+  background: rgba(20, 184, 166, 0.12);
+  color: #2DD4BF;
+  border: 1px solid rgba(45, 212, 191, 0.28);
+}
+:root[data-theme="dark"] .portal-app .hw-btn-submissions:hover,
+[data-theme="dark"] .portal-app .hw-btn-submissions:hover {
+  background: rgba(20, 184, 166, 0.22);
+  border-color: rgba(45, 212, 191, 0.5);
+  color: #FFFFFF;
 }
 
 .vt {

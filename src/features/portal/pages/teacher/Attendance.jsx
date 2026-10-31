@@ -330,7 +330,7 @@ export default function TeacherAttendance() {
                 borderRadius: '10px',
                 background: 'var(--soft)',
                 border: '1px solid var(--line)',
-                color: '#F8FAFC',
+                color: 'var(--ink)',
                 cursor: 'pointer',
                 fontWeight: 600,
                 fontSize: '13px'
@@ -342,7 +342,7 @@ export default function TeacherAttendance() {
 
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#F8FAFC' }}>
+                <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: 'var(--ink)' }}>
                   {selectedSection.className}
                 </h2>
                 {selectedSection.mySubject && (
@@ -468,7 +468,7 @@ export default function TeacherAttendance() {
             <span style={{ fontSize: '11px', color: 'var(--mute)', fontWeight: 700 }}>
               TOTAL ROSTER
             </span>
-            <div style={{ fontSize: '20px', fontWeight: 800, color: '#F8FAFC', marginTop: '2px' }}>
+            <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--ink)', marginTop: '2px' }}>
               {rosterCounts.total}
             </div>
           </div>
@@ -590,7 +590,7 @@ export default function TeacherAttendance() {
             }}
           >
             <Users size={40} style={{ color: 'var(--mute)', margin: '0 auto 12px' }} />
-            <h3 style={{ margin: '0 0 6px', fontWeight: 700, color: '#F8FAFC' }}>No Students Enrolled</h3>
+            <h3 style={{ margin: '0 0 6px', fontWeight: 700, color: 'var(--ink)' }}>No Students Enrolled</h3>
             <p style={{ color: 'var(--mute)', margin: 0, fontSize: '13px' }}>
               There are no students assigned to this section yet.
             </p>
@@ -617,7 +617,7 @@ export default function TeacherAttendance() {
               }}
             >
               <div>
-                <b style={{ fontSize: '14.5px', color: '#F8FAFC' }}>Student Attendance Roster</b>
+                <b style={{ fontSize: '14.5px', color: 'var(--ink)' }}>Student Attendance Roster</b>
                 <span style={{ marginLeft: '10px', fontSize: '12px', color: 'var(--mute)' }}>
                   {localRoster.length} Students Total
                 </span>
@@ -710,7 +710,7 @@ export default function TeacherAttendance() {
                               </span>
                             )}
                             <div>
-                              <b style={{ display: 'block', fontSize: '13.5px', color: '#F8FAFC' }}>
+                              <b style={{ display: 'block', fontSize: '13.5px', color: 'var(--ink)' }}>
                                 {student.name}
                               </b>
                               <span style={{ fontSize: '11px', color: 'var(--mute)' }}>
@@ -809,14 +809,14 @@ export default function TeacherAttendance() {
                                 padding: '6px 10px',
                                 borderRadius: '8px',
                                 border: '1px solid var(--line)',
-                                background: 'rgba(255,255,255,0.03)',
-                                color: '#F8FAFC',
+                                background: 'var(--soft)',
+                                color: 'var(--ink)',
                                 fontSize: '12px',
                                 outline: 'none'
                               }}
                             />
                           ) : (
-                            <span style={{ color: student.note ? '#F8FAFC' : 'var(--mute)', fontSize: '12.5px' }}>
+                            <span style={{ color: student.note ? 'var(--ink)' : 'var(--mute)', fontSize: '12.5px' }}>
                               {student.note || '—'}
                             </span>
                           )}
@@ -936,7 +936,7 @@ export default function TeacherAttendance() {
                 borderRadius: '10px',
                 background: 'var(--soft)',
                 border: '1px solid var(--line)',
-                color: '#F8FAFC',
+                color: 'var(--ink)',
                 cursor: 'pointer',
                 fontWeight: 600,
                 fontSize: '12.5px'
@@ -947,7 +947,7 @@ export default function TeacherAttendance() {
             </button>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#F8FAFC' }}>
+              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: 'var(--ink)' }}>
                 {selectedSection.className}
               </h2>
               {selectedSection.mySubject && (
@@ -1007,9 +1007,9 @@ export default function TeacherAttendance() {
                 width: '30px',
                 height: '30px',
                 borderRadius: '8px',
-                background: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                color: '#F8FAFC',
+                background: 'var(--soft)',
+                border: '1px solid var(--line)',
+                color: 'var(--ink)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -1027,7 +1027,7 @@ export default function TeacherAttendance() {
               style={{
                 fontSize: '15px',
                 fontWeight: 800,
-                color: '#FFFFFF',
+                color: 'var(--ink)',
                 padding: '0 10px',
                 minWidth: '135px',
                 textAlign: 'center',
@@ -1049,9 +1049,9 @@ export default function TeacherAttendance() {
                 width: '30px',
                 height: '30px',
                 borderRadius: '8px',
-                background: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                color: '#F8FAFC',
+                background: 'var(--soft)',
+                border: '1px solid var(--line)',
+                color: 'var(--ink)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -1263,7 +1263,7 @@ export default function TeacherAttendance() {
                           height: isToday ? '24px' : 'auto',
                           borderRadius: isToday ? '6px' : '0',
                           background: isToday ? '#14B8A6' : 'transparent',
-                          color: isToday ? '#042F2E' : '#F8FAFC',
+                          color: isToday ? '#042F2E' : 'var(--ink)',
                           display: 'grid',
                           placeItems: 'center'
                         }}
@@ -1694,9 +1694,9 @@ export default function TeacherAttendance() {
                     borderRadius: '10px',
                     fontSize: '12px',
                     fontWeight: 700,
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    color: '#F8FAFC',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    background: 'var(--soft)',
+                    color: 'var(--ink)',
+                    border: '1px solid var(--line)',
                     cursor: 'pointer',
                     transition: 'all 0.15s ease',
                     whiteSpace: 'nowrap',

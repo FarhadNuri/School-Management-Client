@@ -12,8 +12,8 @@ export default function Hero() {
             <em>{heroContent.headingAccent}</em>
           </h1>
           <p>{heroContent.description}</p>
-          <Button>{heroContent.primaryCta}</Button>
-          <a className="lnk">{heroContent.secondaryCta}</a>
+          <Button href="/contact">{heroContent.primaryCta}</Button>
+          <a className="lnk" href="/contact">{heroContent.secondaryCta}</a>
           <div className="stats">
             {heroContent.stats.map((stat) => (
               <div key={stat.label}>
@@ -24,12 +24,16 @@ export default function Hero() {
           </div>
         </div>
         <div className="art">
-          <i className="a1"></i>
-          <i className="a2"></i>
-          <i className="a3"></i>
-          <div className="chip">
+          <div className="a1">
+            <img
+              src="/classof2025.jpg"
+              alt="Sunrise Model School graduating students"
+              className="hero-main-photo"
+            />
+          </div>
+          <div className="a2">
             <b>{heroContent.chip.title}</b>
-            {heroContent.chip.subtitle}
+            <span>{heroContent.chip.subtitle}</span>
           </div>
         </div>
       </div>

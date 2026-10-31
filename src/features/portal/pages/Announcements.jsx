@@ -32,11 +32,13 @@ import {
   useDeleteAnnouncement,
   useDebounce
 } from '../hooks/usePortalQueries';
+import { useUnreadAnnouncements } from '../hooks/useUnreadAnnouncements';
 
 const CATEGORY_CHIPS = ['All categories', 'General', 'Academic', 'Disciplinary', 'Other'];
 
 export default function Announcements() {
   const { flags, role, user } = usePortalRole();
+  const { isRead, markAsRead, markAllAsRead, unreadCount } = useUnreadAnnouncements();
   const canCreate = flags.canCreateAnnouncement || role === 'teacher';
 
   const [searchInput, setSearchInput] = useState('');
@@ -102,6 +104,13 @@ export default function Announcements() {
   const handleOpenCreate = () => {
     setEditingNotice(null);
     setIsFormOpen(true);
+  };
+
+  const handleViewNotice = (notice) => {
+    if (notice) {
+      markAsRead(notice.id || notice._id);
+      setActiveNotice(notice);
+    }
   };
 
   const handleOpenEdit = (notice) => {
@@ -186,8 +195,44 @@ export default function Announcements() {
       />
 
       {/* Showing count */}
-      <div style={{ margin: '-6px 0 0', color: 'var(--mute)', fontSize: '13px' }}>
-        Showing <b style={{ color: 'var(--ink)' }}>{count}</b> announcement{count === 1 ? '' : 's'}
+      <div
+        style={{
+          margin: '-6px 0 0',
+          color: 'var(--mute)',
+          fontSize: '13px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '8px'
+        }}
+      >
+        <div>
+          Showing <b style={{ color: 'var(--ink)' }}>{count}</b> announcement{count === 1 ? '' : 's'}
+          {unreadCount > 0 && (
+            <span style={{ marginLeft: '6px', color: 'var(--acc, #F59E6C)', fontWeight: 700 }}>
+              ({unreadCount} unread)
+            </span>
+          )}
+        </div>
+        {unreadCount > 0 && (
+          <button
+            type="button"
+            onClick={markAllAsRead}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--p1, #1E6F78)',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              padding: 0
+            }}
+          >
+            Mark all as read
+          </button>
+        )}
       </div>
 
       {/* Skeleton Loading State */}
@@ -296,6 +341,27 @@ export default function Announcements() {
 
                       {/* Priority */}
                       {getPriorityBadge(a.severity)}
+
+                      {/* Unread badge */}
+                      {!isRead(a.id || a._id) && (
+                        <span
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            padding: '2px 7px',
+                            borderRadius: '6px',
+                            background: 'var(--acc, #F59E6C)',
+                            color: '#0A1C24',
+                            fontSize: '10px',
+                            fontWeight: 800,
+                            letterSpacing: '0.04em'
+                          }}
+                        >
+                          <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#0A1C24' }} />
+                          NEW
+                        </span>
+                      )}
                     </div>
 
                     {/* Audience */}
@@ -320,13 +386,15 @@ export default function Announcements() {
 
                   {/* Announcement Title */}
                   <h3
+                    onClick={() => handleViewNotice(a)}
                     style={{
                       margin: 0,
                       fontSize: '18px',
                       fontWeight: 800,
                       color: 'var(--ink)',
                       lineHeight: 1.3,
-                      wordBreak: 'break-word'
+                      wordBreak: 'break-word',
+                      cursor: 'pointer'
                     }}
                   >
                     {a.title}
@@ -412,8 +480,8 @@ export default function Announcements() {
                             width: '36px',
                             height: '36px',
                             borderRadius: '9px',
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            color: '#F8FAFC',
+                            background: 'var(--soft)',
+                            color: 'var(--ink)',
                             border: '1px solid var(--line)',
                             cursor: 'pointer',
                             transition: 'all 0.15s ease'
@@ -447,7 +515,7 @@ export default function Announcements() {
 
                     <button
                       type="button"
-                      onClick={() => setActiveNotice(a)}
+                      onClick={() => handleViewNotice(a)}
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -641,7 +709,7 @@ export default function Announcements() {
                     <Users size={13} style={{ color: 'var(--p1)' }} />
                     Audience
                   </span>
-                  <span style={{ fontSize: '15px', fontWeight: 700, color: '#F8FAFC', wordBreak: 'break-word' }}>
+                  <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--ink)', wordBreak: 'break-word' }}>
                     {activeNotice.targetAudience}
                   </span>
                 </div>
@@ -650,7 +718,7 @@ export default function Announcements() {
                   style={{
                     padding: '14px 16px',
                     borderRadius: '14px',
-                    background: 'rgba(255, 255, 255, 0.03)',
+                    background: 'var(--soft)',
                     border: '1px solid var(--line)',
                     display: 'flex',
                     flexDirection: 'column',
@@ -661,7 +729,7 @@ export default function Announcements() {
                     <ShieldAlert size={13} style={{ color: 'var(--p1)' }} />
                     Priority
                   </span>
-                  <span style={{ fontSize: '15px', fontWeight: 700, color: '#F8FAFC' }}>
+                  <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--ink)' }}>
                     {activeNotice.severity}
                   </span>
                 </div>
@@ -670,7 +738,7 @@ export default function Announcements() {
                   style={{
                     padding: '14px 16px',
                     borderRadius: '14px',
-                    background: 'rgba(255, 255, 255, 0.03)',
+                    background: 'var(--soft)',
                     border: '1px solid var(--line)',
                     display: 'flex',
                     flexDirection: 'column',
@@ -681,7 +749,7 @@ export default function Announcements() {
                     <Tag size={13} style={{ color: 'var(--p1)' }} />
                     Category
                   </span>
-                  <span style={{ fontSize: '15px', fontWeight: 700, color: '#F8FAFC' }}>
+                  <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--ink)' }}>
                     {activeNotice.category}
                   </span>
                 </div>
@@ -697,11 +765,11 @@ export default function Announcements() {
                   style={{
                     padding: '18px',
                     borderRadius: '14px',
-                    background: 'rgba(255, 255, 255, 0.025)',
+                    background: 'var(--soft)',
                     border: '1px solid var(--line)',
                     fontSize: '14px',
                     lineHeight: '1.65',
-                    color: '#F8FAFC',
+                    color: 'var(--ink)',
                     whiteSpace: 'pre-wrap',
                     wordBreak: 'break-word'
                   }}
@@ -760,7 +828,7 @@ export default function Announcements() {
                           >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
                               {isImg ? <ImageIcon size={16} style={{ color: 'var(--p1)', flexShrink: 0 }} /> : <FileText size={16} style={{ color: 'var(--p1)', flexShrink: 0 }} />}
-                              <span style={{ fontSize: '13px', fontWeight: 600, color: '#F8FAFC', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {name}
                               </span>
                             </div>
@@ -837,9 +905,9 @@ export default function Announcements() {
                   style={{
                     padding: '9px 20px',
                     borderRadius: '10px',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    color: '#F8FAFC',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    background: 'var(--soft)',
+                    color: 'var(--ink)',
+                    border: '1px solid var(--line)',
                     fontSize: '13px',
                     fontWeight: 600,
                     cursor: 'pointer'
@@ -931,7 +999,7 @@ export default function Announcements() {
                 <Trash2 size={20} />
               </div>
               <div>
-                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#F8FAFC' }}>
+                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: 'var(--ink)' }}>
                   Delete Announcement
                 </h3>
                 <p style={{ margin: '3px 0 0', fontSize: '13px', color: 'var(--mute)' }}>
@@ -940,7 +1008,7 @@ export default function Announcements() {
               </div>
             </div>
 
-            <p style={{ margin: 0, fontSize: '13.5px', color: '#CBD5E1', lineHeight: 1.5 }}>
+            <p style={{ margin: 0, fontSize: '13.5px', color: 'var(--ink)', lineHeight: 1.5 }}>
               Are you sure you want to delete <b>"{noticeToDelete.title}"</b>? This notice and its attachments will be permanently removed.
             </p>
 
@@ -952,9 +1020,9 @@ export default function Announcements() {
                 style={{
                   padding: '9px 18px',
                   borderRadius: '10px',
-                  background: 'rgba(255,255,255,0.05)',
-                  color: '#F8FAFC',
-                  border: '1px solid rgba(255,255,255,0.12)',
+                  background: 'var(--soft)',
+                  color: 'var(--ink)',
+                  border: '1px solid var(--line)',
                   fontSize: '13px',
                   fontWeight: 600,
                   cursor: 'pointer'
@@ -1347,7 +1415,7 @@ function AnnouncementFormModal({ isOpen, notice, onClose, createMutation, update
                           fontSize: '12px'
                         }}
                       >
-                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '380px', color: '#F8FAFC' }}>
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '380px', color: 'var(--ink)' }}>
                           {name}
                         </span>
                         <button
@@ -1394,9 +1462,9 @@ function AnnouncementFormModal({ isOpen, notice, onClose, createMutation, update
               style={{
                 padding: '9px 18px',
                 borderRadius: '10px',
-                background: 'rgba(255,255,255,0.05)',
-                color: '#F8FAFC',
-                border: '1px solid rgba(255,255,255,0.12)',
+                background: 'var(--soft)',
+                color: 'var(--ink)',
+                border: '1px solid var(--line)',
                 fontSize: '13px',
                 fontWeight: 600,
                 cursor: 'pointer'

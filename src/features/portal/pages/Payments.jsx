@@ -392,11 +392,11 @@ export default function Payments() {
                   </button>
 
                   {isPaid ? (
-                    inv.receiptUrl && (
+                    (inv.receiptUrl || inv.invoicePdf) && (
                       <button
                         type="button"
                         className="ghost"
-                        onClick={() => window.open(inv.receiptUrl, '_blank', 'noopener,noreferrer')}
+                        onClick={() => window.open(inv.receiptUrl || inv.invoicePdf, '_blank', 'noopener,noreferrer')}
                         style={{
                           flex: 1,
                           height: '40px',
@@ -411,10 +411,10 @@ export default function Payments() {
                           color: 'var(--p1)',
                           transition: 'all 0.15s ease'
                         }}
-                        title="Download official receipt / invoice"
+                        title="Download official receipt from Stripe with payment history"
                       >
                         <Download size={14} />
-                        <span>Download</span>
+                        <span>Receipt</span>
                         <ExternalLink size={12} style={{ opacity: 0.6 }} />
                       </button>
                     )
@@ -439,6 +439,31 @@ export default function Payments() {
                     >
                       <CreditCard size={14} />
                       <span>Pay invoice</span>
+                    </button>
+                  ) : (inv.invoicePdf || inv.payUrl) ? (
+                    <button
+                      type="button"
+                      className="ghost"
+                      onClick={() => window.open(inv.invoicePdf || inv.payUrl, '_blank', 'noopener,noreferrer')}
+                      style={{
+                        flex: 1,
+                        height: '40px',
+                        borderRadius: '12px',
+                        fontSize: '13px',
+                        fontWeight: 700,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        cursor: 'pointer',
+                        color: 'var(--p1)',
+                        transition: 'all 0.15s ease'
+                      }}
+                      title="Download invoice showing balance due"
+                    >
+                      <Download size={14} />
+                      <span>Invoice</span>
+                      <ExternalLink size={12} style={{ opacity: 0.6 }} />
                     </button>
                   ) : null}
                 </div>
@@ -603,14 +628,16 @@ export default function Payments() {
               )}
 
               {/* Action Buttons: Download option & Pay option */}
-              <div className="row" style={{ gap: '10px', marginTop: '6px' }}>
-                {selectedPayment.receiptUrl && (
+              <div className="row" style={{ gap: '10px', marginTop: '6px', flexWrap: 'wrap' }}>
+                {/* When unpaid: Both guardian and student modal sees a Download Invoice option showing amount due */}
+                {selectedPayment.status !== 'paid' && (selectedPayment.invoicePdf || selectedPayment.stripeHostedInvoiceUrl) && (
                   <button
                     type="button"
                     className="ghost"
-                    onClick={() => window.open(selectedPayment.receiptUrl, '_blank', 'noopener,noreferrer')}
+                    onClick={() => window.open(selectedPayment.invoicePdf || selectedPayment.stripeHostedInvoiceUrl, '_blank', 'noopener,noreferrer')}
                     style={{
                       flex: 1,
+                      minWidth: '160px',
                       height: '42px',
                       borderRadius: '12px',
                       fontSize: '13.5px',
@@ -621,13 +648,71 @@ export default function Payments() {
                       gap: '8px',
                       cursor: 'pointer'
                     }}
+                    title="Download invoice showing amount due"
                   >
                     <Download size={15} style={{ color: 'var(--p1)' }} />
-                    <span>Download Invoice / Receipt</span>
+                    <span>Download Invoice</span>
                     <ExternalLink size={13} style={{ opacity: 0.6 }} />
                   </button>
                 )}
 
+                {/* When paid: Both see the Receipt from Stripe where payment history is mentioned */}
+                {selectedPayment.status === 'paid' && (selectedPayment.receiptUrl || selectedPayment.invoicePdf) && (
+                  <button
+                    type="button"
+                    className="ghost"
+                    onClick={() => window.open(selectedPayment.receiptUrl || selectedPayment.invoicePdf, '_blank', 'noopener,noreferrer')}
+                    style={{
+                      flex: 1,
+                      minWidth: '160px',
+                      height: '42px',
+                      borderRadius: '12px',
+                      fontSize: '13.5px',
+                      fontWeight: 700,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      cursor: 'pointer',
+                      color: 'var(--p1)',
+                      borderColor: 'rgba(30, 111, 120, 0.35)',
+                      background: 'rgba(30, 111, 120, 0.05)'
+                    }}
+                    title="View official Stripe receipt with payment history"
+                  >
+                    <Download size={15} />
+                    <span>Download Receipt</span>
+                    <ExternalLink size={13} style={{ opacity: 0.6 }} />
+                  </button>
+                )}
+
+                {/* When paid: Also offer original Invoice PDF download if both exist
+                {selectedPayment.status === 'paid' && selectedPayment.invoicePdf && selectedPayment.receiptUrl && (
+                  <button
+                    type="button"
+                    className="ghost"
+                    onClick={() => window.open(selectedPayment.invoicePdf, '_blank', 'noopener,noreferrer')}
+                    style={{
+                      height: '42px',
+                      borderRadius: '12px',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      cursor: 'pointer',
+                      padding: '0 14px'
+                    }}
+                    title="Download original invoice PDF"
+                  >
+                    <Download size={14} />
+                    <span>Invoice PDF</span>
+                    <ExternalLink size={12} style={{ opacity: 0.5 }} />
+                  </button>
+                )} */}
+
+                {/* When unpaid: Pay invoice button (guardian only) */}
                 {selectedPayment.status !== 'paid' && flags.canPay && selectedPayment.payUrl && (
                   <button
                     type="button"
@@ -635,6 +720,7 @@ export default function Payments() {
                     onClick={() => window.open(selectedPayment.payUrl, '_blank', 'noopener,noreferrer')}
                     style={{
                       flex: 1,
+                      minWidth: '160px',
                       height: '42px',
                       borderRadius: '12px',
                       fontSize: '13.5px',

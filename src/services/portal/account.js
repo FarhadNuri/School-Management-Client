@@ -34,12 +34,46 @@ export const changePassword = async ({ currentPassword, newPassword, confirmPass
   return data;
 };
 
-export const logout = () => {
+export const updateProfilePhoto = async (file) => {
+  const formData = new FormData();
+  formData.append('photo', file);
+
+  const data = await apiRequest('/user/me/photo', {
+    method: 'PATCH',
+    body: formData,
+  });
+
+  if (data?.user) {
+    localStorage.setItem('portal_session', JSON.stringify(data.user));
+    localStorage.setItem('guardian_session', JSON.stringify(data.user));
+  } else if (data?.photo) {
+    try {
+      const existing = JSON.parse(localStorage.getItem('portal_session') || '{}');
+      existing.photo = data.photo;
+      localStorage.setItem('portal_session', JSON.stringify(existing));
+      localStorage.setItem('guardian_session', JSON.stringify(existing));
+    } catch (e) {}
+  }
+
+  // Trigger storage event so TopBar, Sidebar, and other listeners refresh photo
+  window.dispatchEvent(new Event('storage'));
+  window.dispatchEvent(new CustomEvent('user-updated', { detail: data?.user || { photo: data?.photo } }));
+
+  return data;
+};
+
+export const clearAuthSession = () => {
   localStorage.removeItem('auth_token');
   localStorage.removeItem('portal_session');
   localStorage.removeItem('guardian_session');
   sessionStorage.setItem('portal_logged_out', 'true');
-  if (typeof window !== 'undefined') {
-    window.location.href = '/login';
+  window.dispatchEvent(new Event('storage'));
+  window.dispatchEvent(new CustomEvent('auth-changed', { detail: { loggedIn: false } }));
+};
+
+export const logout = (redirectTo = '/login') => {
+  clearAuthSession();
+  if (redirectTo && typeof window !== 'undefined') {
+    window.location.href = redirectTo;
   }
 };

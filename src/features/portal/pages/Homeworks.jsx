@@ -6,6 +6,7 @@ import Skeleton from '../components/Skeleton';
 import EmptyState from '../components/EmptyState';
 import ErrorRetry from '../components/ErrorRetry';
 import SubmitHomeworkModal from '../components/SubmitHomeworkModal';
+import ViewSubmissionModal from '../components/ViewSubmissionModal';
 import {
   BookOpen,
   User,
@@ -34,11 +35,15 @@ const getFileName = (url) => {
 };
 
 export default function StudentHomeworks() {
-  const { user } = usePortalRole();
+  const { role, user } = usePortalRole();
+  const isStudent = role === 'student';
+  const isGuardian = role === 'guardian';
+
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'pending', 'submitted', 'past_due'
   const [viewingHomework, setViewingHomework] = useState(null);
   const [submittingHomework, setSubmittingHomework] = useState(null);
+  const [viewingSubmission, setViewingSubmission] = useState(null);
   const debouncedSearch = useDebounce(searchTerm, 300);
 
   // Close modal on Escape key
@@ -47,6 +52,7 @@ export default function StudentHomeworks() {
       if (e.key === 'Escape') {
         setViewingHomework(null);
         setSubmittingHomework(null);
+        setViewingSubmission(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -108,7 +114,9 @@ export default function StudentHomeworks() {
           Homeworks
         </h2>
         <p style={{ margin: 0, color: 'var(--mute)', fontSize: '14px' }}>
-          View, submit and track your homework assignments
+          {isGuardian
+            ? 'View and track your student’s homework assignments and submissions'
+            : 'View, submit and track your homework assignments'}
         </p>
       </div>
 
@@ -289,7 +297,7 @@ export default function StudentHomeworks() {
                         {hw.className || user?.className || 'CLASS'}
                       </span>
 
-                      {/* Done Badge */}
+                      {/* Submitted Badge */}
                       {isDone && (
                         <span
                           style={{
@@ -307,7 +315,7 @@ export default function StudentHomeworks() {
                           }}
                         >
                           <CheckCircle size={12} />
-                          <span>Done</span>
+                          <span>Submitted</span>
                         </span>
                       )}
                     </div>
@@ -423,7 +431,12 @@ export default function StudentHomeworks() {
                     >
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 600 }}>
                         <CheckCircle size={13} />
-                        <span>Submitted {hw.submission?.submittedAt ? formatDate(hw.submission.submittedAt) : 'Successfully'}</span>
+                        <span>
+                          {isGuardian && hw.submission?.studentName
+                            ? `Submitted by ${hw.submission.studentName}`
+                            : 'Submitted'}
+                          {hw.submission?.submittedAt ? ` on ${formatDate(hw.submission.submittedAt)}` : ''}
+                        </span>
                       </span>
                       {hw.submission?.isResubmitted && (
                         <span style={{ fontSize: '10.5px', color: '#60A5FA', fontWeight: 700 }}>Resubmitted</span>
@@ -487,8 +500,92 @@ export default function StudentHomeworks() {
                       <span>Details</span>
                     </button>
 
-                    {/* Submit Homework / Resubmit Button */}
-                    {isPastDue ? (
+                    {/* Action Buttons based on status & role */}
+                    {isDone ? (
+                      isGuardian ? (
+                        <button
+                          type="button"
+                          onClick={() => setViewingSubmission(hw)}
+                          style={{
+                            flex: '1.4 1 0',
+                            minWidth: 0,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px',
+                            height: '38px',
+                            padding: '0 12px',
+                            borderRadius: '10px',
+                            fontSize: '12.5px',
+                            fontWeight: 700,
+                            background: 'rgba(16, 185, 129, 0.14)',
+                            border: '1px solid rgba(16, 185, 129, 0.35)',
+                            color: '#10B981',
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease'
+                          }}
+                          title="View student's submitted files and links"
+                        >
+                          <CheckCircle size={14} />
+                          <span>View Submission</span>
+                        </button>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => setViewingSubmission(hw)}
+                            style={{
+                              flex: '1 1 0',
+                              minWidth: 0,
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '5px',
+                              height: '38px',
+                              padding: '0 8px',
+                              borderRadius: '10px',
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              background: 'rgba(16, 185, 129, 0.12)',
+                              border: '1px solid rgba(16, 185, 129, 0.3)',
+                              color: '#10B981',
+                              cursor: 'pointer',
+                              transition: 'all 0.15s ease'
+                            }}
+                            title="View your submitted work"
+                          >
+                            <CheckCircle size={13} />
+                            <span>Submission</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setSubmittingHomework(hw)}
+                            style={{
+                              flex: '1 1 0',
+                              minWidth: 0,
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '5px',
+                              height: '38px',
+                              padding: '0 8px',
+                              borderRadius: '10px',
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              background: 'var(--soft)',
+                              border: '1px solid var(--line)',
+                              color: 'var(--ink)',
+                              cursor: 'pointer',
+                              transition: 'all 0.15s ease'
+                            }}
+                            title="Resubmit homework"
+                          >
+                            <RotateCcw size={13} />
+                            <span>Resubmit</span>
+                          </button>
+                        </>
+                      )
+                    ) : isPastDue ? (
                       <button
                         type="button"
                         disabled
@@ -515,33 +612,7 @@ export default function StudentHomeworks() {
                         <Clock size={14} />
                         <span>Past Due</span>
                       </button>
-                    ) : isDone ? (
-                      <button
-                        type="button"
-                        onClick={() => setSubmittingHomework(hw)}
-                        style={{
-                          flex: '1.4 1 0',
-                          minWidth: 0,
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '6px',
-                          height: '38px',
-                          padding: '0 12px',
-                          borderRadius: '10px',
-                          fontSize: '12.5px',
-                          fontWeight: 700,
-                          background: 'rgba(16, 185, 129, 0.14)',
-                          border: '1px solid rgba(16, 185, 129, 0.35)',
-                          color: '#10B981',
-                          cursor: 'pointer',
-                          transition: 'all 0.15s ease'
-                        }}
-                      >
-                        <RotateCcw size={14} />
-                        <span>Resubmit</span>
-                      </button>
-                    ) : (
+                    ) : isStudent ? (
                       <button
                         type="button"
                         onClick={() => setSubmittingHomework(hw)}
@@ -568,6 +639,29 @@ export default function StudentHomeworks() {
                         <UploadCloud size={14} />
                         <span>Submit</span>
                       </button>
+                    ) : (
+                      <div
+                        style={{
+                          flex: '1.4 1 0',
+                          minWidth: 0,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                          height: '38px',
+                          padding: '0 12px',
+                          borderRadius: '10px',
+                          fontSize: '12.5px',
+                          fontWeight: 600,
+                          background: 'var(--soft)',
+                          border: '1px solid var(--line)',
+                          color: 'var(--mute)'
+                        }}
+                        title="Your student has not submitted this homework yet"
+                      >
+                        <Clock size={13} />
+                        <span>Not Submitted</span>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -840,7 +934,9 @@ export default function StudentHomeworks() {
                 padding: '16px 24px',
                 borderTop: '1px solid var(--line)',
                 display: 'flex',
+                alignItems: 'center',
                 justifyContent: 'flex-end',
+                gap: '10px',
                 background: 'var(--card)',
                 borderBottomLeftRadius: '24px',
                 borderBottomRightRadius: '24px'
@@ -861,17 +957,82 @@ export default function StudentHomeworks() {
               >
                 Close
               </button>
+
+              {Boolean(viewingHomework.submission || viewingHomework.isDone) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const hw = viewingHomework;
+                    setViewingHomework(null);
+                    setViewingSubmission(hw);
+                  }}
+                  style={{
+                    padding: '8px 18px',
+                    borderRadius: '10px',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    background: 'linear-gradient(135deg, #10B981, #059669)',
+                    border: 'none',
+                    color: '#FFFFFF',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    boxShadow: '0 2px 8px rgba(16, 185, 129, 0.25)'
+                  }}
+                >
+                  <CheckCircle size={14} />
+                  <span>View Submission</span>
+                </button>
+              )}
+
+              {!viewingHomework.isDone && isStudent && !Boolean(viewingHomework.dueDate && new Date(viewingHomework.dueDate).getTime() < startOfToday) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const hw = viewingHomework;
+                    setViewingHomework(null);
+                    setSubmittingHomework(hw);
+                  }}
+                  style={{
+                    padding: '8px 18px',
+                    borderRadius: '10px',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    background: 'linear-gradient(135deg, #14B8A6, #0D9488)',
+                    border: 'none',
+                    color: '#FFFFFF',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    boxShadow: '0 2px 8px rgba(20, 184, 166, 0.25)'
+                  }}
+                >
+                  <UploadCloud size={14} />
+                  <span>Submit Homework</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
       )}
 
-      {/* SUBMIT HOMEWORK MODAL */}
-      <SubmitHomeworkModal
-        homework={submittingHomework}
-        isOpen={Boolean(submittingHomework)}
-        onClose={() => setSubmittingHomework(null)}
+      {/* VIEW SUBMISSION MODAL */}
+      <ViewSubmissionModal
+        homework={viewingSubmission}
+        isOpen={Boolean(viewingSubmission)}
+        onClose={() => setViewingSubmission(null)}
       />
+
+      {/* SUBMIT HOMEWORK MODAL (STUDENTS ONLY) */}
+      {isStudent && (
+        <SubmitHomeworkModal
+          homework={submittingHomework}
+          isOpen={Boolean(submittingHomework)}
+          onClose={() => setSubmittingHomework(null)}
+        />
+      )}
 
       
     </>

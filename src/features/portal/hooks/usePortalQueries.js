@@ -26,6 +26,7 @@ import { getPayments } from '../../../services/portal/payments';
 import {
   getCurrentUser,
   changePassword,
+  updateProfilePhoto,
   login
 } from '../../../services/portal/account';
 import { showToast } from '../../../components/ui/Toast';
@@ -63,6 +64,7 @@ import {
   getTeacherHomework,
   createHomework,
   updateHomework,
+  deleteHomework,
   getTeacherExams,
   getTeacherExam,
   createExam,
@@ -222,6 +224,24 @@ export function useChangePassword() {
     },
     onError: (err) => {
       showToast(err.message || 'Failed to change password', 'error');
+    }
+  });
+}
+
+/**
+ * Hook to update profile photo.
+ */
+export function useUpdateProfilePhoto() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (file) => updateProfilePhoto(file),
+    onSuccess: () => {
+      showToast('Profile photo updated successfully', 'success');
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+    onError: (err) => {
+      showToast(err.message || 'Failed to update profile photo', 'error');
     }
   });
 }
@@ -402,6 +422,22 @@ export function useUpdateHomework() {
     },
     onError: (err) => {
       showToast(err.message || 'Failed to save homework', 'error');
+    }
+  });
+}
+
+export function useDeleteHomework() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id) => deleteHomework(id),
+    onSuccess: () => {
+      showToast('Homework deleted successfully', 'success');
+      queryClient.invalidateQueries({ queryKey: ['teacher', 'homeworks'] });
+      queryClient.invalidateQueries({ queryKey: ['teacher', 'dashboard'] });
+    },
+    onError: (err) => {
+      showToast(err.message || 'Failed to delete homework', 'error');
     }
   });
 }

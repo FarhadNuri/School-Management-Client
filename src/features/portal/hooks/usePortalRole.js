@@ -1,14 +1,33 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ROLES, ALL_TABS } from '../config/roles';
 
 export function usePortalRole() {
-  let session = null;
-  try {
-    const raw = localStorage.getItem('portal_session');
-    if (raw) session = JSON.parse(raw);
-  } catch {
-    session = null;
-  }
+  const [session, setSession] = useState(() => {
+    try {
+      const raw = localStorage.getItem('portal_session');
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      try {
+        const raw = localStorage.getItem('portal_session');
+        setSession(raw ? JSON.parse(raw) : null);
+      } catch {
+        setSession(null);
+      }
+    };
+
+    window.addEventListener('storage', handleUpdate);
+    window.addEventListener('user-updated', handleUpdate);
+    return () => {
+      window.removeEventListener('storage', handleUpdate);
+      window.removeEventListener('user-updated', handleUpdate);
+    };
+  }, []);
 
   const roleKey = session?.role || 'guardian';
   const roleConfig = ROLES[roleKey] || ROLES.guardian;

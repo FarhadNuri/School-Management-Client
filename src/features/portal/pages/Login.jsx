@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ROLES } from '../config/roles';
 import { login } from '../../../services/portal/account';
+import SunriseLogo from '../../../components/ui/SunriseLogo';
 
 export default function Login() {
   const [selectedRole, setSelectedRole] = useState('guardian');
@@ -10,6 +11,10 @@ export default function Login() {
   const [errorMsg, setErrorMsg] = useState('');
   const [isPending, setIsPending] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }, []);
 
   const handleRoleChange = (role) => {
     setSelectedRole(role);
@@ -41,6 +46,9 @@ export default function Login() {
     <div className="login-page">
       <div className="login-card">
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
+            <SunriseLogo size={52} />
+          </div>
           <b style={{ font: "800 24px 'Bricolage Grotesque', serif", color: 'var(--cream)' }}>
             Sunrise
           </b>
@@ -63,7 +71,7 @@ export default function Login() {
         <div
           style={{
             display: 'flex',
-            background: 'var(--ink)',
+            background: 'var(--soft)',
             borderRadius: '14px',
             padding: '4px',
             marginBottom: '20px',
