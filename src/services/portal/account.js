@@ -1,7 +1,7 @@
 import apiRequest from '../api';
 
 export const login = async ({ email, password }) => {
-  const data = await apiRequest('/user/login', {
+  const data = await apiRequest('/auth/user/login', {
     method: 'POST',
     body: { email: email.toLowerCase().trim(), password }
   });
@@ -18,7 +18,7 @@ export const login = async ({ email, password }) => {
 };
 
 export const getCurrentUser = async () => {
-  const data = await apiRequest('/user/me');
+  const data = await apiRequest('/auth/user/me');
   if (data?.user) {
     localStorage.setItem('portal_session', JSON.stringify(data.user));
     localStorage.setItem('guardian_session', JSON.stringify(data.user));
@@ -27,7 +27,7 @@ export const getCurrentUser = async () => {
 };
 
 export const changePassword = async ({ currentPassword, newPassword, confirmPassword }) => {
-  const data = await apiRequest('/user/change-password', {
+  const data = await apiRequest('/auth/user/change-password', {
     method: 'PATCH',
     body: { currentPassword, newPassword, confirmPassword }
   });
@@ -38,7 +38,7 @@ export const updateProfilePhoto = async (file) => {
   const formData = new FormData();
   formData.append('photo', file);
 
-  const data = await apiRequest('/user/me/photo', {
+  const data = await apiRequest('/auth/user/photo', {
     method: 'PATCH',
     body: formData,
   });
@@ -55,7 +55,6 @@ export const updateProfilePhoto = async (file) => {
     } catch (e) {}
   }
 
-  // Trigger storage event so TopBar, Sidebar, and other listeners refresh photo
   window.dispatchEvent(new Event('storage'));
   window.dispatchEvent(new CustomEvent('user-updated', { detail: data?.user || { photo: data?.photo } }));
 
