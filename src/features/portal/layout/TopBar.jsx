@@ -1,13 +1,19 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Moon, Sun } from 'lucide-react';
 import Icon from '../../../components/ui/Icon';
 import { usePortalRole } from '../hooks/usePortalRole';
+import { useTheme } from '../hooks/useTheme';
+import { useUnreadAnnouncements } from '../hooks/useUnreadAnnouncements';
 import AccountModal from '../components/AccountModal';
 
 export default function TopBar({ onToggleSidebar }) {
   const location = useLocation();
-  const { tabs, user, label } = usePortalRole();
+  const navigate = useNavigate();
+  const { tabs, user, label, basePath } = usePortalRole();
+  const { resolvedTheme, toggleTheme } = useTheme();
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const { unreadCount } = useUnreadAnnouncements();
 
   const currentTab =
     tabs.find((tab) => {
@@ -34,9 +40,35 @@ export default function TopBar({ onToggleSidebar }) {
           <small id="ts">{currentTab.subtitle}</small>
         </div>
         <div className="us">
-          <button type="button" className="sq" aria-label="Notifications">
+          <button
+            type="button"
+            className="sq"
+            id="th"
+            aria-label="Theme"
+            title={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleTheme();
+            }}
+          >
+            {resolvedTheme === 'dark' ? (
+              <Sun size={17} strokeWidth={1.8} className="i" />
+            ) : (
+              <Moon size={17} strokeWidth={1.8} className="i" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            className="sq"
+            aria-label="Announcements"
+            title={unreadCount > 0 ? `${unreadCount} unread announcement${unreadCount === 1 ? '' : 's'}` : 'Announcements'}
+            onClick={() => navigate(`${basePath}/announcements`)}
+          >
             <Icon name="mega" />
-            <span className="bd">8</span>
+            {unreadCount > 0 && (
+              <span className="bd">{unreadCount > 99 ? '99+' : unreadCount}</span>
+            )}
           </button>
 
           {/* User profile block - opens Account modal on click */}
