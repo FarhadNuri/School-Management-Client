@@ -12,13 +12,12 @@ export const getComplaints = async () => {
     };
   }
 
-  // Backend endpoint is /user/complaints, with fallback to /user/complaint on 404
   try {
-    const raw = await apiRequest('/user/complaints');
+    const raw = await apiRequest('/communication/user/complaints');
     return adaptComplaintsList(raw);
   } catch (err) {
     if (err?.status === 404) {
-      const fallback = await apiRequest('/user/complaint');
+      const fallback = await apiRequest('/communication/user/complaint');
       return adaptComplaintsList(fallback);
     }
     throw err;
@@ -39,7 +38,6 @@ export const createComplaint = async (complaintData) => {
   formData.append('title', String(complaintData.title || '').trim().slice(0, 50));
   formData.append('description', String(complaintData.description || '').trim().slice(0, 500));
 
-  // Map category to backend allowed enum: ['bullying', 'harassment', 'cyberbullying', 'discrimination', 'other']
   let category = String(complaintData.category || '').toLowerCase().trim();
   if (category === 'misconduct') category = 'other';
   formData.append('category', category);
@@ -47,7 +45,6 @@ export const createComplaint = async (complaintData) => {
   formData.append('severity', String(complaintData.severity || 'medium').toLowerCase().trim());
   formData.append('reportedParty', String(complaintData.reportedParty || '').trim().slice(0, 50));
 
-  // Witnesses: send as JSON array of trimmed names split from comma-separated input
   let witnessesArray = [];
   if (Array.isArray(complaintData.witnesses)) {
     witnessesArray = complaintData.witnesses;
@@ -63,7 +60,7 @@ export const createComplaint = async (complaintData) => {
     formData.append('photoEvidence', complaintData.photoEvidence);
   }
 
-  const res = await apiRequest('/user/complaint', {
+  const res = await apiRequest('/communication/user/complaint', {
     method: 'POST',
     body: formData
   });
