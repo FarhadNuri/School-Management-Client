@@ -15,7 +15,7 @@ export const getMyStudents = async (search = '') => {
     return adaptStudentsList({ count: filtered.length, students: filtered });
   }
 
-  const raw = await apiRequest('/user/students', {
+  const raw = await apiRequest('/academics/user/students', {
     params: { search: search?.trim() || undefined }
   });
 
@@ -28,6 +28,6 @@ export const getStudentById = async (id) => {
     return adaptStudent(match);
   }
 
-  const raw = await apiRequest(`/user/students/${id}`);
+  const raw = await apiRequest(`/academics/user/students/${id}`);
   return adaptStudent(raw?.student || raw);
 };
