@@ -7,9 +7,30 @@ A modern, role-driven web application for Sunrise Model School, serving **Guardi
 ## Features
 
 - **Unified Role Architecture**: Guardians, Students, and Teachers share core layouts, styling, and navigation components. Access, tabs, and permissions are dynamically controlled via centralized role configurations (`roles.js`).
-- **Teacher Portal**: Manage assigned classes and rosters, take attendance roll call, upload study materials, create and evaluate homework, update gradebook marks, and browse parent/guardian contact info.
-- **Guardian Portal**: Monitor linked children, track attendance and grades, view study materials, and settle fee invoices online (`canPay: true`).
-- **Student Portal**: Access personalized timetables, download coursework and study materials, track grades and attendance, and file complaints.
+- **Dynamic Time-Aware Dashboard**: Greeting message dynamically adapts based on time of day (`GOOD MORNING` before 12:00 PM, `GOOD AFTERNOON` from 12:00 PM to 6:00 PM, and `GOOD EVENING` after 6:00 PM).
+- **Teacher Portal**: Manage assigned classes and rosters, take attendance roll call, upload study materials, create and evaluate homework, delete assignments, update gradebook marks, and browse parent/guardian contact info.
+- **Guardian Portal**: Monitor linked children, track attendance and grades, view study materials, inspect student homework submissions (`ViewSubmissionModal`), and settle fee invoices online (`canPay: true`).
+- **Student Portal**: Access personalized timetables, download coursework and study materials, submit homework files and links, track grades and attendance, and file complaints.
+- **Payments & Stripe Receipts**:
+  - Before payment, view and download the pending invoice with amount due.
+  - After payment, view and download the official Stripe receipt detailing payment history (payment method, date paid, amount paid, and receipt number).
+- **Homework Workflow**:
+  - Submissions are restricted strictly to students (hidden from guardians).
+  - Guardians see a "Submitted" status badge and can open the **View Submission** modal to inspect submitted attachments and student notes.
+  - Teachers have full homework deletion controls with confirmation.
+- **Theme Engine (Dark & Light Mode)**:
+  - Persistent theme toggle in TopBar matching admin portal color palette (`dark` default across all dashboards).
+  - Landing pages locked to dark mode.
+  - High-contrast button styles in both dark and light modes.
+- **User Profile & Photo Upload**:
+  - Students, teachers, and guardians can change their profile image with live avatar sync (`PATCH /api/user/me/photo`).
+  - Account modal featuring clean scrollbar-free UX and password change functionality.
+- **Reactive Unread Announcements**:
+  - TopBar megaphone icon shows dynamic unread announcement badge.
+  - Opening or viewing notices reactively decrements the unread counter per user.
+- **Portal & Landing Header Synchronization**:
+  - Top-left sidebar logo in portal navigates back to the landing page (`/`).
+  - Landing page header detects authenticated sessions and renders a circular avatar profile button with dropdown options to return to the **Dashboard** (role-specific) or **Logout** (clears session and restores standard "Enroll now" & "Login" buttons).
 - **Role & Route Guards**: Strict client-side route protection (`AuthGuard`, `RoleGuard`) ensuring authenticated sessions and preventing cross-role route access.
 - **Fast Data Synchronization**: Server-state management powered by TanStack Query with modular API services and data adapters.
 
@@ -74,11 +95,11 @@ A modern, role-driven web application for Sunrise Model School, serving **Guardi
 ### 1. Teacher Portal (`/teacher/*`)
 | Route | Feature / Description |
 |---|---|
-| `/teacher` | Dashboard: assigned classes count, timetable, quick actions, notices |
+| `/teacher` | Dashboard: dynamic greeting, assigned classes count, timetable, quick actions, notices |
 | `/teacher/classes` | Class rosters and enrolled student records |
 | `/teacher/materials` | Upload, edit, and organize section study materials and notes |
 | `/teacher/attendance` | Roll call management and attendance logging per class |
-| `/teacher/homeworks` | Create assignments, manage deadlines, and evaluate student work |
+| `/teacher/homeworks` | Create assignments, manage deadlines, evaluate submissions, and delete homeworks |
 | `/teacher/grades` | Class gradebook, term marks, and assessment entry |
 | `/teacher/guardians` | Directory of linked parents and guardians for contact & communication |
 | `/teacher/announcements`| Post notices and review school-wide announcements |
@@ -87,33 +108,37 @@ A modern, role-driven web application for Sunrise Model School, serving **Guardi
 ### 2. Guardian Portal (`/guardian/*`)
 | Route | Feature / Description |
 |---|---|
-| `/guardian` | Dashboard: linked student summaries, timetable, and announcements |
+| `/guardian` | Dashboard: dynamic greeting, linked student summaries, timetable, and announcements |
 | `/guardian/students` | Linked students roster, academic profiles, and statuses |
 | `/guardian/materials` | Course study materials and lesson resources |
-| `/guardian/homeworks` | Coursework details and submission statuses |
+| `/guardian/homeworks` | Coursework details, submitted status, and student submission inspection modal |
 | `/guardian/grades` | Term assessment results, grade reports, and feedback |
 | `/guardian/attendance` | Daily attendance statistics and absence records |
-| `/guardian/payments` | Invoice history with **online payment** capability (`canPay: true`) |
+| `/guardian/payments` | Invoice history, due invoices, Stripe receipt generation, and **online payments** (`canPay: true`) |
 | `/guardian/complaints` | Submit feedback or formal inquiries to administration |
 | `/guardian/announcements`| School notices and bulletin board |
 
 ### 3. Student Portal (`/student/*`)
 | Route | Feature / Description |
 |---|---|
-| `/student` | Dashboard: enrolled class overview, timetable, and recent notices |
+| `/student` | Dashboard: dynamic greeting, enrolled class overview, timetable, and recent notices |
 | `/student/materials` | Personal course notes, reading lists, and study resources |
-| `/student/homeworks` | Coursework tracker and assignment submissions |
+| `/student/homeworks` | Coursework tracker and assignment submissions (file upload & link) |
 | `/student/grades` | Personal academic marks, exam scores, and GPA summary |
 | `/student/attendance` | Personal presence ring, attendance percentage, and logs |
-| `/student/payments` | Fee statement overview (read-only, `canPay: false`) |
+| `/student/payments` | Fee statement overview and payment history / receipts (read-only, `canPay: false`) |
 | `/student/complaints` | File incident reports and track resolution status |
 | `/student/announcements`| School bulletins and updates |
 
 ### 4. Public Routes
 | Route | Description |
 |---|---|
-| `/` | Landing page |
-| `/login` | Unified login with role tabs (Guardian, Student, Teacher) and 1-click test sign-in |
+| `/` | Landing page with dynamic header (profile dropdown when logged in) |
+| `/about` | About Sunrise Model School, history, and mission |
+| `/programs` | Academic programs and curriculum overview |
+| `/activities` | Co-curricular and sports activities schedule |
+| `/contact` | Contact information, inquiries, and admissions |
+| `/login` | Unified login with role tabs (Guardian, Student, Teacher) and password reveal toggle |
 
 ---
 
@@ -122,16 +147,18 @@ A modern, role-driven web application for Sunrise Model School, serving **Guardi
 ```text
 src/
 ├── assets/          # Static assets (logos, images, icons)
-├── components/      # Reusable UI components (Navbar, Sidebar, Modals, Tables, Toast)
-├── data/            # Static fixtures and fallback mock datasets
+├── components/      # Reusable UI components (Header, Footer, Navbar, Sidebar, Modals, Tables)
+├── data/            # Static fixtures, site copy, and contact data
 ├── features/
-│   ├── landing/     # Public landing page
+│   ├── landing/     # Public landing page and subpages
 │   └── portal/      # Role views, shared pages, and teacher-specific modules
-│       ├── config/  # Role capabilities & tab definitions (roles.js)
-│       └── pages/   # Portal views (teacher/, student, guardian)
+│       ├── components/ # AccountModal, ViewSubmissionModal, Timetable, StatCard
+│       ├── config/     # Role capabilities & tab definitions (roles.js)
+│       ├── hooks/      # usePortalRole, useTheme, useUnreadAnnouncements, usePortalQueries
+│       └── pages/      # Portal views (teacher/, student, guardian)
 ├── routes/          # Router configuration and guards (AuthGuard, RoleGuard)
 ├── services/        # API clients, teacher/student/guardian endpoints & adapters
-└── styles/          # Global CSS tokens and component stylesheets
+└── styles/          # Global CSS tokens (tokens.css), portal styles (portal.css), index.css
 ```
 
 ---
