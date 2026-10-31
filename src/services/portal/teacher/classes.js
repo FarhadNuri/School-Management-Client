@@ -7,7 +7,7 @@ export async function getTeacherClasses({ search = '', isActive } = {}) {
     return { count: 0, classes: [] };
   }
 
-  const raw = await apiRequest('/teacher/classes', {
+  const raw = await apiRequest('/academics/teacher/classes', {
     params: {
       search: search?.trim() || undefined,
       isActive: typeof isActive === 'boolean' ? isActive : undefined
@@ -23,12 +23,12 @@ export async function getTeacherClasses({ search = '', isActive } = {}) {
 
 export async function getTeacherClass(id) {
   if (!LIVE_TEACHER.classes) return null;
-  const raw = await apiRequest(`/teacher/classes/${id}`);
+  const raw = await apiRequest(`/academics/teacher/classes/${id}`);
   return adaptTeacherClassDetail(raw?.class || raw);
 }
 
 export async function getTeacherCourses() {
-  const raw = await apiRequest('/teacher/courses');
+  const raw = await apiRequest('/academics/teacher/courses');
   const list = Array.isArray(raw?.courses) ? raw.courses : [];
   return {
     count: raw?.count ?? list.length,
