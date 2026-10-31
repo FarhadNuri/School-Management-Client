@@ -17,9 +17,9 @@ export const heroContent = {
   primaryCta: "Enroll now →",
   secondaryCta: "Take a campus tour",
   stats: [
-    { value: "4,200+", label: "Students" },
-    { value: "9", label: "Campuses" },
-    { value: "96%", label: "University placement" }
+    { value: "1,200+", label: "Students" },
+    { value: "1", label: "Campus" },
+    { value: "96%", label: "Guardian Trust" }
   ],
   chip: {
     title: "Class of 2025",
@@ -37,7 +37,8 @@ export const achievementsContent = {
       stat: "1st",
       title: "2025 Science & Maths Quiz",
       description: "Curiosity, coaching and grit took the national title.",
-      className: "big"
+      className: "big",
+      image: "/winner.jpg"
     },
     {
       stat: "312",
@@ -62,7 +63,8 @@ export const achievementsContent = {
       title: "Arts & Culture Festival",
       description: "Music, dance and drama ensembles.",
       className: "wide"
-    }
+    },
+    
   ]
 };
 
@@ -134,41 +136,41 @@ export const studentVoiceContent = {
 
 export const testimonialsContent = {
   heading: "What families say",
-  description: "Honest words from parents, students and alumni.",
+  description: "",
   testimonials: [
     {
       quote:
         "“Support here is personal, steady and built for every child’s next step.”",
-      initials: "KO",
-      name: "Kwame O.",
-      role: "Parent · North Region"
+      initials: "FN",
+      name: "Farhad Nuri",
+      role: "Parent"
     },
     {
       quote:
         "“Discipline, curiosity and community still guide me. It prepares you for life.”",
-      initials: "EM",
-      name: "Efua M.",
+      initials: "FA",
+      name: "Fahim Azad",
       role: "Alumna · Class of 2024"
     },
     {
       quote: "“The mentors I met here still answer when I call.”",
-      initials: "YB",
-      name: "Yaw B.",
+      initials: "HH",
+      name: "Halim Hossain",
       role: "Alumnus · Class of 2023"
     },
     {
       quote:
         "“My daughter walks in excited every morning. That says it all.”",
-      initials: "AS",
-      name: "Abena S.",
-      role: "Parent · Central Region"
+      initials: "JI",
+      name: "Jahid Islam",
+      role: "Parent"
     },
     {
       quote:
         "“I stayed because the community truly cares about every child.”",
-      initials: "JM",
-      name: "Mr. Mensah",
-      role: "Teacher · Coastal Region"
+      initials: "NY",
+      name: "Nusrat Yasmin",
+      role: "Teacher"
     }
   ]
 };
@@ -180,7 +182,7 @@ export const ctaBandContent = {
 
 export const footerContent = {
   brand: "Sunrise Model School",
-  description: "Nurturing curious minds from primary to higher secondary.",
+  description: "Nurturing curious minds from primary to higher secondary at our Muradpur, Chattogram campus.",
   columns: [
     {
       title: "Explore",
@@ -188,11 +190,11 @@ export const footerContent = {
     },
     {
       title: "Admissions",
-      links: ["How to apply", "Campus tours", "Fees"]
+      links: ["How to apply", "Campus tours", "Fees & accounts"]
     },
     {
       title: "Contact",
-      links: ["hello@sunrise.edu", "+000 000 0000", "Login"]
+      links: ["info@sunrisemodel.edu.bd", "+880 1865-779218", "Muradpur, Chattogram"]
     }
   ],
   copyright: "© 2026 Sunrise Model School. All rights reserved."
