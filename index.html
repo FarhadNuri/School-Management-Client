@@ -3,19 +3,45 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Sunrise Model School</title>
+    <meta name="theme-color" content="#EDF0EF" />
+    <title>Sunrise Model School | School Portal for Guardians, Students and Teachers</title>
+    <meta
+      name="description"
+      content="School portal for Sunrise Model School in Muradpur, Chattogram. Role based dashboards for attendance, term grades, homework, school fees and announcements."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sunrise Model School" />
+    <meta property="og:title" content="Sunrise Model School | School Portal" />
+    <meta
+      property="og:description"
+      content="Attendance, grades, homework, fees and announcements in one place for guardians, students and teachers at Sunrise Model School."
+    />
+    <meta property="og:image" content="/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sunrise Model School | School Portal" />
+    <meta
+      name="twitter:description"
+      content="Attendance, grades, homework, fees and announcements in one place for guardians, students and teachers."
+    />
+    <meta name="twitter:image" content="/og-image.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Manrope:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <script>
-      (function() {
+      (function () {
         try {
           var p = window.location.pathname;
-          var isPortal = p.startsWith('/guardian') || p.startsWith('/student') || p.startsWith('/teacher');
-          var t = isPortal ? (localStorage.getItem('sunrise_theme') || 'dark') : 'dark';
+          var isPortal =
+            p.startsWith('/guardian') ||
+            p.startsWith('/student') ||
+            p.startsWith('/teacher');
+          var t = isPortal ? localStorage.getItem('sunrise_theme') || 'dark' : 'dark';
           document.documentElement.setAttribute('data-theme', t);
-        } catch(e) {}
+        } catch (e) {}
       })();
     </script>
     <link rel="stylesheet" href="/src/index.css" />
