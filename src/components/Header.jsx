@@ -1,11 +1,17 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, LogOut } from 'lucide-react';
-import { headerContent } from '../data/content';
+import {
+  CaretDown,
+  List,
+  SignOut,
+  SquaresFour,
+  X,
+} from '@phosphor-icons/react';
+import '@fontsource-variable/geist';
 import SunriseLogo from './ui/SunriseLogo';
 import { clearAuthSession } from '../services/portal/account';
 
-const navLinks = [
+const NAV_LINKS = [
   { label: 'Home', path: '/' },
   { label: 'About', path: '/about' },
   { label: 'Programs', path: '/programs' },
@@ -17,11 +23,17 @@ const getStoredSession = () => {
   const token = localStorage.getItem('auth_token');
   if (!token) return null;
   try {
-    const raw = localStorage.getItem('portal_session') || localStorage.getItem('guardian_session');
+    const raw =
+      localStorage.getItem('portal_session') ||
+      localStorage.getItem('guardian_session');
     if (!raw) return null;
     const data = JSON.parse(raw);
-    const name = [data.firstName, data.lastName].filter(Boolean).join(' ') || data.name || 'User';
-    const photo = typeof data.photo === 'object' ? data.photo?.url || '' : data.photo || '';
+    const name =
+      [data.firstName, data.lastName].filter(Boolean).join(' ') ||
+      data.name ||
+      'User';
+    const photo =
+      typeof data.photo === 'object' ? data.photo?.url || '' : data.photo || '';
     const role = (data.role || 'guardian').toLowerCase();
     return { ...data, name, photo, role };
   } catch {
@@ -50,17 +62,15 @@ export default function Header() {
   const navigate = useNavigate();
   const [userSession, setUserSession] = useState(getStoredSession);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    // Landing pages always use dark mode
     document.documentElement.setAttribute('data-theme', 'dark');
   }, []);
 
   useEffect(() => {
-    const syncSession = () => {
-      setUserSession(getStoredSession());
-    };
+    const syncSession = () => setUserSession(getStoredSession());
     window.addEventListener('storage', syncSession);
     window.addEventListener('user-updated', syncSession);
     window.addEventListener('auth-changed', syncSession);
@@ -72,12 +82,7 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    setUserSession(getStoredSession());
-    setIsDropdownOpen(false);
-  }, [location.pathname]);
-
-  useEffect(() => {
-    if (!isDropdownOpen) return;
+    if (!isDropdownOpen) return undefined;
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setIsDropdownOpen(false);
@@ -96,16 +101,28 @@ export default function Header() {
     };
   }, [isDropdownOpen]);
 
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [mobileOpen]);
+
   const handleGoToDashboard = () => {
     setIsDropdownOpen(false);
-    const target = getDashboardPath(userSession?.role);
-    navigate(target);
+    setMobileOpen(false);
+    navigate(getDashboardPath(userSession?.role));
   };
 
   const handleLogout = () => {
     clearAuthSession();
     setUserSession(null);
     setIsDropdownOpen(false);
+    setMobileOpen(false);
   };
 
   const isCurrent = (path) => {
@@ -115,27 +132,39 @@ export default function Header() {
 
   return (
     <header className="main-header">
-      <div className="w">
-        {/* Left: Brand & Logo */}
-        <Link to="/" className="header-brand">
+      <div className="main-header-inner">
+        <Link
+          to="/"
+          className="header-brand"
+          onClick={() => {
+            setIsDropdownOpen(false);
+            setMobileOpen(false);
+          }}
+        >
           <SunriseLogo size={32} />
-          <b>{headerContent.brand}</b>
+          <span className="sub-brand-text">
+            <b>Sunrise</b>
+            <small>Model School</small>
+          </span>
         </Link>
 
-        {/* Middle: Navigation Links */}
-        <nav className="header-nav">
-          {navLinks.map((item) => (
-            <Link
-              key={item.label}
-              to={item.path}
-              className={`nav-item ${isCurrent(item.path) ? 'active' : ''}`}
-            >
-              {item.label}
-            </Link>
-          ))}
+        <nav className="header-nav" aria-label="Primary navigation">
+          {NAV_LINKS.map((item) => {
+            const active = isCurrent(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`nav-item${active ? ' active' : ''}`}
+                aria-current={active ? 'page' : undefined}
+                onClick={() => setIsDropdownOpen(false)}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Right: Enroll Now & Login OR Profile Avatar Dropdown */}
         <div className="header-actions">
           {userSession ? (
             <div className="header-profile-container" ref={dropdownRef}>
@@ -144,20 +173,22 @@ export default function Header() {
                 className="header-profile-btn"
                 onClick={() => setIsDropdownOpen((prev) => !prev)}
                 aria-expanded={isDropdownOpen}
-                aria-haspopup="true"
+                aria-haspopup="menu"
                 title={`${userSession.name} (${getRoleLabel(userSession.role)})`}
               >
-                {userSession.photo ? (
-                  <img
-                    src={userSession.photo}
-                    alt={userSession.name}
-                    className="header-profile-avatar-img"
-                  />
-                ) : (
-                  <span className="header-profile-avatar-text">
-                    {(userSession.name || 'U').charAt(0).toUpperCase()}
-                  </span>
-                )}
+                <span className="header-avatar-circle" aria-hidden="true">
+                  {userSession.photo ? (
+                    <img
+                      src={userSession.photo}
+                      alt=""
+                      className="header-profile-avatar-img"
+                    />
+                  ) : (
+                    (userSession.name || 'U').charAt(0).toUpperCase()
+                  )}
+                </span>
+                <span className="header-avatar-name">{userSession.name}</span>
+                <CaretDown size={14} weight="bold" aria-hidden="true" />
               </button>
 
               {isDropdownOpen && (
@@ -179,7 +210,7 @@ export default function Header() {
                     onClick={handleGoToDashboard}
                     role="menuitem"
                   >
-                    <LayoutDashboard size={17} />
+                    <SquaresFour size={16} weight="regular" aria-hidden="true" />
                     <span>Dashboard</span>
                   </button>
 
@@ -189,28 +220,68 @@ export default function Header() {
                     onClick={handleLogout}
                     role="menuitem"
                   >
-                    <LogOut size={17} />
-                    <span>Logout</span>
+                    <SignOut size={16} weight="regular" aria-hidden="true" />
+                    <span>Log out</span>
                   </button>
                 </div>
               )}
             </div>
           ) : (
-            <>
-              <Link to="/contact" className="enroll-btn">
-                {headerContent.ctaText || 'Enroll now'}
-              </Link>
-
+            <div className="header-auth-links">
               <Link
                 to="/login"
-                className={`login-link ${location.pathname === '/login' ? 'active' : ''}`}
+                className="enroll-btn"
+                onClick={() => setIsDropdownOpen(false)}
               >
-                Login
+                Open portal
               </Link>
-            </>
+            </div>
           )}
+
+          <button
+            type="button"
+            className="header-mobile-toggle"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            aria-expanded={mobileOpen}
+            aria-controls="subpage-mobile-nav"
+            aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          >
+            {mobileOpen ? (
+              <X size={20} weight="bold" aria-hidden="true" />
+            ) : (
+              <List size={20} weight="bold" aria-hidden="true" />
+            )}
+          </button>
         </div>
       </div>
+
+      {mobileOpen && (
+        <div id="subpage-mobile-nav" className="header-mobile-drawer">
+          <nav className="header-mobile-nav" aria-label="Mobile navigation">
+            {NAV_LINKS.map((item) => {
+              const active = isCurrent(item.path);
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`header-mobile-link${active ? ' active' : ''}`}
+                  aria-current={active ? 'page' : undefined}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+            <Link
+              to={userSession ? getDashboardPath(userSession.role) : '/login'}
+              className="enroll-btn header-mobile-cta"
+              onClick={() => setMobileOpen(false)}
+            >
+              {userSession ? 'Dashboard' : 'Open portal'}
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
