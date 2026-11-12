@@ -25,6 +25,7 @@ export default function ContactSection() {
     subject: contactContent.formSection.subjects[0],
     message: ''
   });
+  const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
 
@@ -46,11 +47,44 @@ export default function ContactSection() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[name];
+        return next;
+      });
+    }
+  };
+
+  const validateForm = () => {
+    const nextErrors = {};
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedMessage = formData.message.trim();
+
+    if (trimmedName.length < 2) {
+      nextErrors.name = 'Please enter your full name.';
+    }
+    if (!trimmedEmail) {
+      nextErrors.email = 'Please enter your email address.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      nextErrors.email = 'Please enter a valid email address.';
+    }
+    if (trimmedMessage.length < 10) {
+      nextErrors.message = 'Please enter a message of at least 10 characters.';
+    }
+
+    return nextErrors;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+    const nextErrors = validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      return;
+    }
+    setErrors({});
     setSubmitted(true);
   };
 
@@ -171,7 +205,7 @@ export default function ContactSection() {
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="contact-form-inner">
+                <form onSubmit={handleSubmit} className="contact-form-inner" noValidate>
                   <div className="form-fields-grid">
                     <div className="input-group">
                       <label htmlFor="name">Full Name</label>
@@ -182,8 +216,15 @@ export default function ContactSection() {
                         placeholder="Your full name"
                         value={formData.name}
                         onChange={handleChange}
+                        aria-invalid={Boolean(errors.name)}
+                        aria-describedby={errors.name ? 'contact-name-error' : undefined}
                         required
                       />
+                      {errors.name && (
+                        <p id="contact-name-error" className="field-error-text" role="alert">
+                          {errors.name}
+                        </p>
+                      )}
                     </div>
 
                     <div className="input-group">
@@ -195,8 +236,15 @@ export default function ContactSection() {
                         placeholder="you@example.com"
                         value={formData.email}
                         onChange={handleChange}
+                        aria-invalid={Boolean(errors.email)}
+                        aria-describedby={errors.email ? 'contact-email-error' : undefined}
                         required
                       />
+                      {errors.email && (
+                        <p id="contact-email-error" className="field-error-text" role="alert">
+                          {errors.email}
+                        </p>
+                      )}
                     </div>
 
                     <div className="input-group">
@@ -237,8 +285,15 @@ export default function ContactSection() {
                       placeholder="Write your message here..."
                       value={formData.message}
                       onChange={handleChange}
+                      aria-invalid={Boolean(errors.message)}
+                      aria-describedby={errors.message ? 'contact-message-error' : undefined}
                       required
                     ></textarea>
+                    {errors.message && (
+                      <p id="contact-message-error" className="field-error-text" role="alert">
+                        {errors.message}
+                      </p>
+                    )}
                   </div>
 
                   <button type="submit" className="submit-message-btn">
