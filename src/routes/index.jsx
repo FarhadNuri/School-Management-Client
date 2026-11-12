@@ -7,6 +7,8 @@ import ContactPage from '../features/landing/pages/ContactPage';
 import AboutPage from '../features/landing/pages/AboutPage';
 import ProgramsPage from '../features/landing/pages/ProgramsPage';
 import ActivitiesPage from '../features/landing/pages/ActivitiesPage';
+import LegalPage from '../features/landing/pages/LegalPage';
+import NotFoundPage from '../features/landing/pages/NotFoundPage';
 import Login from '../features/portal/pages/Login';
 import AuthGuard from './AuthGuard';
 import RoleGuard from './RoleGuard';
@@ -56,6 +58,8 @@ export default function AppRoutes() {
       <Route path="/programs" element={<ProgramsPage />} />
       <Route path="/activities" element={<ActivitiesPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/privacy" element={<LegalPage type="privacy" />} />
+      <Route path="/terms" element={<LegalPage type="terms" />} />
       <Route path="/login" element={<Login />} />
 
       {/* Legacy /dashboard redirect */}
@@ -129,7 +133,7 @@ export default function AppRoutes() {
       </Route>
 
       {/* Global Fallback */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
