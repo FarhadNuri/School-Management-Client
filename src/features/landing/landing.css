@@ -1759,74 +1759,242 @@
    Benefits Section (#benefits)
    ========================================================================== */
 
-.landing-root .lp-benefit-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-200);
+.landing-root .lp-benefits-header {
+  margin-bottom: var(--spacing-500);
 }
 
-.landing-root .lp-benefit-top {
+/* ==========================================================================
+   DevPulse-Style Centered Mockup Browser Frame
+   ========================================================================== */
+
+.landing-root .lp-browser-mockup {
+  max-width: 1040px;
+  margin: 0 auto;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--lp-border);
+  background-color: var(--lp-surface);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top Browser Bar */
+.landing-root .lp-browser-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-100);
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--lp-border);
+  background-color: var(--lp-surface-secondary);
+  gap: var(--spacing-200);
 }
 
-.landing-root .lp-benefit-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-lg);
-  background-color: var(--lp-accent-tint);
-  border: 1px solid var(--lp-accent-border);
-  color: var(--lp-accent-ink);
-  display: inline-flex;
+.landing-root .lp-browser-dots {
+  display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 7px;
   flex-shrink: 0;
 }
 
-.landing-root .lp-tag-pill {
+.landing-root .lp-browser-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.landing-root .lp-browser-dot.dot-red {
+  background-color: #ef4444;
+  opacity: 0.85;
+}
+
+.landing-root .lp-browser-dot.dot-yellow {
+  background-color: #f59e0b;
+  opacity: 0.85;
+}
+
+.landing-root .lp-browser-dot.dot-green {
+  background-color: #10b981;
+  opacity: 0.85;
+}
+
+.landing-root .lp-browser-url-pill {
   display: inline-flex;
   align-items: center;
-  padding: var(--spacing-50) var(--spacing-100);
-  border-radius: var(--radius-full);
-  background-color: var(--lp-surface-secondary);
+  gap: 8px;
+  padding: 5px 16px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--lp-border);
-  color: var(--lp-text-secondary);
+  background-color: var(--lp-canvas);
+  color: var(--lp-text-muted);
+  font-size: 0.78rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.landing-root .lp-card-text {
-  color: var(--lp-text-secondary);
-  flex: 1 1 auto;
+.landing-root .lp-browser-lock-icon {
+  flex-shrink: 0;
+  opacity: 0.7;
 }
 
-.landing-root .lp-benefit-media {
+.landing-root .lp-browser-url-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.landing-root .lp-browser-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--lp-text-muted);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  flex-shrink: 0;
+}
+
+.landing-root .lp-browser-counter-divider {
+  opacity: 0.5;
+}
+
+/* Main Screenshot Viewport */
+.landing-root .lp-browser-viewport {
   position: relative;
-  margin-top: var(--spacing-75);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--lp-border);
-  background-color: var(--lp-surface-secondary);
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  min-height: 280px;
+  max-height: 580px;
+  background-color: var(--lp-canvas);
   overflow: hidden;
 }
 
-.landing-root .lp-benefit-img {
+@media (min-width: 640px) {
+  .landing-root .lp-browser-viewport {
+    min-height: 420px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .landing-root .lp-browser-viewport {
+    min-height: 480px;
+  }
+}
+
+.landing-root .lp-browser-slide {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 10;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-root .lp-browser-img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: top center;
   display: block;
 }
 
-.landing-root .lp-media-slot-caption {
-  position: absolute;
-  bottom: var(--spacing-100);
-  left: var(--spacing-100);
-  padding: var(--spacing-25) var(--spacing-75);
+/* Bottom Control Bar */
+.landing-root .lp-browser-bottombar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-top: 1px solid var(--lp-border);
+  background-color: var(--lp-surface-secondary);
+  gap: var(--spacing-200);
+}
+
+.landing-root .lp-browser-active-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.landing-root .lp-browser-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--lp-highlight);
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(245, 158, 108, 0.45);
+}
+
+.landing-root .lp-browser-feature-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--lp-text-primary);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.landing-root .lp-browser-dots-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.landing-root .lp-browser-dot-btn {
+  width: 8px;
+  height: 8px;
   border-radius: var(--radius-full);
-  background-color: var(--lp-surface);
+  background-color: var(--lp-border);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all var(--duration-hover) var(--ease-base);
+}
+
+.landing-root .lp-browser-dot-btn.is-active {
+  width: 20px;
+  background-color: var(--lp-highlight);
+}
+
+.landing-root .lp-browser-arrows {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.landing-root .lp-browser-arrow-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  background: transparent;
   border: 1px solid var(--lp-border);
-  color: var(--lp-text-muted);
-  pointer-events: none;
+  color: var(--lp-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--duration-hover) var(--ease-base);
+  padding: 0;
+}
+
+.landing-root .lp-browser-arrow-btn:hover {
+  background-color: var(--lp-surface);
+  color: var(--lp-text-primary);
+  border-color: var(--lp-border-hover);
+  transform: scale(1.05);
+}
+
+.landing-root .lp-browser-arrow-btn:focus-visible {
+  outline: 2px solid var(--lp-focus-ring);
+  outline-offset: 2px;
 }
 
 /* ==========================================================================

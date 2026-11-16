@@ -673,20 +673,471 @@
 }
 
 
-/* Calendar Date Cell & Hover States */
+/* =========================================================================
+   Teacher Attendance Component Styling (Crisp Contrast in Light & Dark Mode)
+   ========================================================================= */
+
+/* Top bar badges (Subject, Student Count) */
+.att-badge-teal {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+:root[data-theme="light"] .att-badge-teal,
+.portal-app[data-theme="light"] .att-badge-teal {
+  background: rgba(30, 111, 120, 0.12);
+  color: #0F766E;
+  border: 1px solid rgba(15, 118, 110, 0.22);
+}
+:root[data-theme="dark"] .att-badge-teal,
+.portal-app[data-theme="dark"] .att-badge-teal {
+  background: rgba(20, 184, 166, 0.15);
+  color: #2DD4BF;
+  border: 1px solid rgba(45, 212, 191, 0.25);
+}
+
+/* Action: Mark All Present Button */
+.att-btn-mark-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+:root[data-theme="light"] .att-btn-mark-all,
+.portal-app[data-theme="light"] .att-btn-mark-all {
+  background: rgba(22, 163, 74, 0.1);
+  color: #15803D;
+  border: 1px solid rgba(22, 163, 74, 0.35);
+}
+:root[data-theme="light"] .att-btn-mark-all:hover,
+.portal-app[data-theme="light"] .att-btn-mark-all:hover {
+  background: rgba(22, 163, 74, 0.18);
+  border-color: #16A34A;
+}
+:root[data-theme="dark"] .att-btn-mark-all,
+.portal-app[data-theme="dark"] .att-btn-mark-all {
+  background: rgba(22, 163, 74, 0.15);
+  color: #4ADE80;
+  border: 1px solid rgba(22, 163, 74, 0.3);
+}
+:root[data-theme="dark"] .att-btn-mark-all:hover,
+.portal-app[data-theme="dark"] .att-btn-mark-all:hover {
+  background: rgba(22, 163, 74, 0.25);
+}
+
+/* Summary Stat Card */
+.att-stat-card {
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--sh);
+  transition: transform 0.15s ease;
+}
+
+/* Stat Text Colors */
+.att-stat-text-present {
+  font-weight: 800;
+}
+:root[data-theme="light"] .att-stat-text-present,
+.portal-app[data-theme="light"] .att-stat-text-present {
+  color: #15803D;
+}
+:root[data-theme="dark"] .att-stat-text-present,
+.portal-app[data-theme="dark"] .att-stat-text-present {
+  color: #4ADE80;
+}
+
+.att-stat-text-absent {
+  font-weight: 800;
+}
+:root[data-theme="light"] .att-stat-text-absent,
+.portal-app[data-theme="light"] .att-stat-text-absent {
+  color: #DC2626;
+}
+:root[data-theme="dark"] .att-stat-text-absent,
+.portal-app[data-theme="dark"] .att-stat-text-absent {
+  color: #F87171;
+}
+
+.att-stat-text-late {
+  font-weight: 800;
+}
+:root[data-theme="light"] .att-stat-text-late,
+.portal-app[data-theme="light"] .att-stat-text-late {
+  color: #D97706;
+}
+:root[data-theme="dark"] .att-stat-text-late,
+.portal-app[data-theme="dark"] .att-stat-text-late {
+  color: #FBBF24;
+}
+
+.att-stat-text-excused {
+  font-weight: 800;
+}
+:root[data-theme="light"] .att-stat-text-excused,
+.portal-app[data-theme="light"] .att-stat-text-excused {
+  color: #2563EB;
+}
+:root[data-theme="dark"] .att-stat-text-excused,
+.portal-app[data-theme="dark"] .att-stat-text-excused {
+  color: #60A5FA;
+}
+
+.att-stat-text-rate {
+  font-weight: 800;
+}
+:root[data-theme="light"] .att-stat-text-rate,
+.portal-app[data-theme="light"] .att-stat-text-rate {
+  color: #0F766E;
+}
+:root[data-theme="dark"] .att-stat-text-rate,
+.portal-app[data-theme="dark"] .att-stat-text-rate {
+  color: #2DD4BF;
+}
+
+/* Unmarked Warning Pill */
+.att-unmarked-pill {
+  font-size: 11.5px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+:root[data-theme="light"] .att-unmarked-pill,
+.portal-app[data-theme="light"] .att-unmarked-pill {
+  background: rgba(217, 119, 6, 0.12);
+  color: #B45309;
+  border: 1px solid rgba(217, 119, 6, 0.25);
+}
+:root[data-theme="dark"] .att-unmarked-pill,
+.portal-app[data-theme="dark"] .att-unmarked-pill {
+  background: rgba(217, 119, 6, 0.15);
+  color: #FBBF24;
+}
+
+/* Table Header Row */
+.att-table-header {
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+:root[data-theme="light"] .att-table-header,
+.portal-app[data-theme="light"] .att-table-header {
+  background: #F1F6F5;
+  color: #475569;
+}
+:root[data-theme="dark"] .att-table-header,
+.portal-app[data-theme="dark"] .att-table-header {
+  background: rgba(255, 255, 255, 0.03);
+  color: #CBD5E1;
+}
+
+/* Attendance Roll Call Status Pill Buttons */
+.att-status-btn {
+  padding: 6px 13px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+:root[data-theme="light"] .att-status-btn-idle,
+.portal-app[data-theme="light"] .att-status-btn-idle {
+  background: #F8FAFA;
+  border: 1px solid #CBD5E1;
+  color: #334155;
+  font-weight: 600;
+}
+:root[data-theme="light"] .att-status-btn-idle:hover,
+.portal-app[data-theme="light"] .att-status-btn-idle:hover {
+  background: #EEF2F6;
+  border-color: #94A3B8;
+  color: #0F172A;
+}
+:root[data-theme="dark"] .att-status-btn-idle,
+.portal-app[data-theme="dark"] .att-status-btn-idle {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  color: #CBD5E1;
+  font-weight: 600;
+}
+:root[data-theme="dark"] .att-status-btn-idle:hover,
+.portal-app[data-theme="dark"] .att-status-btn-idle:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #FFFFFF;
+}
+
+/* Remarks Input */
+.att-remarks-input {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+:root[data-theme="light"] .att-remarks-input,
+.portal-app[data-theme="light"] .att-remarks-input {
+  background: #F8FAFA;
+  border: 1px solid #CBD5E1;
+  color: #0A1C24;
+}
+:root[data-theme="light"] .att-remarks-input::placeholder,
+.portal-app[data-theme="light"] .att-remarks-input::placeholder {
+  color: #94A3B8;
+}
+:root[data-theme="light"] .att-remarks-input:focus,
+.portal-app[data-theme="light"] .att-remarks-input:focus {
+  border-color: #1E6F78;
+  box-shadow: 0 0 0 2px rgba(30, 111, 120, 0.15);
+  background: #FFFFFF;
+}
+:root[data-theme="dark"] .att-remarks-input,
+.portal-app[data-theme="dark"] .att-remarks-input {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+:root[data-theme="dark"] .att-remarks-input:focus,
+.portal-app[data-theme="dark"] .att-remarks-input:focus {
+  border-color: #2DD4BF;
+  box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.2);
+}
+
+/* Status Badges in View Mode (Roll Call Table) */
+:root[data-theme="light"] .att-view-present,
+.portal-app[data-theme="light"] .att-view-present {
+  background: rgba(22, 163, 74, 0.12);
+  color: #15803D;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+}
+:root[data-theme="light"] .att-view-absent,
+.portal-app[data-theme="light"] .att-view-absent {
+  background: rgba(220, 38, 38, 0.12);
+  color: #DC2626;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+:root[data-theme="light"] .att-view-late,
+.portal-app[data-theme="light"] .att-view-late {
+  background: rgba(217, 119, 6, 0.12);
+  color: #D97706;
+  border: 1px solid rgba(217, 119, 6, 0.25);
+}
+:root[data-theme="light"] .att-view-excused,
+.portal-app[data-theme="light"] .att-view-excused {
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563EB;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+}
+
+:root[data-theme="dark"] .att-view-present,
+.portal-app[data-theme="dark"] .att-view-present {
+  background: rgba(22, 163, 74, 0.15);
+  color: #4ADE80;
+}
+:root[data-theme="dark"] .att-view-absent,
+.portal-app[data-theme="dark"] .att-view-absent {
+  background: rgba(220, 38, 38, 0.15);
+  color: #F87171;
+}
+:root[data-theme="dark"] .att-view-late,
+.portal-app[data-theme="dark"] .att-view-late {
+  background: rgba(217, 119, 6, 0.15);
+  color: #FBBF24;
+}
+:root[data-theme="dark"] .att-view-excused,
+.portal-app[data-theme="dark"] .att-view-excused {
+  background: rgba(37, 99, 235, 0.15);
+  color: #60A5FA;
+}
+
+/* Calendar Month Navigation Box */
+.att-month-nav-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  height: 38px;
+  box-sizing: border-box;
+}
+:root[data-theme="light"] .att-month-nav-box,
+.portal-app[data-theme="light"] .att-month-nav-box {
+  background: #F1F6F5;
+}
+:root[data-theme="dark"] .att-month-nav-box,
+.portal-app[data-theme="dark"] .att-month-nav-box {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Calendar Mode Switcher Container & Inactive Text */
+.att-mode-switcher {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+:root[data-theme="light"] .att-mode-switcher,
+.portal-app[data-theme="light"] .att-mode-switcher {
+  background: #F1F6F5;
+}
+:root[data-theme="dark"] .att-mode-switcher,
+.portal-app[data-theme="dark"] .att-mode-switcher {
+  background: rgba(255, 255, 255, 0.035);
+}
+.att-mode-btn-idle {
+  color: #64748B;
+}
+:root[data-theme="light"] .att-mode-btn-idle,
+.portal-app[data-theme="light"] .att-mode-btn-idle {
+  color: #475569;
+}
+:root[data-theme="dark"] .att-mode-btn-idle,
+.portal-app[data-theme="dark"] .att-mode-btn-idle {
+  color: #94A3B8;
+}
+
+/* Calendar Weekday Names */
+.att-weekday-label {
+  padding: 4px 0;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+:root[data-theme="light"] .att-weekday-label,
+.portal-app[data-theme="light"] .att-weekday-label {
+  color: #475569;
+}
+:root[data-theme="light"] .att-weekday-label.weekend,
+.portal-app[data-theme="light"] .att-weekday-label.weekend {
+  color: #0284C7;
+}
+:root[data-theme="dark"] .att-weekday-label,
+.portal-app[data-theme="dark"] .att-weekday-label {
+  color: #94A3B8;
+}
+:root[data-theme="dark"] .att-weekday-label.weekend,
+.portal-app[data-theme="dark"] .att-weekday-label.weekend {
+  color: #38BDF8;
+}
+
+/* Calendar Month Day Cells */
 .att-day-cell {
   position: relative;
   transition: all 0.15s ease;
 }
 
-.att-day-cell-clickable:hover {
+/* Cell Themes: Unmarked */
+:root[data-theme="light"] .att-day-cell-unmarked,
+.portal-app[data-theme="light"] .att-day-cell-unmarked {
+  background: #F8FAFA;
+  border: 1px solid #D1DFDC;
+}
+:root[data-theme="dark"] .att-day-cell-unmarked,
+.portal-app[data-theme="dark"] .att-day-cell-unmarked {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Cell Themes: Marked Records */
+:root[data-theme="light"] .att-day-cell-marked,
+.portal-app[data-theme="light"] .att-day-cell-marked {
+  background: rgba(22, 163, 74, 0.08);
+  border: 1px solid rgba(22, 163, 74, 0.35);
+}
+:root[data-theme="dark"] .att-day-cell-marked,
+.portal-app[data-theme="dark"] .att-day-cell-marked {
+  background: rgba(34, 197, 94, 0.06);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+/* Cell Themes: Today */
+:root[data-theme="light"] .att-day-cell-today,
+.portal-app[data-theme="light"] .att-day-cell-today {
+  background: rgba(20, 184, 166, 0.12);
+  border: 1.5px solid #0D9488;
+  box-shadow: 0 0 10px rgba(20, 184, 166, 0.2);
+}
+:root[data-theme="dark"] .att-day-cell-today,
+.portal-app[data-theme="dark"] .att-day-cell-today {
+  background: rgba(20, 184, 166, 0.12);
+  border: 1.5px solid #14B8A6;
+  box-shadow: 0 0 10px rgba(20, 184, 166, 0.2);
+}
+
+/* Hover States for Clickable Day Cells */
+:root[data-theme="light"] .att-day-cell-clickable:hover,
+.portal-app[data-theme="light"] .att-day-cell-clickable:hover {
+  background: #E8F1F0 !important;
+  border-color: #1E6F78 !important;
+  transform: translateY(-1px);
+}
+:root[data-theme="dark"] .att-day-cell-clickable:hover,
+.portal-app[data-theme="dark"] .att-day-cell-clickable:hover {
   background: rgba(255, 255, 255, 0.07) !important;
   border-color: rgba(20, 184, 166, 0.45) !important;
   transform: translateY(-1px);
 }
 
-.att-day-cell-clickable:hover .att-add-record-text {
-  opacity: 0.95 !important;
+/* Add Record Text inside day cell */
+:root[data-theme="light"] .att-add-record-text,
+.portal-app[data-theme="light"] .att-add-record-text {
+  color: #0F766E !important;
+  font-weight: 700 !important;
+  opacity: 0.85 !important;
+}
+:root[data-theme="dark"] .att-add-record-text,
+.portal-app[data-theme="dark"] .att-add-record-text {
+  color: #2DD4BF !important;
+  font-weight: 600 !important;
+  opacity: 0.65 !important;
+}
+
+/* Marked Badge inside day cell */
+:root[data-theme="light"] .att-cell-marked-badge,
+.portal-app[data-theme="light"] .att-cell-marked-badge {
+  background: rgba(22, 163, 74, 0.14) !important;
+  color: #15803D !important;
+}
+:root[data-theme="dark"] .att-cell-marked-badge,
+.portal-app[data-theme="dark"] .att-cell-marked-badge {
+  background: rgba(34, 197, 94, 0.2) !important;
+  color: #4ADE80 !important;
+}
+
+/* TODAY label on day cell */
+:root[data-theme="light"] .att-today-label,
+.portal-app[data-theme="light"] .att-today-label {
+  color: #0F766E;
+}
+:root[data-theme="dark"] .att-today-label,
+.portal-app[data-theme="dark"] .att-today-label {
+  color: #2DD4BF;
+}
+
+/* No records label on day cell */
+:root[data-theme="light"] .att-no-records-label,
+.portal-app[data-theme="light"] .att-no-records-label {
+  color: #64748B;
+  font-weight: 600;
+}
+:root[data-theme="dark"] .att-no-records-label,
+.portal-app[data-theme="dark"] .att-no-records-label {
+  color: #64748B;
+  font-weight: 500;
 }
 
 /* Section Card Button Hover States */

@@ -92,14 +92,14 @@
   --card: #FFFFFF;
   --ink: #0A1C24;
   --mute: #60797F;
-  --line: #E3ECEA;
+  --line: #D5E2DF;
   --soft: #F1F6F5;
   --p1: #1E6F78;
   --p2: #0F3B44;
   --acc: #F59E6C;
   --lag2: #2B8791;
   --sand: #E7C9A3;
-  --sh: 0 6px 20px rgba(15, 59, 68, 0.07);
+  --sh: 0 4px 16px rgba(15, 59, 68, 0.08);
   --grad-primary: linear-gradient(135deg, var(--p1), var(--p2));
   --grad-banner: linear-gradient(120deg, var(--p2), var(--p1));
   --logout-red: #C0392B;
@@ -108,12 +108,12 @@
   --g-card: #FFFFFF;
   --g-ink: #0A1C24;
   --g-mute: #60797F;
-  --g-line: #E3ECEA;
+  --g-line: #D5E2DF;
   --g-soft: #F1F6F5;
   --g-p1: #1E6F78;
   --g-p2: #0F3B44;
   --g-acc: #F59E6C;
-  --g-sh: 0 6px 20px rgba(15, 59, 68, 0.07);
+  --g-sh: 0 4px 16px rgba(15, 59, 68, 0.08);
 
   background: var(--bg);
   color: var(--ink);

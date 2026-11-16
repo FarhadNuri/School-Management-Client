@@ -1,191 +1,220 @@
-# Sunrise Model School - Client Portal
+<p align="center">
+  <h1 align="center"> Sunrise Model School — Client Portal</h1>
+</p>
 
-A modern, role-driven web application for Sunrise Model School, serving **Guardians**, **Students**, and **Teachers** through a unified UI architecture built with React and Vite.
+<p align="center">
+  <strong>Modern, Role-Driven School Management & Student Portal for Students, Guardians, Teachers, and Staff</strong>
+</p>
 
----
-
-## Key Features
-
-- **Modular Microservice API Routing**: Client services are decoupled into domain-driven endpoint modules (`/auth`, `/communication`, `/academics`, `/billing`, `/grading`) matching the backend microservice architecture.
-- **Unified Role System**: Guardians, Students, and Teachers share core layouts, styling, and navigation primitives. Access, navigation tabs, and actions are dynamically controlled via centralized capability flags.
-- **Academic Grades & Assessment**:
-  - Comprehensive gradebook management for teachers with multi-course tab switching, subject badges, term assessments, and score logging.
-  - Transparent academic reports for students and guardians detailing subject marks, term GPA summaries, grading scales, and instructor feedback.
-- **Attendance & Roll Call Management**:
-  - Interactive daily roll call logging for teachers per class session, supporting real-time status updates (`present`, `absent`, `late`, `excused`) and monthly attendance overview grids.
-  - Visual presence tracking for students and guardians featuring attendance percentage rings, historical logs, and absence breakdown records.
-- **Curriculum Study Materials & E-Books**:
-  - Centralized study materials repository allowing teachers to upload lesson notes, study guides, and multimedia attachments.
-  - Integrated digital e-book reader and curriculum syllabus viewer for students and guardians with quick document downloads and category filtering.
-- **Announcements & Incident Complaints**:
-  - **School Announcements**: Targeted bulletin broadcasts for students, guardians, and teachers with category/severity filtering and a dynamic unread counter badge in the TopBar that decrements reactively when notices are viewed.
-  - **Incident Grievances & Follow-Up**: Structured complaint filing system with evidence uploads (`FormData` photo attachments), categorized incident classifications, witness declarations, and end-to-end lifecycle tracking.
-- **Payment & Stripe Receipt Workflow**:
-  - Unpaid invoices render the pending balance and due date with online settlement capability (`canPay: true`).
-  - Paid invoices render the official Stripe receipt detailing transaction history (payment method, date paid, amount paid, and receipt number).
-- **Homework Workflow**:
-  - Submissions are restricted strictly to students (hidden from guardians).
-  - Guardians view a "Submitted" status badge and can inspect student submissions (files, attachments, notes) via the **View Submission** modal.
-  - Teachers have full homework creation, review, and deletion controls.
-- **Client Route Guards**: Strict route protection via `AuthGuard` and `RoleGuard` ensuring authenticated sessions and preventing cross-role route access.
-- **Server State & Data Adapters**: TanStack Query server-state caching layered on top of resilient adapters that insulate views from upstream payload variations.
+<p align="center">
+  <img src="https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
+  <img src="https://img.shields.io/badge/Vite_8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
+  <img src="https://img.shields.io/badge/React_Router_7-CA4245?style=for-the-badge&logo=react-router&logoColor=white" alt="React Router 7" />
+  <img src="https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=react-query&logoColor=white" alt="TanStack Query" />
+  <img src="https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Framer Motion" />
+</p>
 
 ---
 
-## Modular API Architecture
+## Overview
 
-The application communicates with backend services through clean domain namespaces under `src/services/portal/`:
+**Sunrise Model School Portal** is a high-performance, responsive web application engineered to bridge the daily communication and operational gap between schools, students, teachers, and guardians. Powered by **React 19** and **Vite**, the client portal delivers dynamic class routines, real-time daily roll call logging, online coursework submissions, term grading reports, official notice broadcasts, and secure online tuition fee payments.
 
-| Domain | Base Prefix | Service Files | Responsibilities |
-|---|---|---|---|
-| **Authentication** | `/auth/user` | `account.js` | User login, session verification (`/me`), password changes, profile photo updates |
-| **Communication** | `/communication` | `announcements.js`<br>`complaints.js` | School-wide and role-targeted notices, incident reports, grievance follow-ups |
-| **Academics (Student/Guardian)** | `/academics/user` | `attendance.js`<br>`courses.js`<br>`homeworks.js`<br>`lessons.js`<br>`routine.js`<br>`students.js` | Course materials, student rosters, personal attendance summaries, class timetable, homework submissions |
-| **Academics (Teacher)** | `/academics/teacher` | `teacher/attendance.js`<br>`teacher/classes.js`<br>`teacher/exams.js`<br>`teacher/guardians.js`<br>`teacher/homeworks.js`<br>`teacher/lessons.js` | Roll call management, class rosters, homework assignment creation/deletion, syllabus material uploads, gradebook entries, guardian directory |
-| **Billing & Payments** | `/billing/user` | `payments.js` | Fee invoice history, student payment statements, Stripe online checkout |
-| **Grading** | `/grading/user` | `grades.js` | Academic marks, term report cards, GPA transcripts |
+---
 
-### Data Adapter Layer
-Raw backend responses pass through data adapters (`src/services/portal/adapters/` and `src/services/portal/teacher/adapters/`) before reaching UI components. This ensures:
-- Safe fallback values for nullable database fields.
-- Normalization of entity identifiers (`id`, `_id`).
-- Consistent date/time parsing and formatting.
-- Shielding UI components from backend schema modifications.
+## The Problem
+
+- **Fragmented Communication:** Important notices, fee deadlines, exam dates, and attendance records traditionally travel via paper diaries, phone calls, or unorganized messaging groups. Parents often find out about absences or unpaid fees too late.
+- **Disconnected Academic Workflows:** Teachers manage grades, daily roll calls, and homework assignments across disparate notebooks or spreadsheets, creating friction when compiling term progress reports.
+- **Unclear Progress Tracking:** Students and guardians lack a single, transparent dashboard to monitor daily schedules, upcoming assignment deadlines, GPA calculations, and teacher remarks.
+
+Sunrise Model School solves this by centralizing all daily academic operations into one unified, role-governed platform.
+
+---
+
+## Features
+
+### Dynamic Class Routine & Dashboard
+- Personalized daily class timetables showing subject periods, room allocations, and assigned instructors.
+- Live academic stats overview: attendance rate percentage, pending coursework count, and quick alerts.
+
+### Attendance Tracking & Digital Roll Call
+- **Teacher Roll Call:** Single-click daily attendance logging (`Present`, `Absent`, `Late`, `Excused`) with "Mark All Present" automation and monthly calendar grids.
+- **Guardian & Student Visibility:** Real-time presence tracking, attendance percentage rings, and same-day absence notifications.
+
+### Homework & Coursework Workflow
+- **Student Submissions:** Students inspect assigned tasks, upload files, write remarks, and track submission statuses.
+- **Teacher Controls:** Create homework with subject tags, file attachments, and due date deadlines; review student submissions with feedback.
+- **Guardian Supervision:** Guardians can inspect submitted files and verify student completion status.
+
+### Academic Grades & Transcripts
+- Multi-course gradebook for teachers with subject badges, term assessments, and marks logging.
+- Transparent report cards for students and guardians detailing subject marks, term GPA, grading scales, and instructor comments.
+
+### Notices & Announcements
+- Category-based notices (`Academic`, `General`, `Disciplinary`) with priority badges (`High`, `Medium`, `Low`).
+- Reactive unread count indicator in the navigation bar that decrements in real time upon viewing.
+
+### Online Tuition & Fee Payments
+- Itemized fee statement invoices for tuition, examinations, and activities.
+- Online payment integration with downloadable official transaction receipts.
+
+### Theme & Accessibility
+- Seamless dark and light theme toggle with WCAG AA/AAA compliant high-contrast color tokens.
+- Fully responsive across mobile, tablet, and desktop viewports with fluid Framer Motion animations.
 
 ---
 
 ## Tech Stack
 
-- **Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
-- **Routing**: [React Router v7](https://reactrouter.com/)
-- **State & Data Fetching**: [TanStack Query v5](https://tanstack.com/query)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Linting**: [Oxlint](https://oxc.rs/)
+| Category | Technology |
+| --- | --- |
+| **Framework & Core** | React 19, Vite 8 |
+| **Routing** | React Router v7 (Data Router, Route Guards) |
+| **State & Data Fetching** | TanStack React Query v5 |
+| **Animations** | Framer Motion |
+| **Icons & Typography** | Lucide React, Phosphor Icons, Geist Variable Font |
+| **Styling** | Modern CSS Variables (Design Tokens, Dark/Light Themes) |
+| **Linting & Quality** | Oxlint |
+
+---
+
+## Role-Based Access Control
+
+The portal implements strict client-side route protection via `AuthGuard` and `RoleGuard`:
+
+| Feature / Page | Student | Guardian | Teacher | Admin |
+| --- | :---: | :---: | :---: | :---: |
+| **Personal Dashboard & Routine** | ✅ | ✅ | ✅ | ✅ |
+| **Attendance (View Own / Student)** | ✅ | ✅ | ❌ | ✅ |
+| **Attendance (Take Class Roll Call)** | ❌ | ❌ | ✅ | ✅ |
+| **Homework (Submit Assignment)** | ✅ | ❌ | ❌ | ❌ |
+| **Homework (Create & Review)** | ❌ | ❌ | ✅ | ✅ |
+| **Homework (View Submission Details)** | ✅ | ✅ | ✅ | ✅ |
+| **Gradebook & Report Cards** | ✅ (Own) | ✅ (Child) | ✅ (Manage) | ✅ |
+| **Fee Statements & Online Payments** | ✅ | ✅ | ❌ | ✅ |
+| **School Announcements** | ✅ | ✅ | ✅ | ✅ |
+
+---
+
+## Modular API Endpoints
+
+The frontend client communicates with backend microservice domains through centralized service modules in `src/services/portal/`:
+
+| Domain | Base Endpoint Prefix | Service Files | Key Responsibilities |
+| --- | --- | --- | --- |
+| **Authentication** | `/auth/user` | `account.js` | Session verification (`/me`), credentials login, password changes, profile photo uploads |
+| **Communication** | `/communication` | `announcements.js`<br>`complaints.js` | School notices broadcast, category/severity filtering, student grievance reports & evidence tracking |
+| **Academics (Student & Guardian)** | `/academics/user` | `attendance.js`<br>`courses.js`<br>`homeworks.js`<br>`lessons.js`<br>`routine.js`<br>`students.js` | Personal attendance history, weekly class routines, homework submissions, digital e-book access |
+| **Academics (Teacher)** | `/academics/teacher` | `teacher/attendance.js`<br>`teacher/classes.js`<br>`teacher/exams.js`<br>`teacher/guardians.js`<br>`teacher/homeworks.js`<br>`teacher/lessons.js` | Class session roll calls, assigned section rosters, homework assignment creation, syllabus uploads, guardian directory |
+| **Billing & Payments** | `/billing/user` | `payments.js` | Outstanding fee invoices, transaction logs, Stripe checkout session redirects |
+| **Grading & Transcripts** | `/grading/user` | `grades.js` | Subject assessment marks, semester GPA calculation, term report card generation |
+
+### Data Adapter Layer
+Raw responses pass through dedicated adapters (`src/services/portal/adapters/`) before reaching components. This ensures:
+- Safe fallback values for optional or nullable database attributes.
+- Consistent date, status, and currency normalization across all client views.
+- Clean decoupling between API contracts and UI presentation logic.
 
 ---
 
 ## Getting Started
 
 ### Prerequisites
-- **Node.js** (v18+ recommended)
-- **npm** (or pnpm / yarn)
-- Backend API server running
+
+- **Node.js**: `v18.0.0` or higher
+- **npm** or **pnpm** installed
+- Backend API server running (or target staging API endpoint)
 
 ### Installation
 
-1. **Clone the repository and install dependencies:**
-   ```bash
-   git clone <repository-url>
-   cd client
-   npm install
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/your-username/schoolclient.git
+cd schoolclient
 
-2. **Configure environment variables:**
-   ```bash
-   cp .env.example .env
-   ```
-   Set your backend API endpoint in `.env`:
-   ```env
-   VITE_API_URL=http://localhost:5000/api
-   ```
+# Install dependencies
+npm install
+```
 
-3. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-   The client will start at `http://localhost:5173` (or `http://localhost:5174`).
+### Environment Configuration
 
----
+Create a `.env` file in the root directory:
 
-## Available Scripts
+```env
+# Backend API Base URL
+VITE_API_URL=http://localhost:5000/api
+```
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Runs the Vite dev server with Hot Module Replacement (HMR). |
-| `npm run build` | Compiles and optimizes assets into `dist/` for production. |
-| `npm run preview` | Locally serves the production `dist/` build for testing. |
-| `npm run lint` | Runs Oxlint for fast code analysis. |
+### Development & Production
 
----
+```bash
+# Start local development server
+npm run dev
 
-## Portal Roles & Routes
+# Run fast code linting
+npm run lint
 
-### 1. Teacher Portal (`/teacher/*`)
-| Route | Feature / Description |
-|---|---|
-| `/teacher` | Dashboard: dynamic greeting, assigned classes count, timetable, quick actions, notices |
-| `/teacher/classes` | Class rosters and enrolled student records |
-| `/teacher/materials` | Upload, edit, and organize section study materials and notes |
-| `/teacher/attendance` | Roll call management and attendance logging per class |
-| `/teacher/homeworks` | Create assignments, manage deadlines, evaluate submissions, and delete homeworks |
-| `/teacher/grades` | Class gradebook, term marks, and assessment entry |
-| `/teacher/guardians` | Directory of linked parents and guardians for contact & communication |
-| `/teacher/announcements`| Post notices and review school-wide announcements |
-| `/teacher/complaints` | Incident reporting and case follow-up |
+# Build for production
+npm run build
 
-### 2. Guardian Portal (`/guardian/*`)
-| Route | Feature / Description |
-|---|---|
-| `/guardian` | Dashboard: dynamic greeting, linked student summaries, timetable, and announcements |
-| `/guardian/students` | Linked students roster, academic profiles, and statuses |
-| `/guardian/materials` | Course study materials and lesson resources |
-| `/guardian/homeworks` | Coursework details, submitted status, and student submission inspection modal |
-| `/guardian/grades` | Term assessment results, grade reports, and feedback |
-| `/guardian/attendance` | Daily attendance statistics and absence records |
-| `/guardian/payments` | Invoice history, due invoices, Stripe receipt generation, and **online payments** (`canPay: true`) |
-| `/guardian/complaints` | Submit feedback or formal inquiries to administration |
-| `/guardian/announcements`| School notices and bulletin board |
-
-### 3. Student Portal (`/student/*`)
-| Route | Feature / Description |
-|---|---|
-| `/student` | Dashboard: dynamic greeting, enrolled class overview, timetable, and recent notices |
-| `/student/materials` | Personal course notes, reading lists, and study resources |
-| `/student/homeworks` | Coursework tracker and assignment submissions (file upload & link) |
-| `/student/grades` | Personal academic marks, exam scores, and GPA summary |
-| `/student/attendance` | Personal presence ring, attendance percentage, and logs |
-| `/student/payments` | Fee statement overview and payment history / receipts (read-only, `canPay: false`) |
-| `/student/complaints` | File incident reports and track resolution status |
-| `/student/announcements`| School bulletins and updates |
-
-### 4. Public Routes
-| Route | Description |
-|---|---|
-| `/` | Landing page with dynamic header (profile dropdown when logged in) |
-| `/about` | About Sunrise Model School, history, and mission |
-| `/programs` | Academic programs and curriculum overview |
-| `/activities` | Co-curricular and sports activities schedule |
-| `/contact` | Contact information, inquiries, and admissions |
-| `/login` | Unified login with role tabs (Guardian, Student, Teacher) and password reveal toggle |
+# Preview production build locally
+npm run preview
+```
 
 ---
 
 ## Project Structure
 
-```text
+```
 src/
-├── assets/          # Static assets (logos, images, icons)
-├── components/      # Reusable UI components (Header, Footer, Navbar, Sidebar, Modals, Tables)
-├── data/            # Static fixtures, site copy, and contact data
+├── assets/                  # Static assets and illustrations
+├── components/              # Shared UI components (TopBar, Sidebar, Modals)
 ├── features/
-│   ├── landing/     # Public landing page and subpages
-│   └── portal/      # Role views, shared pages, and teacher-specific modules
-│       ├── components/ # AccountModal, ViewSubmissionModal, Timetable, StatCard
-│       ├── config/     # Role capabilities & tab definitions (roles.js)
-│       ├── hooks/      # usePortalRole, useTheme, useUnreadAnnouncements, usePortalQueries
-│       └── pages/      # Portal views (teacher/, student, guardian)
-├── routes/          # Router configuration and guards (AuthGuard, RoleGuard)
-├── services/        # Modular API clients, domain endpoints & data adapters
-│   └── portal/
-│       ├── adapters/   # Normalization adapters for student & guardian payloads
-│       └── teacher/    # Teacher-specific services and adapters
-└── styles/          # Global CSS tokens (tokens.css), portal styles (portal.css), index.css
+│   ├── auth/                # Login, session checks, and password reset
+│   ├── landing/             # Public landing page sections & benefits slider
+│   └── portal/              # Role-based dashboard features
+│       ├── components/      # Feature-specific widgets (Routine, Gradebook, Cards)
+│       ├── hooks/           # TanStack query and unread notifications hooks
+│       └── pages/           # Student, Teacher, and Guardian views
+├── routes/                  # App routing with AuthGuard and RoleGuard
+├── services/
+│   └── portal/              # Domain API modules & data transformation adapters
+│       ├── academics/       # Routines, homeworks, and curriculum materials
+│       ├── attendance/      # Daily roll call and summary endpoints
+│       ├── billing/         # Fee invoices and Stripe payment calls
+│       └── grading/         # Examination marks and GPA transcripts
+└── styles/                  # Global CSS tokens, theme variables, and layout rules
 ```
 
 ---
 
-## Role Configuration
+## Use Cases
 
-All role differences and capabilities are centralized in `src/features/portal/config/roles.js`. Instead of scattering role conditions across UI components, views query capability flags (e.g. `canTakeAttendance`, `canManageMaterials`, `canPay`, `canCreateAnnouncement`) through the `usePortalRole` hook.
+| Persona | Primary Workflow |
+| --- | --- |
+| **Students** | Check daily class routines, track due homework, submit coursework files, review grades, and read school circulars. |
+| **Guardians** | Monitor student attendance same-day, review teacher remarks, inspect submitted homework, and pay school tuition fees online. |
+| **Teachers** | Conduct daily session roll calls, upload syllabus materials, post homework assignments, and record examination marks. |
+| **Administration** | Broadcast emergency notices, manage class sections, and maintain digital student academic records. |
+
+---
+
+## Contributing
+
+1. Fork the project repository
+2. Create your feature branch (`git checkout -b feature/NewFeature`)
+3. Commit your changes (`git commit -m 'feat: Add NewFeature'`)
+4. Push to your branch (`git push origin feature/NewFeature`)
+5. Open a Pull Request
+
+---
+
+## Author & Support
+
+**Farhad Nuri**
+- **GitHub:** [@FarhadNuri](https://github.com/FarhadNuri)
+- **LinkedIn:** [Farhad Nuri](https://www.linkedin.com/in/farhad-nuri-ba99a62a5/)
+- **Email:** farhadnuri559@gmail.com
 
 ---
