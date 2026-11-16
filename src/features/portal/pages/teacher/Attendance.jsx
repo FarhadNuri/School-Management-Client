@@ -291,16 +291,10 @@ export default function TeacherAttendance() {
   // =========================================================================
   if (selectedSection && selectedDate) {
     const isEditMode = mode === 'give';
-    const formattedDate = new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {/* Top Header & Navigation */}
+        {/* Top Header & Navigation - Styled like Calendar page topbar */}
         <div
           style={{
             display: 'flex',
@@ -315,6 +309,7 @@ export default function TeacherAttendance() {
             boxShadow: 'var(--sh)'
           }}
         >
+          {/* Left: Back button & Class details in single horizontal line */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <button
               onClick={() => {
@@ -325,88 +320,46 @@ export default function TeacherAttendance() {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '8px',
-                padding: '7px 14px',
+                gap: '6px',
+                padding: '7px 12px',
                 borderRadius: '10px',
                 background: 'var(--soft)',
                 border: '1px solid var(--line)',
                 color: 'var(--ink)',
                 cursor: 'pointer',
                 fontWeight: 600,
-                fontSize: '13px'
+                fontSize: '12.5px'
               }}
             >
-              <ArrowLeft size={16} />
-              <span>Back to Calendar</span>
+              <ArrowLeft size={15} />
+              <span>Back</span>
             </button>
 
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: 'var(--ink)' }}>
-                  {selectedSection.className}
-                </h2>
-                {selectedSection.mySubject && (
-                  <span
-                    style={{
-                      padding: '2px 8px',
-                      borderRadius: '6px',
-                      background: 'rgba(20, 184, 166, 0.15)',
-                      color: '#14B8A6',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}
-                  >
-                    <BookOpen size={12} />
-                    <span>{selectedSection.mySubject}</span>
-                    {selectedSection.myCourseCode ? ` (${selectedSection.myCourseCode})` : ''}
-                  </span>
-                )}
-                <span
-                  style={{
-                    padding: '2px 8px',
-                    borderRadius: '6px',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    background: mode === 'give' ? 'rgba(20,184,166,.18)' : 'rgba(37,99,235,.18)',
-                    color: mode === 'give' ? '#2DD4BF' : '#60A5FA',
-                    textTransform: 'uppercase'
-                  }}
-                >
-                  {mode === 'give' ? 'Take Attendance' : 'Attendance Record'}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: 'var(--ink)' }}>
+                {selectedSection.className}
+              </h2>
+              {selectedSection.mySubject && (
+                <span className="att-badge-teal">
+                  <BookOpen size={12} />
+                  <span>{selectedSection.mySubject}</span>
+                  {selectedSection.myCourseCode ? ` (${selectedSection.myCourseCode})` : ''}
                 </span>
-              </div>
-              <p style={{ margin: '2px 0 0', color: 'var(--mute)', fontSize: '12.5px' }}>
-                {formattedDate} • Daily School Roll Call
-              </p>
+              )}
+              <span className="att-badge-teal">
+                {selectedSection.studentCount} Students
+              </span>
             </div>
           </div>
 
-          {/* Mode or Action toggles */}
+          {/* Right: Actions */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            
-
             {isEditMode && (
               <button
                 onClick={handleMarkAllPresent}
-                className="btn"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '8px 16px',
-                  borderRadius: '10px',
-                  background: 'rgba(22,163,74,.15)',
-                  color: '#4ADE80',
-                  border: '1px solid rgba(22,163,74,.3)',
-                  fontWeight: 700,
-                  fontSize: '13px',
-                  cursor: 'pointer'
-                }}
+                className="btn att-btn-mark-all"
               >
-                <Check size={16} strokeWidth={2.5} />
+                <Check size={15} strokeWidth={2.5} />
                 <span>Mark All Present</span>
               </button>
             )}
@@ -419,26 +372,26 @@ export default function TeacherAttendance() {
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 20px',
+                  gap: '7px',
+                  padding: '7px 16px',
                   borderRadius: '10px',
                   background: 'linear-gradient(135deg, var(--p1), var(--p2))',
                   color: '#fff',
                   border: 'none',
                   fontWeight: 700,
-                  fontSize: '13px',
+                  fontSize: '12.5px',
                   cursor: isSaving ? 'not-allowed' : 'pointer',
                   boxShadow: '0 4px 14px rgba(15,59,68,.3)'
                 }}
               >
                 {isSaving ? (
                   <>
-                    <Loader2 size={16} className="spin" />
+                    <Loader2 size={15} className="spin" />
                     <span>Saving...</span>
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 size={16} />
+                    <CheckCircle2 size={15} />
                     <span>Save Attendance</span>
                   </>
                 )}
@@ -456,12 +409,8 @@ export default function TeacherAttendance() {
           }}
         >
           <div
-            className="cd"
+            className="cd att-stat-card"
             style={{
-              padding: '12px 16px',
-              borderRadius: '14px',
-              background: 'var(--card)',
-              border: '1px solid var(--line)',
               borderLeft: '4px solid var(--mute)'
             }}
           >
@@ -474,91 +423,71 @@ export default function TeacherAttendance() {
           </div>
 
           <div
-            className="cd"
+            className="cd att-stat-card"
             style={{
-              padding: '12px 16px',
-              borderRadius: '14px',
-              background: 'var(--card)',
-              border: '1px solid var(--line)',
               borderLeft: '4px solid #16A34A'
             }}
           >
-            <span style={{ fontSize: '11px', color: '#4ADE80', fontWeight: 700 }}>
+            <span className="att-stat-text-present" style={{ fontSize: '11px' }}>
               PRESENT
             </span>
-            <div style={{ fontSize: '20px', fontWeight: 800, color: '#4ADE80', marginTop: '2px' }}>
+            <div className="att-stat-text-present" style={{ fontSize: '20px', marginTop: '2px' }}>
               {rosterCounts.present}
             </div>
           </div>
 
           <div
-            className="cd"
+            className="cd att-stat-card"
             style={{
-              padding: '12px 16px',
-              borderRadius: '14px',
-              background: 'var(--card)',
-              border: '1px solid var(--line)',
               borderLeft: '4px solid #DC2626'
             }}
           >
-            <span style={{ fontSize: '11px', color: '#F87171', fontWeight: 700 }}>
+            <span className="att-stat-text-absent" style={{ fontSize: '11px' }}>
               ABSENT
             </span>
-            <div style={{ fontSize: '20px', fontWeight: 800, color: '#F87171', marginTop: '2px' }}>
+            <div className="att-stat-text-absent" style={{ fontSize: '20px', marginTop: '2px' }}>
               {rosterCounts.absent}
             </div>
           </div>
 
           <div
-            className="cd"
+            className="cd att-stat-card"
             style={{
-              padding: '12px 16px',
-              borderRadius: '14px',
-              background: 'var(--card)',
-              border: '1px solid var(--line)',
               borderLeft: '4px solid #D97706'
             }}
           >
-            <span style={{ fontSize: '11px', color: '#FBBF24', fontWeight: 700 }}>
+            <span className="att-stat-text-late" style={{ fontSize: '11px' }}>
               LATE
             </span>
-            <div style={{ fontSize: '20px', fontWeight: 800, color: '#FBBF24', marginTop: '2px' }}>
+            <div className="att-stat-text-late" style={{ fontSize: '20px', marginTop: '2px' }}>
               {rosterCounts.late}
             </div>
           </div>
 
           <div
-            className="cd"
+            className="cd att-stat-card"
             style={{
-              padding: '12px 16px',
-              borderRadius: '14px',
-              background: 'var(--card)',
-              border: '1px solid var(--line)',
               borderLeft: '4px solid #2563EB'
             }}
           >
-            <span style={{ fontSize: '11px', color: '#60A5FA', fontWeight: 700 }}>
+            <span className="att-stat-text-excused" style={{ fontSize: '11px' }}>
               EXCUSED
             </span>
-            <div style={{ fontSize: '20px', fontWeight: 800, color: '#60A5FA', marginTop: '2px' }}>
+            <div className="att-stat-text-excused" style={{ fontSize: '20px', marginTop: '2px' }}>
               {rosterCounts.excused}
             </div>
           </div>
 
           <div
-            className="cd"
+            className="cd att-stat-card"
             style={{
-              padding: '12px 16px',
-              borderRadius: '14px',
-              background: 'var(--card)',
-              border: '1px solid var(--line)',
               borderLeft: '4px solid var(--p1)'
             }}
           >
-            <span style={{ fontSize: '11px', color: '#2DD4BF', fontWeight: 700 }}>
+            <span className="att-stat-text-rate" style={{ fontSize: '11px' }}>
               ATTENDANCE RATE
             </span>
-            <div style={{ fontSize: '20px', fontWeight: 800, color: '#2DD4BF', marginTop: '2px' }}>
+            <div className="att-stat-text-rate" style={{ fontSize: '20px', marginTop: '2px' }}>
               {rosterCounts.rate}%
             </div>
           </div>
@@ -623,16 +552,7 @@ export default function TeacherAttendance() {
                 </span>
               </div>
               {rosterCounts.unmarked > 0 && isEditMode && (
-                <span
-                  style={{
-                    fontSize: '11.5px',
-                    color: '#FBBF24',
-                    background: 'rgba(217,119,6,.15)',
-                    padding: '3px 10px',
-                    borderRadius: '6px',
-                    fontWeight: 700
-                  }}
-                >
+                <span className="att-unmarked-pill">
                   {rosterCounts.unmarked} students unmarked
                 </span>
               )}
@@ -641,16 +561,7 @@ export default function TeacherAttendance() {
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
-                  <tr
-                    style={{
-                      borderBottom: '1px solid var(--line)',
-                      background: 'rgba(255,255,255,0.03)',
-                      fontSize: '11px',
-                      color: '#CBD5E1',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.06em'
-                    }}
-                  >
+                  <tr className="att-table-header">
                     <th style={{ padding: '12px 18px', width: '50px' }}>#</th>
                     <th style={{ padding: '12px 18px' }}>Student</th>
                     <th style={{ padding: '12px 18px', minWidth: '320px' }}>Attendance Status</th>
@@ -698,8 +609,9 @@ export default function TeacherAttendance() {
                                   width: '36px',
                                   height: '36px',
                                   borderRadius: '10px',
-                                  background: 'rgba(20,184,166,.18)',
-                                  color: '#2DD4BF',
+                                  background: 'var(--soft)',
+                                  color: 'var(--p1)',
+                                  border: '1px solid var(--line)',
                                   display: 'grid',
                                   placeItems: 'center',
                                   fontWeight: 800,
@@ -735,16 +647,13 @@ export default function TeacherAttendance() {
                                     key={opt.key}
                                     type="button"
                                     onClick={() => handleStatusChange(student.studentId, opt.key)}
+                                    className={`att-status-btn ${isSelected ? 'att-status-btn-active' : 'att-status-btn-idle'}`}
                                     style={{
-                                      padding: '6px 13px',
-                                      borderRadius: '8px',
-                                      border: isSelected ? `2px solid ${opt.color}` : '1px solid var(--line)',
-                                      background: isSelected ? opt.bg : 'rgba(255,255,255,0.03)',
-                                      color: isSelected ? '#fff' : '#CBD5E1',
+                                      border: isSelected ? `2px solid ${opt.color}` : undefined,
+                                      background: isSelected ? opt.bg : undefined,
+                                      color: isSelected ? '#fff' : undefined,
                                       fontWeight: isSelected ? 800 : 600,
-                                      fontSize: '12px',
-                                      cursor: 'pointer',
-                                      transition: 'all 0.15s ease'
+                                      cursor: 'pointer'
                                     }}
                                   >
                                     {opt.label}
@@ -756,6 +665,7 @@ export default function TeacherAttendance() {
                             <div>
                               {status ? (
                                 <span
+                                  className={`att-view-${status}`}
                                   style={{
                                     display: 'inline-flex',
                                     alignItems: 'center',
@@ -764,23 +674,7 @@ export default function TeacherAttendance() {
                                     borderRadius: '8px',
                                     fontWeight: 700,
                                     fontSize: '12px',
-                                    textTransform: 'capitalize',
-                                    background:
-                                      status === 'present'
-                                        ? 'rgba(22,163,74,.15)'
-                                        : status === 'absent'
-                                        ? 'rgba(220,38,38,.15)'
-                                        : status === 'late'
-                                        ? 'rgba(217,119,6,.15)'
-                                        : 'rgba(37,99,235,.15)',
-                                    color:
-                                      status === 'present'
-                                        ? '#4ADE80'
-                                        : status === 'absent'
-                                        ? '#F87171'
-                                        : status === 'late'
-                                        ? '#FBBF24'
-                                        : '#60A5FA'
+                                    textTransform: 'capitalize'
                                   }}
                                 >
                                   {status === 'present' && <CheckCircle2 size={13} />}
@@ -804,16 +698,7 @@ export default function TeacherAttendance() {
                               onChange={(e) => handleNoteChange(student.studentId, e.target.value)}
                               placeholder="Optional remarks..."
                               maxLength={200}
-                              style={{
-                                width: '100%',
-                                padding: '6px 10px',
-                                borderRadius: '8px',
-                                border: '1px solid var(--line)',
-                                background: 'var(--soft)',
-                                color: 'var(--ink)',
-                                fontSize: '12px',
-                                outline: 'none'
-                              }}
+                              className="att-remarks-input"
                             />
                           ) : (
                             <span style={{ color: student.note ? 'var(--ink)' : 'var(--mute)', fontSize: '12.5px' }}>
@@ -833,7 +718,7 @@ export default function TeacherAttendance() {
               <div
                 style={{
                   padding: '14px 20px',
-                  background: 'rgba(255,255,255,0.02)',
+                  background: 'var(--soft)',
                   borderTop: '1px solid var(--line)',
                   display: 'flex',
                   alignItems: 'center',
@@ -951,54 +836,20 @@ export default function TeacherAttendance() {
                 {selectedSection.className}
               </h2>
               {selectedSection.mySubject && (
-                <span
-                  style={{
-                    padding: '2px 8px',
-                    borderRadius: '6px',
-                    background: 'rgba(20, 184, 166, 0.15)',
-                    color: '#14B8A6',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                >
+                <span className="att-badge-teal">
                   <BookOpen size={12} />
                   <span>{selectedSection.mySubject}</span>
                   {selectedSection.myCourseCode ? ` (${selectedSection.myCourseCode})` : ''}
                 </span>
               )}
-              <span
-                style={{
-                  padding: '2px 8px',
-                  borderRadius: '6px',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  background: 'rgba(20,184,166,.15)',
-                  color: '#2DD4BF'
-                }}
-              >
+              <span className="att-badge-teal">
                 {selectedSection.studentCount} Students
               </span>
             </div>
           </div>
 
           {/* Center: Perfectly Aligned Month Navigator & Today Button */}
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '4px',
-              background: 'rgba(255, 255, 255, 0.04)',
-              padding: '4px 8px',
-              borderRadius: '12px',
-              border: '1px solid var(--line)',
-              height: '38px',
-              boxSizing: 'border-box'
-            }}
-          >
+          <div className="att-month-nav-box">
             <button
               type="button"
               onClick={handlePrevMonth}
@@ -1093,17 +944,10 @@ export default function TeacherAttendance() {
           </div>
 
           {/* Right: Mode Switcher */}
-          <div
-            style={{
-              display: 'inline-flex',
-              padding: '3px',
-              borderRadius: '12px',
-              background: 'rgba(255,255,255,0.035)',
-              border: '1px solid var(--line)'
-            }}
-          >
+          <div className="att-mode-switcher">
             <button
               onClick={() => setMode('give')}
+              className={mode === 'give' ? 'att-mode-btn-active' : 'att-mode-btn-idle'}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -1112,7 +956,7 @@ export default function TeacherAttendance() {
                 borderRadius: '9px',
                 border: 'none',
                 background: mode === 'give' ? 'var(--p1)' : 'transparent',
-                color: mode === 'give' ? '#fff' : '#94A3B8',
+                color: mode === 'give' ? '#fff' : undefined,
                 fontWeight: 700,
                 fontSize: '12px',
                 cursor: 'pointer',
@@ -1125,6 +969,7 @@ export default function TeacherAttendance() {
 
             <button
               onClick={() => setMode('view')}
+              className={mode === 'view' ? 'att-mode-btn-active' : 'att-mode-btn-idle'}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -1133,7 +978,7 @@ export default function TeacherAttendance() {
                 borderRadius: '9px',
                 border: 'none',
                 background: mode === 'view' ? 'var(--p1)' : 'transparent',
-                color: mode === 'view' ? '#fff' : '#94A3B8',
+                color: mode === 'view' ? '#fff' : undefined,
                 fontWeight: 700,
                 fontSize: '12px',
                 cursor: 'pointer',
@@ -1170,14 +1015,7 @@ export default function TeacherAttendance() {
             {WEEKDAY_NAMES.map((name, i) => (
               <div
                 key={name}
-                style={{
-                  padding: '4px 0',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                  color: (i === 5 || i === 6) ? '#38BDF8' : '#CBD5E1'
-                }}
+                className={`att-weekday-label ${(i === 5 || i === 6) ? 'weekend' : ''}`}
               >
                 {name}
               </div>
@@ -1207,7 +1045,8 @@ export default function TeacherAttendance() {
                         height: '56px',
                         background: 'transparent',
                         borderRadius: '12px',
-                        border: '1px dashed rgba(255,255,255,0.03)'
+                        border: '1px dashed var(--line)',
+                        opacity: 0.5
                       }}
                     />
                   );
@@ -1216,6 +1055,12 @@ export default function TeacherAttendance() {
                 const { day, dateStr, isToday, stat } = item;
                 const hasRecords = stat?.hasRecords;
                 const isClickable = mode === 'give' || hasRecords;
+                const isMarked = Boolean(hasRecords);
+                const cellThemeClass = isToday
+                  ? 'att-day-cell-today'
+                  : isMarked
+                  ? 'att-day-cell-marked'
+                  : 'att-day-cell-unmarked';
 
                 return (
                   <div
@@ -1223,27 +1068,15 @@ export default function TeacherAttendance() {
                     onClick={isClickable ? () => setSelectedDate(dateStr) : undefined}
                     role={isClickable ? 'button' : undefined}
                     tabIndex={isClickable ? 0 : -1}
-                    className={`att-day-cell ${isClickable ? 'att-day-cell-clickable' : ''}`}
+                    className={`att-day-cell ${cellThemeClass} ${isClickable ? 'att-day-cell-clickable' : ''}`}
                     style={{
                       height: '56px',
                       padding: '6px 8px',
                       borderRadius: '12px',
-                      background: isToday
-                        ? 'rgba(20,184,166,0.12)'
-                        : hasRecords
-                        ? 'rgba(34,197,94,0.06)'
-                        : 'rgba(255,255,255,0.035)',
-                      border: isToday
-                        ? '1.5px solid #14B8A6'
-                        : hasRecords
-                        ? '1px solid rgba(34,197,94,0.35)'
-                        : '1px solid rgba(255,255,255,0.08)',
                       cursor: isClickable ? 'pointer' : 'default',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
-                      transition: 'all 0.15s ease',
-                      boxShadow: isToday ? '0 0 10px rgba(20,184,166,0.2)' : 'none',
                       opacity: mode === 'view' && !hasRecords ? 0.75 : 1
                     }}
                   >
@@ -1262,8 +1095,8 @@ export default function TeacherAttendance() {
                           width: isToday ? '24px' : 'auto',
                           height: isToday ? '24px' : 'auto',
                           borderRadius: isToday ? '6px' : '0',
-                          background: isToday ? '#14B8A6' : 'transparent',
-                          color: isToday ? '#042F2E' : 'var(--ink)',
+                          background: isToday ? 'var(--p1)' : 'transparent',
+                          color: isToday ? '#FFFFFF' : 'var(--ink)',
                           display: 'grid',
                           placeItems: 'center'
                         }}
@@ -1273,10 +1106,10 @@ export default function TeacherAttendance() {
 
                       {isToday && (
                         <span
+                          className="att-today-label"
                           style={{
                             fontSize: '9.5px',
                             fontWeight: 800,
-                            color: '#2DD4BF',
                             letterSpacing: '0.5px'
                           }}
                         >
@@ -1289,14 +1122,13 @@ export default function TeacherAttendance() {
                     {hasRecords ? (
                       <div>
                         <div
+                          className="att-cell-marked-badge"
                           style={{
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '4px',
                             padding: '1px 6px',
                             borderRadius: '5px',
-                            background: 'rgba(34,197,94,0.2)',
-                            color: '#4ADE80',
                             fontSize: '10.5px',
                             fontWeight: 700
                           }}
@@ -1312,10 +1144,7 @@ export default function TeacherAttendance() {
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '3px',
-                          color: '#2DD4BF',
-                          opacity: 0.65,
                           fontSize: '10px',
-                          fontWeight: 600,
                           letterSpacing: '0.2px',
                           transition: 'opacity 0.15s ease'
                         }}
@@ -1325,10 +1154,9 @@ export default function TeacherAttendance() {
                       </div>
                     ) : (
                       <span
+                        className="att-no-records-label"
                         style={{
                           fontSize: '10.5px',
-                          color: '#64748B',
-                          fontWeight: 500,
                           userSelect: 'none'
                         }}
                       >
@@ -1589,27 +1417,20 @@ export default function TeacherAttendance() {
                     }}
                   >
                     <span
+                      className="att-badge-teal"
                       style={{
-                        fontSize: '12.5px',
-                        fontWeight: 700,
-                        color: '#14B8A6',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '5px'
+                        fontSize: '12px'
                       }}
                     >
-                      <BookOpen size={14} />
+                      <BookOpen size={13} />
                       <span>{section.mySubject}</span>
                     </span>
                     {section.myCourseCode && (
                       <span
+                        className="att-badge-teal"
                         style={{
                           fontSize: '11px',
-                          fontWeight: 800,
-                          padding: '2px 7px',
-                          borderRadius: '6px',
-                          background: 'rgba(20, 184, 166, 0.12)',
-                          color: '#14B8A6'
+                          fontWeight: 800
                         }}
                       >
                         {section.myCourseCode}
