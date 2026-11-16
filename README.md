@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <strong>Modern, Role-Driven School Management & Student Portal for Students, Guardians, Teachers, and Staff</strong>
+  <strong>Modern, Role-Driven School Management Portal for Students, Guardians, Teachers, and Staff</strong>
 </p>
 
 <p align="center">
